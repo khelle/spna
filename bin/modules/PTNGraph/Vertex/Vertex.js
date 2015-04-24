@@ -1,4 +1,4 @@
-require('../../utils/Array');
+var ArrayUtils = require('../../utils/Array');
 var Edge = require('../Edge/Edge');
 var Utils = require('../../utils/Utils');
 
@@ -35,7 +35,7 @@ Vertex.prototype = {
         var edge = this.getEdge(vertex);
 
         if (edge) {
-            this.neighbours.removeElement(edge);
+            ArrayUtils.removeElement(this.neighbours, edge);
             vertex.removeReferencedBy(this);
         }
 
@@ -68,7 +68,7 @@ Vertex.prototype = {
     removeReferencedBy: function(vertex) {
         validateVertex(vertex);
 
-        this.referencedBy.removeElement(vertex);
+        ArrayUtils.removeElement(this.referencedBy, vertex);
         return this;
     },
 

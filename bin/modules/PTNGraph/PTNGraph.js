@@ -1,4 +1,4 @@
-require('../utils/Array');
+var ArrayUtils = require('../utils/Array');
 var Utils = require('../utils/Utils');
 var PTNVertex = require('./Vertex/PTNVertex');
 var Transition = PTNVertex.Transition;
@@ -61,12 +61,10 @@ PTNGraph.prototype = {
         vertex.clearNeighbours();
 
         if (vertex instanceof Place) {
-            this.places.removeElement(vertex);
-            return vertex;
+            return ArrayUtils.removeElement(this.places, vertex);
         }
 
-        this.transitions.removeElement(vertex);
-        return vertex;
+        return ArrayUtils.removeElement(this.transitions, vertex);
     },
 
     print: function() {

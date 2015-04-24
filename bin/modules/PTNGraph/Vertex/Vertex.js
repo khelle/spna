@@ -32,7 +32,7 @@ Vertex.prototype = {
     removeNeighbour: function(vertex) {
         validateVertex(vertex);
 
-        var edge = this.getEdge(vertex);
+        var edge = this.getEdgeTo(vertex);
 
         if (edge) {
             ArrayUtils.removeElement(this.neighbours, edge);
@@ -76,7 +76,7 @@ Vertex.prototype = {
         return this.referencedBy;
     },
 
-    getEdge: function(vertex) {
+    getEdgeTo: function(vertex) {
         for (var i in this.neighbours) {
             if (this.neighbours[i].hasVertex(vertex)) {
                 return this.neighbours[i];

@@ -1,7 +1,7 @@
 var Utils = require('../../utils/Utils');
 
 function Edge(vertex, weight) {
-    this.setVertex(vertex).setWeight(Utils.getValue(weight, 0));
+    this.setVertex(vertex).setWeight(Utils.getValue(weight, 1));
 }
 
 Edge.prototype = {

@@ -18,23 +18,16 @@ Place.prototype = {
         return this;
     },
 
-    addMarker: function() {
-        this.markers += 1;
-        return this;
+    incrementMarker: function() {
+        return this.addMarkers(1);
+    },
+
+    decrementMarker: function() {
+        return this.removeMarkers(1);
     },
 
     addMarkers: function(markers) {
         this.markers += Utils.number(markers);
-        return this;
-    },
-
-    removeMarker: function() {
-        if (this.markers == 0) {
-            this.markers = 0;
-            return this;
-        }
-
-        this.markers -= 1;
         return this;
     },
 
@@ -59,20 +52,6 @@ Place.prototype = {
         validateTransition(transition);
 
         this.removeNeighbour(transition);
-        return this;
-    },
-
-    connectToTransition: function(transition, weight) {
-        validateTransition(transition);
-
-        transition.addNeighbour(this, weight);
-        return this;
-    },
-
-    disconnectFromTransition: function(transition) {
-        validateTransition(transition);
-
-        transition.removeNeighbour(this);
         return this;
     }
 };
@@ -106,20 +85,6 @@ Transition.prototype = {
         validatePlace(place);
 
         this.removeNeighbour(place);
-        return this;
-    },
-
-    connectToPlace: function(place, weight) {
-        validatePlace(place);
-
-        place.addNeighbour(this, weight);
-        return this;
-    },
-
-    disconnectFromPlace: function(place) {
-        validatePlace(place);
-
-        place.removeNeighbour(this);
         return this;
     }
 };

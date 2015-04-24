@@ -1,18 +1,16 @@
 var PTNGraph = require('../bin/modules/PTNGraph');
-var PTNVertex = require('../bin/modules/PTNGraph/Vertex/PTNVertex');
 
-var Transition = PTNVertex.Transition;
-var Place = PTNVertex.Place;
+var g = new PTNGraph('G1');
 
-var p = new Place;
-var t = new Transition;
+var p1 = g.createPlace('p1', 1);
+var p2 = g.createPlace('p2');
+var t1 = g.createTransition('t1');
 
-p.connectToTransition(t,5);
-console.log('p neighbours: ' + p.getNeighbours());
-console.log('t neighbours: ' + t.getNeighbours());
+p1.connectTransition(t1,1);
+p2.connectToTransition(t1,2);
 
-console.log('------------------------');
+console.log(g.print());
 
-t.disconnectPlace(p);
-console.log('p neighbours: ' + p.getNeighbours());
-console.log('t neighbours: ' + t.getNeighbours());
+g.removeVertex(t1);
+
+console.log(g.print());

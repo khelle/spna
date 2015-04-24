@@ -1,35 +1,25 @@
-/**
- * Helper module which extends functionality of Arrays
- */
+Object.defineProperty(Array.prototype, 'removeElement', {
+    enumerable: false,
+    value: function(element) {
+        var index = this.indexOf(element);
 
-/**
- * @param element
- * @returns {Array}
- *
- * Removes first occurrence of the element in the array
- */
-Array.prototype.removeElement = function(element) {
-    var index = this.indexOf(element);
+        if (index > -1) {
+            this.splice(index,1);
+        }
 
-    if (index > -1) {
-        this.splice(index,1);
+        return this;
     }
+});
 
-    return this;
-};
+Object.defineProperty(Array.prototype, 'removeLastElement', {
+    enumerable: false,
+    value: function(element) {
+        var index = this.lastIndexOf(element);
 
-/**
- * @param element
- * @returns {Array}
- *
- * Removes last occurrence of the element in the array
- */
-Array.prototype.removeLastElement = function(element) {
-    var index = this.lastIndexOf(element);
+        if (index > -1) {
+            this.splice(index,1);
+        }
 
-    if (index > -1) {
-        this.splice(index,1);
+        return this;
     }
-
-    return this;
-};
+});

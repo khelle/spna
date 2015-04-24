@@ -2,21 +2,14 @@ require('../../utils/Array');
 var Edge = require('../Edge/Edge');
 var Utils = require('../../utils/Utils');
 
-function Vertex(label, markers, priority) {
-    this.setLabel(Utils.getValue(label, 'Vertex'))
-        .setMarkers(Utils.getValue(markers, 0))
-        .setPriority(Utils.getValue(priority, 0))
-        .setNeighbours([]);
+function Vertex(label) {
+    this.setLabel(Utils.getValue(label, 'Vertex')).initialize();
 }
 
 Vertex.prototype = {
-    getPriority: function() {
-        return this.priority;
-    },
-
-    setPriority: function(priority) {
-        this.priority = priority;
-        return this;
+    initialize: function() {
+        this.neighbours = [];
+        this.referencedBy = [];
     },
 
     getLabel: function() {
@@ -28,49 +21,11 @@ Vertex.prototype = {
         return this;
     },
 
-    getMarkers: function() {
-        return this.markers;
-    },
-
-    setMarkers: function(markers) {
-        this.markers = Utils.number(markers);
-        return this;
-    },
-
-    addMarker: function() {
-        this.markers += 1;
-        return this;
-    },
-
-    addMarkers: function(markers) {
-        this.markers += Utils.number(markers);
-        return this;
-    },
-
-    removeMarker: function() {
-        if (this.markers == 0) {
-            this.markers = 0;
-            return this;
-        }
-
-        this.markers -= 1;
-        return this;
-    },
-
-    removeMarkers: function(markers) {
-        if (markers > this.markers) {
-            this.markers = 0;
-            return this;
-        }
-
-        this.markers -= Utils.number(markers);
-        return this;
-    },
-
     addNeighbour: function(vertex, weight) {
         validateVertex(vertex);
 
         this.neighbours.push(new Edge(vertex, weight));
+        vertex.addReferencedBy(this);
         return this;
     },
 
@@ -81,7 +36,20 @@ Vertex.prototype = {
 
         if (edge) {
             this.neighbours.removeElement(edge);
+            vertex.removeReferencedBy(this);
         }
+
+        return this;
+    },
+
+    clearNeighbours: function() {
+        this.neighbours.forEach(function(edge) {
+            this.removeNeighbour(edge.getVertex());
+        }, this);
+
+        this.referencedBy.forEach(function(vertex) {
+            vertex.removeNeighbour(this);
+        }, this);
 
         return this;
     },
@@ -90,9 +58,22 @@ Vertex.prototype = {
         return this.neighbours;
     },
 
-    /** This function requires an array of Edges */
-    setNeighbours: function(neighbours) {
-        this.neighbours = neighbours;
+    addReferencedBy: function(vertex) {
+        validateVertex(vertex);
+
+        this.referencedBy.push(vertex);
+        return this;
+    },
+
+    removeReferencedBy: function(vertex) {
+        validateVertex(vertex);
+
+        this.referencedBy.removeElement(vertex);
+        return this;
+    },
+
+    getReferencedBy: function() {
+        return this.referencedBy;
     },
 
     getEdge: function(vertex) {

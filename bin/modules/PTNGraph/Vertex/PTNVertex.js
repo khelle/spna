@@ -3,11 +3,51 @@ var Class = require('../../utils/Class');
 var Utils = require('../../utils/Utils');
 
 /** Place class*/
-function Place(label, markers, priority) {
-    Vertex.call(this, Utils.getValue(label, 'Place'), markers, priority);
+function Place(label, markers) {
+    Vertex.call(this, Utils.getValue(label, 'Place'));
+    this.setMarkers(Utils.getValue(markers, 0));
 }
 
 Place.prototype = {
+    getMarkers: function() {
+        return this.markers;
+    },
+
+    setMarkers: function(markers) {
+        this.markers = Utils.number(markers);
+        return this;
+    },
+
+    addMarker: function() {
+        this.markers += 1;
+        return this;
+    },
+
+    addMarkers: function(markers) {
+        this.markers += Utils.number(markers);
+        return this;
+    },
+
+    removeMarker: function() {
+        if (this.markers == 0) {
+            this.markers = 0;
+            return this;
+        }
+
+        this.markers -= 1;
+        return this;
+    },
+
+    removeMarkers: function(markers) {
+        if (markers > this.markers) {
+            this.markers = 0;
+            return this;
+        }
+
+        this.markers -= Utils.number(markers);
+        return this;
+    },
+
     connectTransition: function(transition, weight) {
         validateTransition(transition);
 
@@ -40,11 +80,21 @@ Place.prototype = {
 Class.extend(Vertex, Place);
 
 /** Transition class */
-function Transition(label, markers, priority) {
-    Vertex.call(this, Utils.getValue(label, 'Transition'), markers, priority);
+function Transition(label, priority) {
+    Vertex.call(this, Utils.getValue(label, 'Transition'));
+    this.setPriority(Utils.getValue(priority, 0));
 }
 
 Transition.prototype = {
+    getPriority: function() {
+        return this.priority;
+    },
+
+    setPriority: function(priority) {
+        this.priority = priority;
+        return this;
+    },
+
     connectPlace: function(place, weight) {
         validatePlace(place);
 

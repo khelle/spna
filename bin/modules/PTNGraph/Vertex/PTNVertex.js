@@ -89,7 +89,6 @@ Transition.prototype = {
     },
 
     canBeExecuted: function() {
-        //if (transition instanceof Transition) {
         var tmpPlaces = this.getReferencedBy();
 
         for (var i in tmpPlaces) {
@@ -97,8 +96,6 @@ Transition.prototype = {
                 return false;
         }
         return true;
-        //}
-        //return false;
     }
 };
 

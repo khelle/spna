@@ -67,6 +67,20 @@ PTNGraph.prototype = {
         return ArrayUtils.removeElement(this.transitions, vertex);
     },
 
+
+
+
+    findTransitionsToExecute: function() {
+
+        var ExecutableTransitions = [];
+        this.transitions.forEach(function(transition) {
+            if(transition.canBeExecuted())
+                ExecutableTransitions.push(transition);
+        });
+        return ExecutableTransitions;
+    },
+
+
     print: function() {
         var string = 'Graph: ' + this.name;
 

@@ -86,6 +86,19 @@ Transition.prototype = {
 
         this.removeNeighbour(place);
         return this;
+    },
+
+    canBeExecuted: function() {
+        //if (transition instanceof Transition) {
+        var tmpPlaces = this.getReferencedBy();
+
+        for (var i in tmpPlaces) {
+            if(tmpPlaces[i].getMarkers() < tmpPlaces[i].getEdgeTo(this).getWeight())
+                return false;
+        }
+        return true;
+        //}
+        //return false;
     }
 };
 

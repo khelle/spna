@@ -88,6 +88,9 @@ Transition.prototype = {
         return this;
     },
 
+    /*
+    Return true if this transition can be executed at this network stance
+     */
     canBeExecuted: function() {
         var tmpPlaces = this.getReferencedBy();
 

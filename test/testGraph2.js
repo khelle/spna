@@ -12,12 +12,12 @@ var t1 = g.createTransition('t1');    // t1 [Priority: def?]
 var t2 = g.createTransition('t2');    // t2 [Priority: def?]
 var t3 = g.createTransition('t3');    // t3 [Priority: def?]
 
-p1.connectTransition(t1,1);       // p1 -2-> t1
+p1.connectTransition(t1,1);       // p1 -1-> t1
 p2a.connectTransition(t2);       // p2a -1-> t2
 p2b.connectTransition(t2);       // p2b -1-> t2
 p3.connectTransition(t3);       // p3 -1-> t3
 
-t1.connectPlace(p2b);          // t1 -1-> p2b
+t1.connectPlace(p2b,1);          // t1 -1-> p2b
 t2.connectPlace(p3);          // t2 -1-> p3
 t3.connectPlace(p2a);          // t3 -1-> p2a
 t3.connectPlace(p1);          // t3 -1-> p1
@@ -30,6 +30,18 @@ console.log(g.print());     // current state of graph << format: vertex( connect
 
 console.log(t1.canBeExecuted());
 
+//console.log(g.findTransitionsToExecute());
+
+console.log(g.places);
+console.log('=======================');
+console.log(g.print());
 console.log(g.findTransitionsToExecute());
+g.executeTransition(t1);
+console.log('=======EXECUTED========');
+console.log(g.print());
+console.log(g.findTransitionsToExecute());
+console.log('=======================');
+console.log(g.places);
 
-
+g.executeTransition(t1);
+console.log(t1.canBeExecuted());

@@ -69,7 +69,9 @@ PTNGraph.prototype = {
 
 
 
-
+    /*
+    Finds and returns array of all transitions that can be executed at this stance of network
+     */
     findTransitionsToExecute: function() {
 
         var ExecutableTransitions = [];
@@ -78,6 +80,29 @@ PTNGraph.prototype = {
                 ExecutableTransitions.push(transition);
         });
         return ExecutableTransitions;
+    },
+
+    /*
+    Executes target transition (swaps their
+     */
+    executeTransition: function(transition) {
+
+        if(!transition.canBeExecuted()) {
+            throw new Error('This trainsition (' + transition.label + ') cannot be executed at this time.' );
+        }
+        else {
+            var TakingMarkers = transition.getReferencedBy();
+            for (var i in TakingMarkers) {
+                TakingMarkers[i].removeMarkers( TakingMarkers[i].getEdgeTo(transition).getWeight() );
+            }
+
+            var AddingMarkers = transition.getNeighbours();
+            for (var i in AddingMarkers) {
+                var mark = AddingMarkers[i].getVertex();
+                //AddingMarkers[i].addMarkers( transition.getEdgeTo(AddingMarkers[i]).getWeight() );
+                mark.addMarkers( AddingMarkers[i].getWeight() );
+            }
+        }
     },
 
 

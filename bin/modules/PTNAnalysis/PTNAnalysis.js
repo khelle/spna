@@ -22,7 +22,7 @@ function PTNAnalysis(ptnGraph) {
         while(!(list.length==0)) {
 
             current = list.pop();
-            while();
+            //while();
 
 
             this.graph.modifyMarkersByState(current);

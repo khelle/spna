@@ -37,7 +37,7 @@ function State(places) {
     this.isEqual = function(state) {
 
         for (var i in this.markers) {
-            if (this.markers[i] != state.getState()[i])
+            if (this.getState()[i] != state.getState()[i])
                 return false;
         }
         return true;
@@ -52,18 +52,18 @@ function State(places) {
     this.isGreaterEqual = function(state) {
 
         var foundOneGreater = false;
-        for (var i in this.markers) {
-            if (!foundOneGreater && (this.markers[i] > state.getState()[i])) {
+        for (var i in this.getState()) {
+            if (!foundOneGreater && (this.getState()[i] > state.getState()[i])) {
                 foundOneGreater = true;
             }
-            if (!(this.markers[i] >= state.getState()[i]))
+            if (!(this.getState()[i] >= state.getState()[i]))
                 return false;
         }
 
         if (foundOneGreater) {
-            for (var i in this.markers) {
-                if (this.markers[i] > state.getState()[i]) {
-                    this.markers[i] = Infinity;
+            for (var i in this.getState()) {
+                if (this.getState()[i] > state.getState()[i]) {
+                    this.getState()[i] = Infinity;
                 }
             }
 

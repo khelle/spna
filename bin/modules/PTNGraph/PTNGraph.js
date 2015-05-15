@@ -1,10 +1,14 @@
 var ArrayUtils = require('../utils/Array');
 var Utils = require('../utils/Utils');
+//var Graph = require('../Graph');
+//var VertexStorage = require('../Graph/DefaultVertexStorage');
+//var EdgeStorage = require('../Graph/DenseEdgeStorage');
 var PTNVertex = require('./Vertex/PTNVertex');
 var Transition = PTNVertex.Transition;
 var Place = PTNVertex.Place;
 
 function PTNGraph(name) {
+    //this.graph = new Graph(VertexStorage, EdgeStorage);
     this.setName(Utils.getValue(name, 'Graph'))
         .setPlaces([])
         .setTransitions([]);
@@ -36,6 +40,7 @@ PTNGraph.prototype = {
 
     createPlace: function(label, markers, priority) {
         var place = new Place(label, markers, priority);
+        //this.graph.AddVertex(place);
         this.places.push(place);
 
         return place;

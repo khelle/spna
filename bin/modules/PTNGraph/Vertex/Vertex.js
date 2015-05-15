@@ -3,6 +3,7 @@ var Edge = require('../Edge/Edge');
 var Utils = require('../../utils/Utils');
 
 function Vertex(label) {
+    this.id   = -1;
     this.setLabel(Utils.getValue(label, 'Vertex')).initialize();
 }
 
@@ -10,6 +11,14 @@ Vertex.prototype = {
     initialize: function() {
         this.neighbours = [];
         this.referencedBy = [];
+    },
+
+    setId: function(id) {
+        this.id = id;
+    },
+
+    getId: function() {
+        return this.id;
     },
 
     getLabel: function() {

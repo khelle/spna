@@ -70,7 +70,7 @@ PTNGraph.prototype = {
             throw new Error('This transition (' + transition.getLabel() + ') cannot be executed at this time.');
         }
         else {
-            var TakingMarkers = transition.getReferencedBy();
+            var TakingMarkers = transition.getReferencing();
             for (var i in TakingMarkers) {
                 TakingMarkers[i].removeMarkers(TakingMarkers[i].getCostTo(transition));
             }

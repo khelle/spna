@@ -19,7 +19,7 @@ var Graph = function(VerticesStorage, EdgeStorage) {
         return neighbours;
     };
 
-    this.GetReferencedBy = function(V) {
+    this.GetReferencing = function(V) {
         var neighbours = [];
         this.GetIncomingEdges(V).forEach(function(edge) {
             neighbours.push(this.GetVertex(edge.source));

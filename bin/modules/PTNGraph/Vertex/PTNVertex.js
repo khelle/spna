@@ -92,7 +92,7 @@ Transition.prototype = {
     Return true if this transition can be executed at this network stance
      */
     canBeExecuted: function() {
-        var tmpPlaces = this.getReferencedBy();
+        var tmpPlaces = this.getReferencing();
 
         for (var i in tmpPlaces) {
             if(tmpPlaces[i].getMarkers() < tmpPlaces[i].getCostTo(this))

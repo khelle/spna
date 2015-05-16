@@ -45,8 +45,8 @@ Vertex.prototype = {
         return this.graph.GetNeighbours(this);
     },
 
-    getReferencedBy: function() {
-        return this.graph.GetReferencedBy(this);
+    getReferencing: function() {
+        return this.graph.GetReferencing(this);
     },
 
     getEdgeTo: function(vertex) {

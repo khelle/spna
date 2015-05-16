@@ -6,9 +6,11 @@ var State = require('../State');
 
 
 function PTNAnalysis(ptnGraph) {
-    this.ptnGraph = Utils.clone(ptnGraph);
+    //this.ptnGraph = Utils.clone(ptnGraph);
+    //console.log(this.ptnGraph);
+    this.ptnGraph = ptnGraph;
     this.tree = new Graph(new VertexStorage(), new EdgeStorage());
-
+    this.treeRoot = null;
 
     this.getParent = function(vertex) {
         try {
@@ -25,6 +27,8 @@ function PTNAnalysis(ptnGraph) {
         var root = this.ptnGraph.getState();
         this.tree.AddVertex( root );
         list.push(root);
+
+        this.treeRoot = root;
 
         var current, parent, innerparent;
         var newState;
@@ -59,16 +63,51 @@ function PTNAnalysis(ptnGraph) {
                             newState.setInfinity(innerparent);
 
                             this.tree.AddVertex( newState );
-                            this.tree.AddEdge(current,newState,{transition:transition});
+                            this.tree.AddEdge(current.id,newState.id,{transition:transition});
                             list.push( newState );
                         }
-                    });
+                    }, this);
                 }
             }
 
         }
 
     };
+
+
+
+    // PRINTING:
+    this.printNodes = function(node) {
+
+        var string = 'Node:\n';
+        var list = this.tree.GetNeighbours(node.id);
+
+        var curr = null;
+        while(!(list.length==0)) {
+
+            curr = list.pop();
+            string += curr.print();
+
+            string += this.printNodes(curr);
+        }
+
+        return string;
+    }
+
+    this.printTree = function() {
+
+        var string = 'Tree:\n';
+        string += "\tRoot:\n";
+        string += this.treeRoot.print();
+        string += "===REST:===\n";
+
+        string += this.printNodes(this.treeRoot);
+
+
+
+        return string;
+    }
+
 
     return this;
 }

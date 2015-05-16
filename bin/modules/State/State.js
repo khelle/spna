@@ -13,10 +13,9 @@ function State(places) {
     this.label = State.NEW;
     this.markers = [];
 
-
-    places.forEach(function(place) {
-        this.markers.push(place.getMarkers());
-    },this);
+    for (var i in places) {
+        this.markers.push(places[i].getMarkers());
+    }
 
 
     this.getLabel = function() {
@@ -75,7 +74,20 @@ function State(places) {
             return false;
     };
 
+    this.print = function() {
 
+        var string = 'Label: ';
+        string += this.getLabel();
+
+        string += "\nMarks:\n";
+
+        for (var i in this.getState()) {
+            string += " (" + (parseInt(i)+1) + ")" + this.getState()[i];
+        }
+        string += "\n";
+
+        return string;
+    };
 
 
     return this;

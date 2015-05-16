@@ -1,6 +1,6 @@
 
 var PTNGraph = require('../bin/modules/PTNGraph');  // load graph module
-var PTNAnalysis = require('../bin/modules/PTNAnalysis');  // load graph module
+var CoverabilityGraph = require('../bin/modules/CoverabilityGraph');  // load graph module
 
 
 var g = new PTNGraph('G1');     // create a new Graph
@@ -31,14 +31,14 @@ var t1 = g.createTransition('t1');
 var t2 = g.createTransition('t2');
 
 
-p1.connectTransition(t1,1);
-t1.connectPlace(p2,1);
-t1.connectPlace(p1,1);
+p1.connect(t1,1);
+t1.connect(p2,1);
+t1.connect(p1,1);
 
 
-p3.connectTransition(t2,1);
-t2.connectPlace(p3,1);
-t2.connectPlace(p4,1);
+p3.connect(t2,1);
+t2.connect(p3,1);
+t2.connect(p4,1);
 
 
 
@@ -56,7 +56,7 @@ console.log( g.print() );
 
 
 
-var testing = new PTNAnalysis(g);
+var testing = new CoverabilityGraph(g);
 testing.buildCoverabilityTree();
 
 //console.log( testing.printTree() );

@@ -121,4 +121,4 @@ function CoverabilityGraph(ptnGraph) {
     return this;
 }
 
-module.exports = PTNAnalysis;
+module.exports = CoverabilityGraph;

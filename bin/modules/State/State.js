@@ -18,6 +18,15 @@ function State(places) {
         //this.markers.push(places[i].getMarkers());
     }
 
+    this.getHash = function() {
+        var hash = '';
+
+        for (var i in this.markers) {
+            var m = this.markers[i];
+            hash += (m === Infinity ? 'i' : m);
+        }
+        return hash;
+    };
 
     this.getLabel = function() {
         return this.label;

@@ -41,18 +41,27 @@ Place.prototype = {
         return this;
     },
 
-    connectTransition: function(transition, weight) {
+    connect: function(transition, weight) {
         validateTransition(transition);
 
         this.addNeighbour(transition, weight);
         return this;
     },
 
-    disconnectTransition: function(transition) {
+    disconnect: function(transition) {
         validateTransition(transition);
 
         this.removeNeighbour(transition);
         return this;
+    },
+
+    export: function() {
+        var obj = Vertex.prototype.export.apply(this);
+
+        obj.type = 'Place';
+        obj.markers = this.getMarkers();
+
+        return obj;
     }
 };
 
@@ -74,14 +83,14 @@ Transition.prototype = {
         return this;
     },
 
-    connectPlace: function(place, weight) {
+    connect: function(place, weight) {
         validatePlace(place);
 
         this.addNeighbour(place, weight);
         return this;
     },
 
-    disconnectPlace: function(place) {
+    disconnect: function(place) {
         validatePlace(place);
 
         this.removeNeighbour(place);
@@ -99,6 +108,15 @@ Transition.prototype = {
                 return false;
         }
         return true;
+    },
+
+    export: function() {
+        var obj = Vertex.prototype.export.apply(this);
+
+        obj.type = 'Transition';
+        obj.priority = this.getPriority();
+
+        return obj;
     }
 };
 

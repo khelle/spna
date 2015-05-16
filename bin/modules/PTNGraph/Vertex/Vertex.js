@@ -61,6 +61,17 @@ Vertex.prototype = {
         }
     },
 
+    export: function() {
+        var obj = {type: 'Vertex', id: this.id, label: this.label, neighbours: []};
+
+        var neighbours = this.getNeighbours();
+        for (var i in neighbours) {
+            obj.neighbours.push({id: neighbours[i].id, weight: this.getCostTo(neighbours[i])});
+        }
+
+        return obj;
+    },
+
     toString: function() {
         return this.getLabel();
     }

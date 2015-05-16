@@ -50,13 +50,14 @@ PTNGraph.prototype = {
      */
     findTransitionsToExecute: function () {
         var ExecutableTransitions = [];
+        var transitions = this.getTransitions();
 
-        this.getTransitions().forEach(function(transition) {
-            if(transition.canBeExecuted()) {
-                ExecutableTransitions.push(transition);
+        for (var i in transitions) {
+            if(transitions[i].canBeExecuted()) {
+                ExecutableTransitions.push(transitions[i]);
             }
-        });
-        
+        }
+
         return ExecutableTransitions;
     },
 
@@ -66,19 +67,18 @@ PTNGraph.prototype = {
     executeTransition: function (transition) {
 
         if (!transition.canBeExecuted()) {
-            throw new Error('This trainsition (' + transition.label + ') cannot be executed at this time.');
+            throw new Error('This transition (' + transition.getLabel() + ') cannot be executed at this time.');
         }
         else {
             var TakingMarkers = transition.getReferencedBy();
             for (var i in TakingMarkers) {
-                TakingMarkers[i].removeMarkers(TakingMarkers[i].getEdgeTo(transition).getWeight());
+                TakingMarkers[i].removeMarkers(TakingMarkers[i].getCostTo(transition));
             }
 
             var AddingMarkers = transition.getNeighbours();
             for (var i in AddingMarkers) {
-                var mark = AddingMarkers[i].getVertex();
-                //AddingMarkers[i].addMarkers( transition.getEdgeTo(AddingMarkers[i]).getWeight() );
-                mark.addMarkers(AddingMarkers[i].getWeight());
+                var mark = AddingMarkers[i];
+                mark.addMarkers(transition.getCostTo(mark));
             }
         }
     },
@@ -94,7 +94,6 @@ PTNGraph.prototype = {
      Changes all marks according to given state
      */
     modifyMarkersByState: function(state) {
-
         var allPlaces = this.getPlaces();
         for (var i in allPlaces) {
             allPlaces[i].setMarkers( state.getState()[i] );

@@ -27,21 +27,21 @@ t3.connectPlace(p1);          // t3 -1-> p1
 
 
 console.log(g.print());     // current state of graph << format: vertex( connections[weight] ) >>
-
+console.log('CanBeExecuted');
 console.log(t1.canBeExecuted());
 
 //console.log(g.findTransitionsToExecute());
 
-console.log(g.places);
+//console.log(g.getPlaces());
 console.log('=======================');
 console.log(g.print());
-console.log(g.findTransitionsToExecute());
+//console.log(g.findTransitionsToExecute());
 g.executeTransition(t1);
 console.log('=======EXECUTED========');
 console.log(g.print());
-console.log(g.findTransitionsToExecute());
+//console.log(g.findTransitionsToExecute());
 console.log('=======================');
-console.log(g.places);
+//console.log(g.getPlaces());
 
-g.executeTransition(t1);
 console.log(t1.canBeExecuted());
+g.executeTransition(t1);

@@ -1,4 +1,3 @@
-var ArrayUtils = require('../utils/Array');
 var Utils = require('../utils/Utils');
 var Graph = require('../Graph/DirectedGraph');
 var VertexStorage = require('../Graph/TypedVertexStorage');
@@ -27,16 +26,16 @@ PTNGraph.prototype = {
         return this.graph.GetVertices()['Place'];
     },
 
-    createPlace: function(label, markers, priority) {
-        return this.graph.AddVertex(new Place(this.graph, label, markers, priority));
+    createPlace: function(label, markers) {
+        return this.graph.AddVertex(new Place(this.graph, label, markers));
     },
 
     getTransitions: function() {
         return this.graph.GetVertices()['Transition'];
     },
 
-    createTransition: function(label, markers, priority) {
-        return this.graph.AddVertex(new Transition(this.graph, label, markers, priority));
+    createTransition: function(label, priority) {
+        return this.graph.AddVertex(new Transition(this.graph, label, priority));
     },
 
     removeVertex: function(vertex) {
@@ -127,6 +126,42 @@ PTNGraph.prototype = {
         }
 
         return string + "\n";
+    },
+
+    serialize: function() {
+        var v = [];
+
+        var vertices = this.graph.GetVertices();
+        for (var i in vertices) {
+            v.push(vertices[i].export());
+        }
+
+        return JSON.stringify(v);
+    },
+
+    deserialize: function(json) {
+        var vertices = JSON.parse(json);
+
+        for (var i in vertices) {
+            var vertex = vertices[i];
+
+            if (vertex.type === 'Place') {
+                this.createPlace(vertex.label, vertex.markers);
+            } else if (vertex.type === 'Transition') {
+                this.createTransition(vertex.label, vertex.priority)
+            }
+
+            for (var n in vertex.neighbours) {
+                var neighbour = vertex.neighbours[n];
+                this.graph.AddEdge(vertex.id, neighbour.id, {weight: neighbour.weight});
+            }
+        }
+
+        return this;
+    },
+
+    clone: function() {
+        return new PTNGraph().deserialize(this.serialize());
     },
 
     toString: function() {

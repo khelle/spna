@@ -1,25 +1,18 @@
 var ArrayUtils = require('../utils/Array');
 var Utils = require('../utils/Utils');
-//var Graph = require('../Graph');
-//var VertexStorage = require('../Graph/DefaultVertexStorage');
-//var EdgeStorage = require('../Graph/DenseEdgeStorage');
+var Graph = require('../Graph/DirectedGraph');
+var VertexStorage = require('../Graph/TypedVertexStorage');
+var EdgeStorage = require('../Graph/DenseDirectedEdgeStorage');
 var PTNVertex = require('./Vertex/PTNVertex');
 var Transition = PTNVertex.Transition;
 var Place = PTNVertex.Place;
 
 function PTNGraph(name) {
-    //this.graph = new Graph(VertexStorage, EdgeStorage);
-    this.setName(Utils.getValue(name, 'Graph'))
-        .setPlaces([])
-        .setTransitions([]);
+    this.graph = new Graph(new VertexStorage(['Place', 'Transition']), new EdgeStorage());
+    this.setName(Utils.getValue(name, 'Graph'));
 }
 
 PTNGraph.prototype = {
-    importGraph: function(places, transitions) {
-        this.setPlaces(places).setTransitions(transitions);
-        return this;
-    },
-
     getName: function() {
         return this.name;
     },
@@ -30,49 +23,26 @@ PTNGraph.prototype = {
     },
 
     getPlaces: function() {
-        return this.places;
-    },
-
-    setPlaces: function(places) {
-        this.places = Utils.array(places);
-        return this;
+        return this.graph.GetVertices()['Place'];
     },
 
     createPlace: function(label, markers, priority) {
-        var place = new Place(label, markers, priority);
-        //this.graph.AddVertex(place);
-        this.places.push(place);
-
-        return place;
+        return this.graph.AddVertex(new Place(this.graph, label, markers, priority));
     },
 
     getTransitions: function() {
-        return this.transitions;
-    },
-
-    setTransitions: function(transitions) {
-        this.transitions = Utils.array(transitions);
-        return this;
+        return this.graph.GetVertices()['Transition'];
     },
 
     createTransition: function(label, markers, priority) {
-        var transition = new Transition(label, markers, priority);
-        this.transitions.push(transition);
-
-        return transition;
+        return this.graph.AddVertex(new Transition(this.graph, label, markers, priority));
     },
 
     removeVertex: function(vertex) {
-        vertex.clearNeighbours();
+        this.graph.RemoveVertex(vertex);
 
-        if (vertex instanceof Place) {
-            return ArrayUtils.removeElement(this.places, vertex);
-        }
-
-        return ArrayUtils.removeElement(this.transitions, vertex);
+        return this;
     },
-
-
 
     /*
     Finds and returns array of all transitions that can be executed at this stance of network
@@ -80,7 +50,7 @@ PTNGraph.prototype = {
     findTransitionsToExecute: function() {
 
         var ExecutableTransitions = [];
-        this.transitions.forEach(function(transition) {
+        this.getTransitions().forEach(function(transition) {
             if(transition.canBeExecuted())
                 ExecutableTransitions.push(transition);
         });
@@ -116,15 +86,17 @@ PTNGraph.prototype = {
 
         string += "\nPlaces:\n\t";
 
-        this.places.forEach(function(place) {
-            string += place + '( ' + place.getNeighbours() + ' ), ';
-        });
+        var places = this.getPlaces();
+        for (var i in places) {
+            string += places[i] + '( ' + places[i].getNeighbours() + ' ), ';
+        }
 
         string += "\nTransitions:\n\t";
 
-        this.transitions.forEach(function(transition) {
-            string += transition + '( ' + transition.getNeighbours() + ' ), ';
-        });
+        var transitions = this.getTransitions();
+        for (var i in transitions) {
+            string += transitions[i] + '( ' + transitions[i].getNeighbours() + ' ), ';
+        }
 
         return string + "\n";
     },

@@ -2,21 +2,13 @@ var ArrayUtils = require('../../utils/Array');
 var Edge = require('../Edge/Edge');
 var Utils = require('../../utils/Utils');
 
-function Vertex(label) {
+function Vertex(graph, label) {
     this.id   = -1;
-    this.setLabel(Utils.getValue(label, 'Vertex')).initialize();
+    this.graph = graph;
+    this.setLabel(Utils.getValue(label, 'Vertex'));
 }
 
 Vertex.prototype = {
-    initialize: function() {
-        this.neighbours = [];
-        this.referencedBy = [];
-    },
-
-    setId: function(id) {
-        this.id = id;
-    },
-
     getId: function() {
         return this.id;
     },
@@ -33,66 +25,40 @@ Vertex.prototype = {
     addNeighbour: function(vertex, weight) {
         validateVertex(vertex);
 
-        this.neighbours.push(new Edge(vertex, weight));
-        vertex.addReferencedBy(this);
+        this.graph.AddEdge(this, vertex, {weight: Utils.getValue(weight, 1)});
         return this;
     },
 
     removeNeighbour: function(vertex) {
         validateVertex(vertex);
 
-        var edge = this.getEdgeTo(vertex);
-
-        if (edge) {
-            ArrayUtils.removeElement(this.neighbours, edge);
-            vertex.removeReferencedBy(this);
-        }
-
+        this.graph.RemoveEdge(this.getEdgeTo(vertex));
         return this;
     },
 
     clearNeighbours: function() {
-        this.neighbours.forEach(function(edge) {
-            this.removeNeighbour(edge.getVertex());
-        }, this);
-
-        this.referencedBy.forEach(function(vertex) {
-            vertex.removeNeighbour(this);
-        }, this);
-
+        this.graph.RemoveIncidentEdges(this);
         return this;
     },
 
     getNeighbours: function() {
-        return this.neighbours;
-    },
-
-    addReferencedBy: function(vertex) {
-        validateVertex(vertex);
-
-        this.referencedBy.push(vertex);
-        return this;
-    },
-
-    removeReferencedBy: function(vertex) {
-        validateVertex(vertex);
-
-        ArrayUtils.removeElement(this.referencedBy, vertex);
-        return this;
+        return this.graph.GetNeighbours(this);
     },
 
     getReferencedBy: function() {
-        return this.referencedBy;
+        return this.graph.GetReferencedBy(this);
     },
 
     getEdgeTo: function(vertex) {
-        for (var i in this.neighbours) {
-            if (this.neighbours[i].hasVertex(vertex)) {
-                return this.neighbours[i];
-            }
-        }
+        return this.graph.GetEdgeBetween(this, vertex);
+    },
 
-        return null;
+    getCostTo: function(vertex) {
+        try {
+            return this.getEdgeTo(vertex).data.weight;
+        } catch (e) {
+            return null;
+        }
     },
 
     toString: function() {

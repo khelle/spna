@@ -1,20 +1,20 @@
-DenseEdgeStorage = function() {
+var DenseEdgeStorage = function() {
     this.edges      = {};
     this.edgesCount = 0;
     this.edgesRefs  = {};
     this.lastID     = 0;
 
-    this.AddEdge = function(id1, id2, E) {
-        if (this.edges[id1] !== undefined && this.edges[id2] !== undefined && (this.edges[id1][id2] !== undefined || this.edges[id2][id1] !== undefined)) {
+    this.AddEdge = function(source, target, data) {
+        if (this.edges[source] !== undefined && this.edges[target] !== undefined && (this.edges[source][target] !== undefined || this.edges[target][source] !== undefined)) {
             return false;
         }
-        this.edges[this.lastID] = { val: E, id1: id1, id2: id2 };
+        this.edges[this.lastID] = { data: data, source: source, target: target };
 
-        if (this.edgesRefs[id1] === undefined) { this.edgesRefs[id1] = {}; }
-        if (this.edgesRefs[id2] === undefined) { this.edgesRefs[id2] = {}; }
+        if (this.edgesRefs[source] === undefined) { this.edgesRefs[source] = {}; }
+        if (this.edgesRefs[target] === undefined) { this.edgesRefs[target] = {}; }
 
-        this.edgesRefs[id1][id2] = this.lastID;
-        this.edgesRefs[id2][id1] = this.lastID;
+        this.edgesRefs[source][target] = this.lastID;
+        this.edgesRefs[target][source] = this.lastID;
 
         this.lastID++;
         this.edgesCount++;
@@ -34,8 +34,8 @@ DenseEdgeStorage = function() {
         }
         edge = this.edges[id];
 
-        delete this.edgesRefs[edge.id1][edge.id2];
-        delete this.edgesRefs[edge.id2][edge.id1];
+        delete this.edgesRefs[edge.source][edge.target];
+        delete this.edgesRefs[edge.target][edge.source];
         delete this.edges[id];
 
         this.edgesCount--;

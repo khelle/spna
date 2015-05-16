@@ -40,7 +40,6 @@ PTNGraph.prototype = {
 
     removeVertex: function(vertex) {
         this.graph.RemoveVertex(vertex.id);
-
         return this;
     },
 
@@ -129,11 +128,13 @@ PTNGraph.prototype = {
     },
 
     serialize: function() {
+        var vertices = this.graph.GetVertices();
         var v = [];
 
-        var vertices = this.graph.GetVertices();
-        for (var i in vertices) {
-            v.push(vertices[i].export());
+        for (var type in vertices) {
+            for (var id in vertices[type]) {
+                v.push(vertices[type][id].export());
+            }
         }
 
         return JSON.stringify(v);

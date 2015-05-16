@@ -25,32 +25,32 @@ Vertex.prototype = {
     addNeighbour: function(vertex, weight) {
         validateVertex(vertex);
 
-        this.graph.AddEdge(this, vertex, {weight: Utils.getValue(weight, 1)});
+        this.graph.AddEdge(this.id, vertex.id, {weight: Utils.getValue(weight, 1)});
         return this;
     },
 
     removeNeighbour: function(vertex) {
         validateVertex(vertex);
 
-        this.graph.RemoveEdge(this.getEdgeTo(vertex));
+        this.graph.RemoveEdgeBetween(this.id, vertex.id);
         return this;
     },
 
     clearNeighbours: function() {
-        this.graph.RemoveIncidentEdges(this);
+        this.graph.RemoveIncidentEdges(this.id);
         return this;
     },
 
     getNeighbours: function() {
-        return this.graph.GetNeighbours(this);
+        return this.graph.GetNeighbours(this.id);
     },
 
     getReferencing: function() {
-        return this.graph.GetReferencing(this);
+        return this.graph.GetReferencing(this.id);
     },
 
     getEdgeTo: function(vertex) {
-        return this.graph.GetEdgeBetween(this, vertex);
+        return this.graph.GetEdgeBetween(this.id, vertex.id);
     },
 
     getCostTo: function(vertex) {

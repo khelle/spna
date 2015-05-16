@@ -40,7 +40,7 @@ PTNGraph.prototype = {
     },
 
     removeVertex: function(vertex) {
-        this.graph.RemoveVertex(vertex);
+        this.graph.RemoveVertex(vertex.id);
 
         return this;
     },

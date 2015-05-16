@@ -2,35 +2,35 @@ var Graph = function(VerticesStorage, EdgeStorage) {
     this.verticesStorage = VerticesStorage;
     this.edgesStorage    = EdgeStorage;
 
-    this.AddVertex = function(V) {
-        return this.verticesStorage.AddVertex(V);
+    this.AddVertex = function(id) {
+        return this.verticesStorage.AddVertex(id);
     };
 
     this.GetVertex = function(id) {
         return this.verticesStorage.GetVertex(id);
     };
 
-    this.GetNeighbours = function(V) {
+    this.GetNeighbours = function(id) {
         var neighbours = [];
-        this.GetIncidentEdges(V).forEach(function(edge) {
+        this.GetIncidentEdges(id).forEach(function(edge) {
             neighbours.push(this.GetVertex(edge.target));
         }, this);
 
         return neighbours;
     };
 
-    this.GetReferencing = function(V) {
+    this.GetReferencing = function(id) {
         var neighbours = [];
-        this.GetIncomingEdges(V).forEach(function(edge) {
+        this.GetIncomingEdges(id).forEach(function(edge) {
             neighbours.push(this.GetVertex(edge.source));
         }, this);
 
         return neighbours;
     };
 
-    this.RemoveVertex = function(V) {
-        this.RemoveIncidentEdges(V.id);
-        return this.verticesStorage.RemoveVertex(V.id);
+    this.RemoveVertex = function(id) {
+        this.RemoveIncidentEdges(id);
+        return this.verticesStorage.RemoveVertex(id);
     };
 
     this.GetVertices = function() {
@@ -41,29 +41,33 @@ var Graph = function(VerticesStorage, EdgeStorage) {
         return this.verticesStorage.GetVerticesCount();
     };
 
-    this.GetVertexDegree = function(V) {
-        return this.edgesStorage.GetVertexDegree(V.id);
+    this.GetVertexDegree = function(id) {
+        return this.edgesStorage.GetVertexDegree(id);
     };
 
-    this.AddEdge = function(Vsource, Vtarget, E) {
-        return this.edgesStorage.AddEdge(Vsource.id, Vtarget.id, E);
+    this.AddEdge = function(source, target, E) {
+        return this.edgesStorage.AddEdge(source, target, E);
     };
 
     this.GetEdge = function(id) {
         return this.edgesStorage.GetEdge(id);
     };
 
-    this.GetIncidentEdges = function(V) {
-        return this.edgesStorage.GetIncidentEdges(V.id);
+    this.GetIncidentEdges = function(id) {
+        return this.edgesStorage.GetIncidentEdges(id);
     };
 
-    this.RemoveEdge = function(Edge) {
-        var id = this.edgesStorage.GetEdgeBetween(Edge.source, Edge.target);
+    this.RemoveEdge = function(id) {
         return this.edgesStorage.RemoveEdge(id);
     };
 
-    this.RemoveIncidentEdges = function(V) {
-        return this.edgesStorage.RemoveIncidentEdges(V.id);
+    this.RemoveEdgeBetween = function(source, target) {
+        var id = this.edgesStorage.GetEdgeBetween(source, target);
+        return this.RemoveEdge(id);
+    };
+
+    this.RemoveIncidentEdges = function(id) {
+        return this.edgesStorage.RemoveIncidentEdges(id);
     };
 
     this.GetEdgesCount = function() {

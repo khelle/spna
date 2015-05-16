@@ -3,6 +3,7 @@ var Utils = require('../utils/Utils');
 var Graph = require('../Graph/DirectedGraph');
 var VertexStorage = require('../Graph/TypedVertexStorage');
 var EdgeStorage = require('../Graph/DenseDirectedEdgeStorage');
+var State = require('../State/State');
 var PTNVertex = require('./Vertex/PTNVertex');
 var Transition = PTNVertex.Transition;
 var Place = PTNVertex.Place;
@@ -13,11 +14,11 @@ function PTNGraph(name) {
 }
 
 PTNGraph.prototype = {
-    getName: function() {
+    getName: function () {
         return this.name;
     },
 
-    setName: function(name) {
+    setName: function (name) {
         this.name = name;
         return this;
     },
@@ -45,39 +46,61 @@ PTNGraph.prototype = {
     },
 
     /*
-    Finds and returns array of all transitions that can be executed at this stance of network
+     Finds and returns array of all transitions that can be executed at this stance of network
      */
-    findTransitionsToExecute: function() {
-
+    findTransitionsToExecute: function () {
         var ExecutableTransitions = [];
+
         this.getTransitions().forEach(function(transition) {
-            if(transition.canBeExecuted())
+            if(transition.canBeExecuted()) {
                 ExecutableTransitions.push(transition);
+            }
         });
+        
         return ExecutableTransitions;
     },
 
     /*
-    Executes target transition (swaps their
+     Executes target transition
      */
-    executeTransition: function(transition) {
+    executeTransition: function (transition) {
 
-        if(!transition.canBeExecuted()) {
-            throw new Error('This trainsition (' + transition.label + ') cannot be executed at this time.' );
+        if (!transition.canBeExecuted()) {
+            throw new Error('This trainsition (' + transition.label + ') cannot be executed at this time.');
         }
         else {
             var TakingMarkers = transition.getReferencedBy();
             for (var i in TakingMarkers) {
-                TakingMarkers[i].removeMarkers( TakingMarkers[i].getEdgeTo(transition).getWeight() );
+                TakingMarkers[i].removeMarkers(TakingMarkers[i].getEdgeTo(transition).getWeight());
             }
 
             var AddingMarkers = transition.getNeighbours();
             for (var i in AddingMarkers) {
                 var mark = AddingMarkers[i].getVertex();
                 //AddingMarkers[i].addMarkers( transition.getEdgeTo(AddingMarkers[i]).getWeight() );
-                mark.addMarkers( AddingMarkers[i].getWeight() );
+                mark.addMarkers(AddingMarkers[i].getWeight());
             }
         }
+    },
+
+    /*
+     Return structure State for current state of network
+     */
+    getState: function() {
+        return new State(this.getPlaces());
+    },
+
+    /*
+     Changes all marks according to given state
+     */
+    modifyMarkersByState: function(state) {
+
+        var allPlaces = this.getPlaces();
+        for (var i in allPlaces) {
+            allPlaces[i].setMarkers( state.getState()[i] );
+        }
+
+        return true;
     },
 
 

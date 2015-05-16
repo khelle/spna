@@ -5,7 +5,7 @@ var Utils = require('../utils/Utils');
 var State = require('../State');
 
 
-function PTNAnalysis(ptnGraph) {
+function CoverabilityGraph(ptnGraph) {
     //this.ptnGraph = Utils.clone(ptnGraph);
     //console.log(this.ptnGraph);
     this.ptnGraph = ptnGraph;

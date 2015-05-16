@@ -93,7 +93,7 @@ PTNGraph.prototype = {
     /*
      Changes all marks according to given state
      */
-    modifyMarkersByState: function(state) {
+    setState: function(state) {
         var allPlaces = this.getPlaces();
         for (var i in allPlaces) {
             allPlaces[i].setMarkers( state.getState()[i] );

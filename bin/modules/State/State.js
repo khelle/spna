@@ -8,26 +8,28 @@ function State(places) {
     dead - no more alive transitions from this state
      */
 
-    this.label = "new";
+
+
+    this.label = State.NEW;
     this.markers = [];
 
 
     places.forEach(function(place) {
         this.markers.push(place.getMarkers());
-    },this)
+    },this);
 
 
     this.getLabel = function() {
         return this.label;
-    }
+    };
     this.setLabel = function(label) {
         this.label = label;
         return this;
-    }
+    };
 
     this.getState = function() {
         return this.markers;
-    }
+    };
 
 
     /*
@@ -41,7 +43,7 @@ function State(places) {
                 return false;
         }
         return true;
-    }
+    };
 
     /*
     thisState.isGreaterEqual(someState)
@@ -49,14 +51,14 @@ function State(places) {
     AND there is at least one greater entry
     also sets greaters to Infinity
      */
-    this.isGreaterEqual = function(state) {
+    this.setInfinity = function(state) {
 
         var foundOneGreater = false;
         for (var i in this.getState()) {
             if (!foundOneGreater && (this.getState()[i] > state.getState()[i])) {
                 foundOneGreater = true;
             }
-            if (!(this.getState()[i] >= state.getState()[i]))
+            if ( this.getState()[i] < state.getState()[i] )
                 return false;
         }
 
@@ -71,10 +73,17 @@ function State(places) {
         }
         else
             return false;
-    }
+    };
 
 
 
 
     return this;
 }
+
+State.NEW = "new";
+State.CHECKED = "checked"
+State.OLD = "old";
+State.DEAD = "dead";
+
+module.exports=State;

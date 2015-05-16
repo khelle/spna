@@ -22,4 +22,4 @@ exports.clone = function(obj) {
         }
     }
     return temp;
-}
+};

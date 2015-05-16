@@ -33,6 +33,30 @@ var Graph = function(VerticesStorage, EdgeStorage) {
         return this.verticesStorage.RemoveVertex(id);
     };
 
+    this.MergeVertices = function(source, target) {
+        this.GetReferencing(source).forEach(function(vertex) {
+            if (vertex.id === target) {
+                return;
+            }
+
+            var data = this.GetEdgeBetween(vertex.id, source).data;
+            this.AddEdge(vertex.id, target, data);
+        }, this);
+
+        this.GetNeighbours(source).forEach(function(vertex) {
+            if (vertex.id === target) {
+                return;
+            }
+
+            var data = this.GetEdgeBetween(source, vertex.id).data;
+            this.AddEdge(target, vertex.id, data);
+        }, this);
+
+        this.RemoveVertex(source);
+
+        return true;
+    };
+
     this.GetVertices = function() {
         return this.verticesStorage.GetVertices();
     };

@@ -99,6 +99,12 @@ PTNGraph.prototype = {
             allPlaces[i].setMarkers( state.getState()[i] );
         }
 
+        //console.log( "!!!!=======================");
+        //console.log( state.print() );
+        //console.log( "=SPLIT!!!================");
+        //console.log( allPlaces );
+        //console.log( "!!!!=======================");
+
         return true;
     },
 
@@ -110,7 +116,7 @@ PTNGraph.prototype = {
 
         var places = this.getPlaces();
         for (var i in places) {
-            string += places[i] + '( ' + places[i].getNeighbours() + ' ), ';
+            string += places[i] + '( ' + places[i].getNeighbours() + '| ' + places[i].getMarkers() + ' ), ';
         }
 
         string += "\nTransitions:\n\t";

@@ -10,7 +10,9 @@ function PTNAnalysis(ptnGraph) {
     //console.log(this.ptnGraph);
     this.ptnGraph = ptnGraph;
     this.tree = new Graph(new VertexStorage(), new EdgeStorage());
+
     this.treeRoot = null;
+
 
     this.getParent = function(vertex) {
         try {
@@ -20,6 +22,7 @@ function PTNAnalysis(ptnGraph) {
         }
     };
 
+    //BUILD
     this.buildCoverabilityTree = function() {
 
         var list = [];
@@ -34,10 +37,14 @@ function PTNAnalysis(ptnGraph) {
         var newState;
         while(!(list.length==0)) {
             current = list.pop();
+
             parent = current;
 
             while( parent = this.getParent(parent) ) {
                 if(current.isEqual(parent)) {
+
+                    console.log("current set to OLD");
+
                     current.setLabel(State.OLD);
                     break;
                 }
@@ -50,63 +57,65 @@ function PTNAnalysis(ptnGraph) {
 
                 if(!TMPtrans.length) {
                     current.setLabel(State.DEAD);
+                    console.log("current set to DEAD");
                 }
                 else {
+                    console.log("current in checking executable transitions");
+
                     TMPtrans.forEach(function(transition) {
+
+                        console.log("(one) + transition name: " + transition.getLabel());
 
                         this.ptnGraph.setState(current);
                         this.ptnGraph.executeTransition(transition);
                         newState = this.ptnGraph.getState();
 
                         innerparent = current;
-                        while( innerparent = this.getParent(innerparent) ) {
-                            newState.setInfinity(innerparent);
+
+                        do {
+                            if(newState.isEqual(innerparent)) {
+                                console.log("newState set to OLD");
+                                newState.setLabel(State.OLD);
+
+                                this.tree.AddVertex( newState );
+                                this.tree.AddEdge(current.id,newState.id,{transition:transition});
+
+                                break;
+                            }
+
+                            if(newState.setInfinity(innerparent)) {
+                                console.log("newState has Inf now");
+                                console.log(newState.print());
+
+                            }
 
                             this.tree.AddVertex( newState );
                             this.tree.AddEdge(current.id,newState.id,{transition:transition});
                             list.push( newState );
-                        }
+
+                        } while( innerparent = this.getParent(innerparent) );
+
                     }, this);
                 }
             }
 
+
         }
 
     };
+    //!BUILD
+
+
+    //tree2graph
+    this.buildCoverabilityGraph = function() {
+
+        var root = this.treeRoot;
 
 
 
-    // PRINTING:
-    this.printNodes = function(node) {
 
-        var string = 'Node:\n';
-        var list = this.tree.GetNeighbours(node.id);
-
-        var curr = null;
-        while(!(list.length==0)) {
-
-            curr = list.pop();
-            string += curr.print();
-
-            string += this.printNodes(curr);
-        }
-
-        return string;
     }
-
-    this.printTree = function() {
-
-        var string = 'Tree:\n';
-        string += "\tRoot:\n";
-        string += this.treeRoot.print();
-        string += "===REST:===\n";
-
-        string += this.printNodes(this.treeRoot);
-
-
-
-        return string;
-    }
+    //!tree2graph
 
 
     return this;

@@ -11,10 +11,11 @@ function State(places) {
 
 
     this.label = State.NEW;
-    this.markers = [];
+    this.markers = {};
 
     for (var i in places) {
-        this.markers.push(places[i].getMarkers());
+        this.markers[i] = places[i].getMarkers();
+        //this.markers.push(places[i].getMarkers());
     }
 
 
@@ -82,7 +83,7 @@ function State(places) {
         string += "\nMarks:\n";
 
         for (var i in this.getState()) {
-            string += " (" + (parseInt(i)+1) + ")" + this.getState()[i];
+            string += " (" + i + ")" + this.getState()[i];
         }
         string += "\n";
 

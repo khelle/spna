@@ -9,13 +9,12 @@ var t1 = g.createTransition('t1',2);    // t1 [Priority: 2]
 p1.connect(t1,3);       // p1 -1-> t1
 t1.connect(p2,4);          // p1 -1-> t1 -4-> p2
 
-var serializedGraph = g.serialize();
-var g2 = new PTNGraph('G2').deserialize(serializedGraph);
+var g2 = g.clone();
 
 console.log(g2);
 
-//t1.disconnectPlace(p2).connectPlace(p1);    // p1 <-1-> t1
-//t1.disconnectPlace(p1).connectPlace(p2,3);  // p1 -1-> t1 -3-> p2
+//t1.disconnect(p2).connect(p1);    // p1 <-1-> t1
+//t1.disconnect(p1).connect(p2,3);  // p1 -1-> t1 -3-> p2
 //
 //var weight = p1.getCostTo(t1);      // Weight: 1
 //console.log("Weight [p1 -> t1]: " + weight);

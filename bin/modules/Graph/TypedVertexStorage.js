@@ -56,14 +56,7 @@ var TypedVertexStorage = function(types) {
     };
 
     this.GetVertices = function() {
-        var vertices = [];
-        for (var type in this.vertices) {
-            for (var id in this.vertices[type]) {
-                vertices[id] = this.vertices[type][id];
-            }
-        }
-
-        return vertices;
+        return this.vertices;
     };
 
     this.GetVerticesCount = function() {

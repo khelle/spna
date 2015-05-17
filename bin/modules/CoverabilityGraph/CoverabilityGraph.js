@@ -132,12 +132,16 @@ function CoverabilityGraph(ptnGraph) {
     //tree2graph
     this.buildCoverabilityGraph = function() {
 
-        var root = this.treeRoot;
+        for (var i in this.mergeQueue) {
+            var tab = this.mergeQueue[i];
 
+            var merger = tab.pop();
+            while(tab.length) {
+                this.tree.MergeVertices(tab.pop().id, merger.id);
+            }
+        }
 
-
-
-    }
+    };
     //!tree2graph
 
 

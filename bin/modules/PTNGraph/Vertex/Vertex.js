@@ -2,9 +2,10 @@ var ArrayUtils = require('../../utils/Array');
 var Edge = require('../Edge/Edge');
 var Utils = require('../../utils/Utils');
 
-function Vertex(graph, label) {
+function Vertex(graph, label, position) {
     this.id   = -1;
     this.graph = graph;
+    this.position = Utils.position(position);
     this.setLabel(Utils.getValue(label, 'Vertex'));
 }
 
@@ -22,18 +23,25 @@ Vertex.prototype = {
         return this;
     },
 
+    getPosition: function() {
+        return this.position;
+    },
+
+    setPosition: function(position) {
+        this.position = position;
+        return this;
+    },
+
     addNeighbour: function(vertex, weight) {
         validateVertex(vertex);
 
-        this.graph.AddEdge(this.id, vertex.id, {weight: Utils.getValue(weight, 1)});
-        return this;
+        return this.graph.AddEdge(this.id, vertex.id, {weight: Utils.getValue(weight, 1)});
     },
 
     removeNeighbour: function(vertex) {
         validateVertex(vertex);
 
-        this.graph.RemoveEdgeBetween(this.id, vertex.id);
-        return this;
+        return this.graph.RemoveEdgeBetween(this.id, vertex.id);
     },
 
     clearNeighbours: function() {

@@ -11,13 +11,24 @@ function number(value) {
 }
 
 function position(value) {
-    if (typeof value !== 'object' || typeof value.x !== 'number' || typeof value.y !== 'number') {
+    if (typeof value !== 'object') {
         return {x: 0, y: 0};
     }
+
+    if (typeof value.x !== 'number') {
+        value.x = 0;
+    }
+
+    if (typeof value.y !== 'number') {
+        value.y = 0;
+    }
+
+    return value;
 }
 
 module.exports = {
     getValue: getValue,
     array: array,
-    number: number
+    number: number,
+    position: position
 };

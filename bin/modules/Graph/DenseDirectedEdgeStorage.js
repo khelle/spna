@@ -6,7 +6,7 @@ var DenseDirectedEdgeStorage = function() {
     this.lastID     = 0;
 
     this.AddEdge = function(source, target, data) {
-        if (this.edges[source] !== undefined && this.edges[target] !== undefined && (this.edges[source][target] !== undefined || this.edges[target][source] !== undefined)) {
+        if (this.outRefs[source] !== undefined && this.inRefs[target] !== undefined && (this.outRefs[source][target] !== undefined || this.inRefs[target][source] !== undefined)) {
             return false;
         }
 

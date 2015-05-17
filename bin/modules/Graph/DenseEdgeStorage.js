@@ -23,7 +23,7 @@ var DenseEdgeStorage = function() {
 
     this.GetEdge = function(id) {
         if (this.edges[id] === undefined) {
-            return false;
+            return null;
         }
         return this.edges[id];
     };

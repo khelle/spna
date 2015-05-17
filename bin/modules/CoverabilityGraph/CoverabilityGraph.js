@@ -1,6 +1,6 @@
 var Graph = require('../Graph/DirectedGraph');
 var VertexStorage = require('../Graph/DefaultVertexStorage');
-var EdgeStorage = require('../Graph/DenseDirectedEdgeStorage');
+var EdgeStorage = require('../Graph/DenseMultiDirectedEdgeStorage');
 var Utils = require('../utils/Utils');
 var State = require('../State');
 var PriorityQueue = require('priorityqueuejs');
@@ -143,7 +143,8 @@ function CoverabilityGraph(ptnGraph) {
 
             var merger = tab.pop();
             while(tab.length) {
-                this.tree.MergeVertices(tab.pop().id, merger.id);
+                var popped = tab.pop();
+                this.tree.MergeVertices(popped.id, merger.id);
             }
         }
 

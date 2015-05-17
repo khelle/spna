@@ -136,18 +136,35 @@ function CoverabilityGraph(ptnGraph) {
         // var vertices = this.graph.getVertices();
         var vertices = this.tree.GetVertices(); // TODO: Zmienić drzewo na graf
         var d = {};
-        var Q = {};
+        //var Q = {};
 
 
 
-        var queue = new PriorityQueue(function(a, b) {
-            return a.cash - b.cash;
+        var Q = new PriorityQueue(function(a, b) { // zdefiniuj mi kolejkę, gdzie komparatorem jest różnica pomiędzy
+            return a.distance - b.distance;
         });
 
-            for (var i in vertices){
-                if(vertices[i].id == startVertex.id) d[startVertex.id] = 0;
-                else d[vertices[i].id] = Infinity;
 
+
+
+
+            for (var i in vertices){
+
+                var di = null;
+                if(vertices[i].id == startVertex.id)
+                {
+                    di = 0;
+                    d[startVertex.id] = di;
+                }
+                else
+                {
+                    di = Infinity;
+                    d[vertices[i].id] = di;
+                }
+
+                Q.enq({vertex: vertices[i], distance: di});
+
+                /*
                 if(Q[d[vertices[i]]] === undefined) // nie miałem jeszcze takiej odleglości/priorytetu
                 {
                     Q[d[vertices[i]]] = [];
@@ -157,6 +174,7 @@ function CoverabilityGraph(ptnGraph) {
                 {
                     Q[d[vertices[u]]].push(vertices[i].id);
                 }
+                */
 
             }
 
@@ -166,7 +184,7 @@ function CoverabilityGraph(ptnGraph) {
         //TODO: Dodać jakąś wersję kolejki priorytetowej z internetu
         //TODO: Przetestować
 
-        while(!Q.isEmpty) // Dopóki kolejka nie jest pusta:
+        while(!Q.isEmpty()) // Dopóki kolejka nie jest pusta:
         {
             //Usuń z kolejki wierzchołek u o najniższym priorytecie (wierzchołek najbliższy źródła, który nie został jeszcze rozważony)
 

@@ -23,7 +23,7 @@ function NetProperties(PTNGraph) {
    this.CoverabilityGraph = CoverabilityGraph(PTNGraph);
    this.graph = this.CoverabilityGraph.graph;
 
-    this.isKLimited = function ()
+    this.KLimit = function ()
     {
         // sieć jest k-ograniczona, jeśli istnieje liczba naturalna k,
         // taka że w każdym miejscu nigdy nie będzie więcej niż (k) kropek.
@@ -33,24 +33,41 @@ function NetProperties(PTNGraph) {
             //
         // jeśli któryś z węzłów ma więcej niż k znaczników zwróć fałsz
         var vertices = this.graph.GetVertices();
-        for (var v in vertices)
+        var maxK = 1;
+        for (var v in vertices) // v to indeks a nie obiekt!!!
         {
-            var state = v.getState();
-            console.log(state);
-        }
-
+            var state = vertices[v].getState();
+            var tmp = 0;
+            for(var m in state)
+            {
+                tmp = Math.max(state[m]);
+            }
+            if (tmp > maxK) maxK = tmp;
+         }
+        return maxK; // funkcja może zwrócić nieskończoność!!!
+        // TODO: sprawdzić obliczanie max
     };
 
     this.isSecure = function () {
         // sieć jest bezpieczna, jeśli jest 1-ograniczona
-        if (thiisKLimited()==1) return true;
+        if (this.KLimit()==1) return true;
+        else return false;
+    };
+    this.isUnLimited = function () {
+        // sieć jest bezpieczna, jeśli jest 1-ograniczona
+        if (this.KLimit()==Infinity) return true;
         else return false;
     };
 
-    this.isConservative = function () {
+
+    this.isConservative = function () { // TODO: Potrzebuję do testu sieci, w której nie pojawiają się nieskończoności w grafie pokrycia
         // JEŚLI CoverabilityGraph.isConservative = true - sprawdź:
         // Jeśli false- zwróc false
 
+        if(!graph.isConservative)
+        {
+            return false;
+        }
         var sum = null;
         var sumPrev = null;
 
@@ -66,7 +83,26 @@ function NetProperties(PTNGraph) {
         // we wszystkich getState, klasa State;
 
         // jeśli gdziekolwiek w grafie pokrycia pojawi się nam symbol nieskończnoności, to sieć nie jest zachowawcza
+        var vertices = this.graph.GetVertices();
+        var sums = [];
 
+        for(var i in vertices)
+        {
+            var state = vertices[i].getState();
+            var sum = 0;
+            for(var m in state)
+            {
+                sum  +=  state[m];
+            }
+            console.log(sum);
+            sums.push(sum);
+        }
+        console.log(sums);
+        for (var s in sums)
+        {
+            if( (sums[i]-sums[i-1]) !== 0) return false;
+        }
+        return true;
     };
 
     this.isReversable = function () {
@@ -75,6 +111,7 @@ function NetProperties(PTNGraph) {
 
         // Przejdź po wszystkich węzłach grafu pokrycia, dla węzła i:
             // Sprawdź, czy istnieje ścieżka prowadząca z powrotem
+        var vertices = this.graph.GetVertices();
 
     };
 
@@ -93,6 +130,8 @@ function NetProperties(PTNGraph) {
 
     };
 
-
+    return this;
 
 }
+
+module.exports = NetProperties;

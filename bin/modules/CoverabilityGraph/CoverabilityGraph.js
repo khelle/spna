@@ -1,17 +1,13 @@
-var Graph = require('../Graph/DirectedGraph');
+var Graph = require('../Graph/MultiDirectedGraph');
 var VertexStorage = require('../Graph/DefaultVertexStorage');
-var EdgeStorage = require('../Graph/DenseMultiDirectedEdgeStorage');
-var Utils = require('../utils/Utils');
 var State = require('../State');
 var PriorityQueue = require('priorityqueuejs');
-
-
 
 function CoverabilityGraph(ptnGraph) {
     //this.ptnGraph = Utils.clone(ptnGraph);
     //console.log(this.ptnGraph);
     this.ptnGraph = ptnGraph;
-    this.graph = new Graph(new VertexStorage(), new EdgeStorage());
+    this.graph = new Graph(new VertexStorage());
 
     this.treeRoot = null;
 
@@ -26,6 +22,11 @@ function CoverabilityGraph(ptnGraph) {
         } catch(e) {
             return null;
         }
+    };
+
+    this.build = function() {
+        this.buildCoverabilityTree();
+        this.buildCoverabilityGraph();
     };
 
     //BUILD
@@ -49,7 +50,7 @@ function CoverabilityGraph(ptnGraph) {
             while( parent = this.getParent(parent) ) {
                 if(current.isEqual(parent)) {
 
-                    console.log("current set to OLD");
+                    //console.log("current set to OLD");
                     current.setLabel(State.OLD);
 
                     this.addToMergeQueue(parent);
@@ -66,14 +67,14 @@ function CoverabilityGraph(ptnGraph) {
 
                 if(!TMPtrans.length) {
                     current.setLabel(State.DEAD);
-                    console.log("current set to DEAD");
+                    //console.log("current set to DEAD");
                 }
                 else {
-                    console.log("current in checking executable transitions");
+                    //console.log("current in checking executable transitions");
 
                     TMPtrans.forEach(function(transition) {
 
-                        console.log("(one) + transition name: " + transition.getLabel());
+                        //console.log("(one) + transition name: " + transition.getLabel());
 
                         this.ptnGraph.setState(current);
                         this.ptnGraph.executeTransition(transition);
@@ -83,7 +84,7 @@ function CoverabilityGraph(ptnGraph) {
 
                         do {
                             if(newState.isEqual(innerparent)) {
-                                console.log("newState set to OLD");
+                                //console.log("newState set to OLD");
                                 newState.setLabel(State.OLD);
 
                                 this.graph.AddVertex( newState );
@@ -98,8 +99,8 @@ function CoverabilityGraph(ptnGraph) {
                             if(newState.setInfinity(innerparent)) {
                                 // TODO:
                                 this.isConservative = false;
-                                console.log("newState has Inf now");
-                                console.log(newState.print());
+                                //console.log("newState has Inf now");
+                                //console.log(newState.print());
 
                             }
 
@@ -137,7 +138,6 @@ function CoverabilityGraph(ptnGraph) {
 
     //tree2graph
     this.buildCoverabilityGraph = function() {
-
         for (var i in this.mergeQueue) {
             var tab = this.mergeQueue[i];
 
@@ -146,8 +146,24 @@ function CoverabilityGraph(ptnGraph) {
                 var popped = tab.pop();
                 this.graph.MergeVertices(popped.id, merger.id);
             }
-        }
 
+            var presentEdges = {};
+            var edges = {};
+            var edgesIds = this.graph.edgesStorage.GetEdgesBetween(merger.id, merger.id);
+
+            for (var eid in edgesIds) {
+                edges[edgesIds[eid]] = this.graph.GetEdge(edgesIds[eid]);
+            }
+
+            for (var e in edges) {
+                var index = edges[e].data.transition.label;
+                if (presentEdges[index] !== undefined) {
+                    this.graph.RemoveEdge(e);
+                } else {
+                    presentEdges[index] = true;
+                }
+            }
+        }
     };
     //!tree2graph
 
@@ -317,6 +333,8 @@ function CoverabilityGraph(ptnGraph) {
     else return false;
 
     }
+
+    this.build();
 
     return this;
 }

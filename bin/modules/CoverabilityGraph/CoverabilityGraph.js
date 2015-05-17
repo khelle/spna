@@ -3,6 +3,8 @@ var VertexStorage = require('../Graph/DefaultVertexStorage');
 var EdgeStorage = require('../Graph/DenseDirectedEdgeStorage');
 var Utils = require('../utils/Utils');
 var State = require('../State');
+var PriorityQueue = require('priorityqueuejs');
+
 
 
 function CoverabilityGraph(ptnGraph) {
@@ -15,6 +17,8 @@ function CoverabilityGraph(ptnGraph) {
 
     this.mergeQueue = {};
     this.mergeIndexes = {};
+    
+    this.IsConservative = true; // czy sieć jest zachowawcza
 
     this.getParent = function(vertex) {
         try {
@@ -92,6 +96,8 @@ function CoverabilityGraph(ptnGraph) {
                             }
 
                             if(newState.setInfinity(innerparent)) {
+                                // TODO:
+                                this.isConservative = false;
                                 console.log("newState has Inf now");
                                 console.log(newState.print());
 
@@ -144,6 +150,94 @@ function CoverabilityGraph(ptnGraph) {
     };
     //!tree2graph
 
+    this.Dijkstra = function(startVertex, endVertex)
+    {
+        /*
+        Sprawdź przy pomocy algorytmu Dijkstry czy
+         */
+        //var s = this.startVertex;
+
+        // Stwórz tablicę d odległości od źródła
+        // dla wszystkich wierzchołków grafu.
+        // Na początku d[s]=0, zaś d[v]=\infty dla
+        // wszystkich pozostałych wierzchołków.
+        // var vertices = this.graph.getVertices();
+        var vertices = this.tree.GetVertices(); // TODO: Zmienić drzewo na graf
+        var d = {};
+        var Q = {};
+
+
+
+        var queue = new PriorityQueue(function(a, b) {
+            return a.cash - b.cash;
+        });
+
+            for (var i in vertices){
+                if(vertices[i].id == startVertex.id) d[startVertex.id] = 0;
+                else d[vertices[i].id] = Infinity;
+
+                if(Q[d[vertices[i]]] === undefined) // nie miałem jeszcze takiej odleglości/priorytetu
+                {
+                    Q[d[vertices[i]]] = [];
+                    Q[d[vertices[i]]].push(vertices[i].id); // dodaj wierzchołek z danym priorytetem
+                }
+                else
+                {
+                    Q[d[vertices[u]]].push(vertices[i].id);
+                }
+
+            }
+
+        // Utwórz kolejkę priorytetową Q wszystkich wierzchołków grafu. Priorytetem kolejki jest aktualnie wyliczona odległość od wierzchołka źródłowego s.
+        // Stwórz tablicę wierzchołków, sortuj ją stabilnie
+
+        //TODO: Dodać jakąś wersję kolejki priorytetowej z internetu
+        //TODO: Przetestować
+
+        while(!Q.isEmpty) // Dopóki kolejka nie jest pusta:
+        {
+            //Usuń z kolejki wierzchołek u o najniższym priorytecie (wierzchołek najbliższy źródła, który nie został jeszcze rozważony)
+
+            var uIndex = 0;
+            var u = Q[minIndex];
+
+            // Znajdź wierzchołek o najmniejszym priorytecie
+            for( var i in Q)
+            {
+                if(i==0) continue;
+
+                if( (u > Q[i]) && (!u.isEmpty) && (!Q[i].isEmpty) )
+                {
+                    u = Q[i];
+                    uIndex = i;
+                }
+            }
+            u = Q[minIndex].pop();
+
+            //Dla każdego sąsiada v wierzchołka u dokonaj relaksacji poprzez u: jeśli d[u] + w(u, v) < d[v]
+            //(poprzez u da się dojść do v szybciej niż dotychczasową ścieżką), to d[v] := d[u] + w(u, v).
+            var uNeighbours = vertices[minIndex].getNeighbours();
+            for(var v in uNeighbours)
+            {
+                //w(u,w) - waga krawędzi pomiędzy u i w
+                if((w = u.getEdgeTo(v) == null))
+                {
+                    w = Infinity;
+                }
+                else w = 1;
+
+                if(d[u] + w < d[v])
+                {
+                    d[v] = d[u] + w;
+                }
+
+            }
+
+
+        }
+        if(d[endVertex] != Infinity) return true;
+        else return false;
+    }
 
     return this;
 }

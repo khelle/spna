@@ -170,7 +170,12 @@ function CoverabilityGraph(ptnGraph) {
 
         var Q = new PriorityQueue(function(a, b) { // zdefiniuj mi kolejkę, gdzie komparatorem jest różnica pomiędzy
             return a.distance - b.distance;
+            // if
         });
+
+
+
+        // jak mam zapisać, żeby ściągało elementy o najmniejszym priorytecie?
 
 
 
@@ -214,6 +219,7 @@ function CoverabilityGraph(ptnGraph) {
 
         while(!Q.isEmpty()) // Dopóki kolejka nie jest pusta:
         {
+            /* */
             //Usuń z kolejki wierzchołek u o najniższym priorytecie (wierzchołek najbliższy źródła, który nie został jeszcze rozważony)
 
             var uIndex = 0;

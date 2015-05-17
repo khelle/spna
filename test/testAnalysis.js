@@ -7,6 +7,7 @@
 var PTNGraph = require('../bin/modules/PTNGraph');  // load graph module
 var CoverabilityGraph = require('../bin/modules/CoverabilityGraph');  // load graph module
 
+var NetProperties = require('../bin/modules/NetAnalysis');
 
 var g = new PTNGraph('G1');     // create a new Graph
 
@@ -61,14 +62,16 @@ console.log( g.print() );
 
 
 
-var testing = new CoverabilityGraph(g);
+var testing = new NetProperties(g);
 var graphVertices = testing.graph.GetVertices();
+console.log(graphVertices);
+
 var graphVerticesCount = testing.graph.GetVerticesCount();
-var startVertex = graphVertices[10];
-var endVertex =  graphVertices[4];
 console.log(graphVerticesCount);
 
-console.log(startVertex, endVertex);
-
-var test = testing.Dijkstra(startVertex, endVertex);
-
+console.log("Limit: " + testing.KLimit());
+console.log("Is secure? " + testing.isSecure());
+console.log("Is unlimited? " + testing.isUnLimited());
+console.log("Is conservative? " + testing.isConservative());
+console.log("Is reversable? " + testing.isReversable());
+console.log("Is vital? " + testing.isVital());

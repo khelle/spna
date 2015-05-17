@@ -45,7 +45,7 @@ var TypedVertexStorage = function(types) {
         var type;
 
         if ((type = this.verticesIndex[id]) === undefined) {
-            return null;
+            return false;
         }
 
         delete this.vertices[type][id];

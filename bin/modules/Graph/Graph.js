@@ -40,6 +40,10 @@ var Graph = function(VerticesStorage, EdgeStorage) {
         }, this);
 
         this.GetNeighbours(source).forEach(function(vertex) {
+            if (vertex.id === target) {
+                return;
+            }
+
             var data = this.GetEdgeBetween(source, vertex.id).data;
             this.AddEdge(target, vertex.id, data);
         }, this);

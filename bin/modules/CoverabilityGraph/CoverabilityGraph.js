@@ -15,6 +15,9 @@ function CoverabilityGraph(ptnGraph) {
 
     this.treeRoot = null;
 
+    this.mergeQueue = {};
+    this.mergeIndexes = {};
+    
     this.IsConservative = true; // czy sieć jest zachowawcza
 
     this.getParent = function(vertex) {
@@ -47,8 +50,11 @@ function CoverabilityGraph(ptnGraph) {
                 if(current.isEqual(parent)) {
 
                     console.log("current set to OLD");
-
                     current.setLabel(State.OLD);
+
+                    this.addToMergeQueue(parent);
+                    this.addToMergeQueue(current);
+
                     break;
                 }
             }
@@ -83,6 +89,9 @@ function CoverabilityGraph(ptnGraph) {
                                 this.tree.AddVertex( newState );
                                 this.tree.AddEdge(current.id,newState.id,{transition:transition});
 
+                                this.addToMergeQueue(innerparent);
+                                this.addToMergeQueue(newState);
+
                                 break;
                             }
 
@@ -110,16 +119,35 @@ function CoverabilityGraph(ptnGraph) {
     };
     //!BUILD
 
+    this.addToMergeQueue = function(state) {
+        if (this.mergeIndexes[state.id] !== undefined) {
+            return false;
+        }
+
+        var hash = state.getHash();
+
+        if(this.mergeQueue[hash] === undefined){
+            this.mergeQueue[hash]=[];
+        }
+        this.mergeQueue[hash].push(state);
+        this.mergeIndexes[state.id] = true;
+
+        return true;
+    };
 
     //tree2graph
     this.buildCoverabilityGraph = function() {
 
-        var root = this.treeRoot;
+        for (var i in this.mergeQueue) {
+            var tab = this.mergeQueue[i];
 
+            var merger = tab.pop();
+            while(tab.length) {
+                this.tree.MergeVertices(tab.pop().id, merger.id);
+            }
+        }
 
-
-
-    }
+    };
     //!tree2graph
 
     this.Dijkstra = function(startVertex, endVertex)

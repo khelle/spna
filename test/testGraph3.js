@@ -58,6 +58,7 @@ console.log( g.print() );
 
 var testing = new CoverabilityGraph(g);
 testing.buildCoverabilityTree();
+testing.buildCoverabilityGraph();
 
 //console.log( testing.printTree() );
 

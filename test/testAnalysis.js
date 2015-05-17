@@ -73,4 +73,5 @@ console.log("Limit: " + testing.KLimit());
 console.log("Is secure? " + testing.isSecure());
 console.log("Is unlimited? " + testing.isUnLimited());
 console.log("Is conservative? " + testing.isConservative());
-
+console.log("Is reversable? " + testing.isReversable());
+console.log("Is vital? " + testing.isVital());

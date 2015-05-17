@@ -3,7 +3,7 @@
  */
 
 var CoverabilityGraph = require('../CoverabilityGraph');
-
+var State = require('../State');
 function NetProperties(PTNGraph) {
 
 
@@ -22,6 +22,7 @@ function NetProperties(PTNGraph) {
    this.PTNgraph = PTNGraph;
    this.CoverabilityGraph = CoverabilityGraph(PTNGraph);
    this.graph = this.CoverabilityGraph.graph;
+
 
     this.KLimit = function ()
     {
@@ -112,6 +113,18 @@ function NetProperties(PTNGraph) {
         // Przejdź po wszystkich węzłach grafu pokrycia, dla węzła i:
             // Sprawdź, czy istnieje ścieżka prowadząca z powrotem
         var vertices = this.graph.GetVertices();
+        var root = this.CoverabilityGraph.treeRoot;
+        console.log("Root: " + root.id);
+        for(v in vertices)
+        {
+            vv = vertices[v];
+            if(vv.id !== root.id)
+            {
+                console.log("Vertex: " + vv.id);
+                if(!this.CoverabilityGraph.Dijkstra(vertices[v], root)) return false;
+            }
+        }
+        return true;
 
     };
 
@@ -127,7 +140,16 @@ function NetProperties(PTNGraph) {
 
             // znajdź taką ścieżkę w grafie pokrycia, że kończy się tym przejściem
             // znajdź taki ciąg wierzchołków, że ostatni wierzchołek w ciągu ma krawędź wychodzącą będącą i-tym przejściem
-
+    var vertices = this.graph.GetVertices();
+        for(var v in vertices)
+        {
+            var vv = vertices[v];
+            console.log(vv);
+            console.log(vv.id);
+            console.log(vv.getLabel());
+            if(vv.getLabel() === State.DEAD ) return false;
+        }
+        return true;
     };
 
     return this;

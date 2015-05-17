@@ -62,7 +62,10 @@ consle.log( g.print() );
 
 
 var testing = new CoverabilityGraph(g);
-testing.buildCoverabilityTree()e
+testing.buildCoverabilityTree();
+var treeVertices = testing.tree.GetVertices;
+var treeVerticesCount = testing.tree.GetVerticesCount();
+console.log(treeVerticesCount);
 //var testo = testing.Dijkstra();
 
 //console.log( testing.printTree() );

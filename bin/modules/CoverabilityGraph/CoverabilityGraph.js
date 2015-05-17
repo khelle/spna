@@ -163,6 +163,9 @@ function CoverabilityGraph(ptnGraph) {
         // wszystkich pozostałych wierzchołków.
 
         // var vertices = this.graph.getVertices();
+
+
+
         var vertices = this.graph.GetVertices(); // TODO: Zmienić drzewo na graf
 
         var d = {};
@@ -172,13 +175,13 @@ function CoverabilityGraph(ptnGraph) {
 
         var Q = new PriorityQueue(function(a, b) { // zdefiniuj mi kolejkę, gdzie komparatorem jest różnica pomiędzy
             var comp = null;
-            if( (a.distance == Infinity) && (b.distance != Infinity))
+            if( (a.distance == Infinity) && (b.distance !== Infinity))
             {
                 comp =  -1;
             }
-            else if ((b.distance == Infinity) && (a.distance != Infinity))
+            else if ((b.distance == Infinity) && (a.distance !== Infinity))
             {
-                comp = 0;
+                comp = 1;
             }
             else if((a.distance == Infinity) && (b.distance == Infinity))
             {
@@ -188,7 +191,7 @@ function CoverabilityGraph(ptnGraph) {
             {
                 comp =  b.distance- a.distance;
             }
-            console.log("Comparison = " + comp);
+            //console.log("a.dist = " + a.distance + ", b.distance =" + b.distance + ", comparison,  = " + comp);
             return comp;
             //TODO: jak poradzić sobie z nieskończonością?
             // działa chyba dobrze
@@ -210,9 +213,12 @@ function CoverabilityGraph(ptnGraph) {
 
             }
             d[vertices[i].id] = di;
-            console.log("Distance = " + di);
-
-            Q.enq({distance: i, vert: vertices[i]});
+            //console.log("Distance = " + di);
+            if(i == 7)
+            {
+                Q.enq({distance: Infinity, vert: vertices[i]});
+            }
+            else Q.enq({distance: i, vert: vertices[i]});
 
                     /*
                     if(Q[d[vertices[i]]] === undefined) // nie miałem jeszcze takiej odleglości/priorytetu
@@ -228,12 +234,6 @@ function CoverabilityGraph(ptnGraph) {
 
         }
 
-        Q.forEach(function (v)
-        {
-            var ver = v.vert.id;
-            var prior = v.distance;
-            console.log("Vertex : " + ver + ", its distance: " + prior);
-        })
 
 
 
@@ -268,11 +268,26 @@ function CoverabilityGraph(ptnGraph) {
             }
             u = Q[minIndex].pop();
              */
+            Q.forEach(function (v)
+            {
+                var ver = v.vert.id;
+                var prior = v.distance;
+
+                console.log("\nVertex : " + ver + ", its distance: " + prior);
+            })
 
             u = Q.deq(); // dlaczego nie zwraca elementu o
+
+            Q.forEach(function (v)
+            {
+                var ver = v.vert.id;
+                var prior = v.distance;
+                console.log("\nVertex : " + ver + ", its distance: " + prior);
+            })
+
             var uID = u.vert.id;
             var pr = u.distance;
-            console.log("d vertex id: " + uID + ", its distance: " + pr);
+            //console.log("d vertex id: " + uID + ", its distance: " + pr);
 
             //Dla każdego sąsiada v wierzchołka u dokonaj relaksacji poprzez u: jeśli d[u] + w(u, v) < d[v]
             //(poprzez u da się dojść do v szybciej niż dotychczasową ścieżką), to d[v] := d[u] + w(u, v).
@@ -280,7 +295,7 @@ function CoverabilityGraph(ptnGraph) {
             //console.log(u.vertex + );
             //var uNeighbours = vertices[uID];
             // czy to nie działa bo nie działam na grafie??
-            console.log(u);
+            //console.log(u);
             var uv = vertices[u.vert.id];
             var tmp = this.graph.GetNeighbours(vertices[u.vert.id]);
 
@@ -313,9 +328,10 @@ function CoverabilityGraph(ptnGraph) {
 
 
     }
-    if(d[endVertex.id] != Infinity) return true; // istnieje ścieżka pomiędzy wierzchołkami
+    /*
+        if(d[endVertex.id] != Infinity) return true; // istnieje ścieżka pomiędzy wierzchołkami
     else return false;
-
+    */
     }
 
     return this;

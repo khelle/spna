@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>SPNA-beta</title>
+    <meta name="title" content="SPNA-beta">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="robots" content="all">
+    <link rel="stylesheet" content="text/css" media="all" href="/stylesheets/default/css/style.css">
+    <link rel="stylesheet" content="text/css" media="all" href="/stylesheets/default/css/jquery.css">
+    <script content="text/javascript" src="/js/lib/jquery/jquery-2.1.1.min.js"></script>
+
+    <script content="text/javascript" src="/js/lib/sigma/sigma.core.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/conrad.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/utils/sigma.utils.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/utils/sigma.polyfills.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/sigma.settings.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/classes/sigma.classes.dispatcher.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/classes/sigma.classes.configurable.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/classes/sigma.classes.graph.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/classes/sigma.classes.camera.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/classes/sigma.classes.quad.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/classes/sigma.classes.edgequad.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/captors/sigma.captors.mouse.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/captors/sigma.captors.touch.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/sigma.renderers.canvas.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/sigma.renderers.webgl.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/sigma.renderers.svg.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/sigma.renderers.def.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/webgl/sigma.webgl.edges.def.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/canvas/sigma.canvas.labels.def.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/canvas/sigma.canvas.edges.def.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/svg/sigma.svg.utils.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/svg/sigma.svg.nodes.def.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/svg/sigma.svg.edges.def.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/svg/sigma.svg.edges.curve.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/svg/sigma.svg.labels.def.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/renderers/svg/sigma.svg.hovers.def.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/middlewares/sigma.middlewares.rescale.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/middlewares/sigma.middlewares.copy.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/misc/sigma.misc.animation.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/misc/sigma.misc.bindEvents.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/misc/sigma.misc.bindDOMEvents.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/misc/sigma.misc.drawHovers.js"></script>
+
+    <script content="text/javascript" src="/js/lib/sigma/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/plugins/sigma.renderers.edgeLabels/settings.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curve.js"></script>
+    <script content="text/javascript" src="/js/lib/sigma/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.curvedArrow.js"></script>
+
+    <script content="text/javascript" src="/js/usr/Devices/Keyboard.js"></script>
+    <script content="text/javascript" src="/js/usr/Utils/Evenement.js"></script>
+    <script content="text/javascript" src="/js/usr/Utils/Mode.js"></script>
+    <script content="text/javascript" src="/js/usr/Utils/ModeManager.js"></script>
+    <script content="text/javascript" src="/js/usr/PetriGui/PetriNode.js"></script>
+    <script content="text/javascript" src="/js/usr/PetriGui/PetriEdge.js"></script>
+    <script content="text/javascript" src="/js/usr/PetriGui/PetriStorage.js"></script>
+    <script content="text/javascript" src="/js/usr/Graph/GraphEdge.js"></script>
+    <script content="text/javascript" src="/js/usr/Graph/GraphVertex.js"></script>
+    <script content="text/javascript" src="/js/usr/Graph/DefaultVertexStorage.js"></script>
+    <script content="text/javascript" src="/js/usr/Graph/DenseEdgeStorage.js"></script>
+    <script content="text/javascript" src="/js/usr/Graph/DirectedDenseEdgeStorage.js"></script>
+    <script content="text/javascript" src="/js/usr/Graph/Graph.js"></script>
+    <script content="text/javascript" src="/js/usr/Visuals/GraphRenderer.js"></script>
+    <script content="text/javascript" src="/js/usr/AppGui/AppModel.js"></script>
+    <script content="text/javascript" src="/js/usr/AppGui/AppController.js"></script>
+    <script content="text/javascript" src="/js/usr/Autorun.js"></script>
+</head>
+
+<body onload="appRoot = Autorun();">
+
+<div id="box">
+
+    <div id="box-header">
+        <div class="header-name header-opt"><p>S</p>PNA</div>
+        <div class="app-button-delimiter"></div>
+        <div class="app-button" id="btn-1"></div>
+        <div class="app-button" id="btn-2"></div>
+        <div class="app-button" id="btn-3"></div>
+        <div class="app-button-delimiter"></div>
+        <div class="app-button" id="btn-5"></div>
+        <div class="app-button" id="btn-6"></div>
+        <div class="app-button" id="btn-7"></div>
+        <div class="app-button-delimiter"></div>
+        <input id="canvas-zoom-input" class="header-opt" type="range" min="0" max="56" value="0">
+        <div class="app-button-delimiter"></div>
+        <div class="app-button" id="btn-4"></div>
+        <div class="app-button-delimiter"></div>
+        <div class="app-button" id="btn-8"></div>
+        <div class="app-button" id="btn-9"></div>
+        <div class="app-button" id="btn-10"></div>
+        <div class="app-button" id="btn-11"></div>
+        <div class="app-button" id="btn-12"></div>
+    </div>
+
+    <div id="box-body">
+        <div id="popup-message"></div>
+
+        <div id="canvas">
+            <div id="graph-canvas"></div>
+        </div>
+    </div>
+
+    <a href="#" id="canvas-download" download="petri-network"></a>
+    <div id="temp-canvas-container">
+        <div id="temp-canvas"></div>
+    </div>
+
+    <div id="tooltip-box" style="display:none;">
+        <div class="tooltip" id="tooltip-place-data" style="display:none;">
+            <header>Vertex:</header>
+            <div></div>
+        </div>
+
+        <div class="tooltip" id="tooltip-place-iedges" style="display:none;">
+            <header>Incoming Edges:</header>
+            <div></div>
+        </div>
+
+        <div class="tooltip" id="tooltip-place-oedges" style="display:none;">
+            <header>Outcoming Edges:</header>
+            <div></div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

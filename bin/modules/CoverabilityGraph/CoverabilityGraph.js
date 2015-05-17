@@ -16,6 +16,8 @@ function CoverabilityGraph(ptnGraph) {
 
     this.IsConservative = true; // czy sieć jest zachowawcza
 
+
+
     this.getParent = function(vertex) {
         try {
             return this.graph.getReferencing(vertex)[0];
@@ -212,10 +214,10 @@ function CoverabilityGraph(ptnGraph) {
             //console.log("Distance = " + di);
 
             Q.enq({distance: di, vert: vertices[i]});
-            console.log(Q);
-            console.log("----------------------");
-            console.log("ID: " + vertices[i].id);
-            console.log("================");
+           // console.log(Q);
+           // console.log("----------------------");
+            //console.log("ID: " + vertices[i].id);
+            //console.log("================");
             /*
              if(Q[d[vertices[i]]] === undefined) // nie miałem jeszcze takiej odleglości/priorytetu
              {
@@ -245,7 +247,7 @@ function CoverabilityGraph(ptnGraph) {
          console.log(ttt.distance);
          }
          */
-        console.log("=!!!!!!!!!!!!!!!!!!!======");
+        //console.log("=!!!!!!!!!!!!!!!!!!!======");
         var u = null;
 
         while (!Q.isEmpty()) // Dopóki kolejka nie jest pusta:
@@ -253,16 +255,16 @@ function CoverabilityGraph(ptnGraph) {
 
 
             u = Q.deq().vert;
-            console.log("u: " + u.id);
+            //console.log("u: " + u.id);
 
             var neighbours = this.graph.GetNeighbours(u.id);
-            if (neighbours === undefined) console.log("Empty neighbours")
+            //if (neighbours === undefined) console.log("Empty neighbours")
 
 
 
             for (var v in neighbours) {
                 var neighID = neighbours[v].id;
-                console.log("nighbors: " + neighbours[v].id);
+                //console.log("nighbors: " + neighbours[v].id);
 
                 //w(u,w) - waga krawędzi pomiędzy u i w
                 // sprawdź, czy v jest elementem Q

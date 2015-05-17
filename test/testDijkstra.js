@@ -64,8 +64,8 @@ console.log( g.print() );
 var testing = new CoverabilityGraph(g);
 var graphVertices = testing.graph.GetVertices();
 var graphVerticesCount = testing.graph.GetVerticesCount();
-var startVertex = graphVertices[0];
-var endVertex =  graphVertices[graphVerticesCount];
+var startVertex = graphVertices[10];
+var endVertex =  graphVertices[4];
 console.log(graphVerticesCount);
 
 console.log(startVertex, endVertex);

@@ -168,6 +168,7 @@ function CoverabilityGraph(ptnGraph) {
     //!tree2graph
 
     this.Dijkstra = function(startVertex, endVertex) {
+        console.log("startVertex.id = " + startVertex.id + ", endVertex.id = " + endVertex.id);
         /*
          Sprawdź przy pomocy algorytmu Dijkstry czy pomiędzy startVertex a endVertex istnieje ścieżka
          */
@@ -188,26 +189,7 @@ function CoverabilityGraph(ptnGraph) {
 
         var Q = new PriorityQueue(function (a, b) { // zdefiniuj mi kolejkę, gdzie komparatorem jest różnica pomiędzy
             var comp = null;
-            /*
-             if( (a.distance === Infinity) && (b.distance !== Infinity))
-             {
-             comp =  -1;
-             }
-             else if ((b.distance === Infinity) && (a.distance !== Infinity))
-             {
-             comp = 1;
-             }
-             else if((a.distance === Infinity) && (b.distance === Infinity))
-             {
-             comp =  0
-             }
-             else
-             */
-            //{
-            //    comp =  b.distance- a.distance;
-            //}
-            //console.log(typeof a.distance);
-            //console.log(typeof b.distance);
+
             if (a.distance < b.distance) comp = 1;
             else if (a.distance > b.distance) comp = -1;
             else comp = 0;
@@ -230,7 +212,10 @@ function CoverabilityGraph(ptnGraph) {
             //console.log("Distance = " + di);
 
             Q.enq({distance: di, vert: vertices[i]});
-
+            console.log(Q);
+            console.log("----------------------");
+            console.log("ID: " + vertices[i].id);
+            console.log("================");
             /*
              if(Q[d[vertices[i]]] === undefined) // nie miałem jeszcze takiej odleglości/priorytetu
              {
@@ -252,7 +237,6 @@ function CoverabilityGraph(ptnGraph) {
         //TODO: Dodać jakąś wersję kolejki priorytetowej z internetu
         //TODO: Przetestować
 
-        var u = null;
 
         /*
          while(!Q.isEmpty())
@@ -261,62 +245,42 @@ function CoverabilityGraph(ptnGraph) {
          console.log(ttt.distance);
          }
          */
-
+        console.log("=!!!!!!!!!!!!!!!!!!!======");
+        var u = null;
 
         while (!Q.isEmpty()) // Dopóki kolejka nie jest pusta:
         {
-            /*
-             //Usuń z kolejki wierzchołek u o najniższym priorytecie (wierzchołek najbliższy źródła, który nie został jeszcze rozważony)
 
-             var uIndex = 0;
-             var u = Q[minIndex];
 
-             // Znajdź wierzchołek o najmniejszym priorytecie
-             for( var i in Q)
-             {
-             if(i==0) continue;
+            u = Q.deq().vert;
+            console.log("u: " + u.id);
 
-             if( (u > Q[i]) && (!u.isEmpty) && (!Q[i].isEmpty) )
-             {
-             u = Q[i];
-             uIndex = i;
-             }
-             }
-             u = Q[minIndex].pop();
-             */
-
-            u = Q.deq(); // dlaczego nie zwraca elementu o
-
-            var neighbours = this.graph.GetNeighbours(u);
+            var neighbours = this.graph.GetNeighbours(u.id);
             if (neighbours === undefined) console.log("Empty neighbours")
 
 
-            for (var v in neighbours) {
-                //w(u,w) - waga krawędzi pomiędzy u i w
 
+            for (var v in neighbours) {
+                var neighID = neighbours[v].id;
+                console.log("nighbors: " + neighbours[v].id);
+
+                //w(u,w) - waga krawędzi pomiędzy u i w
                 // sprawdź, czy v jest elementem Q
 
-                var isElement = false;
-                /*
-                 Q.forEach(function(i) {
-                 console.log(i);
-                 if(i.id == v.id) isElement = true;
-                 });
-                 */
-                if (d[v.id] === Infinity) {
-                    d[v.id] = d[u.id] + 1;
+                if (d[neighID] === Infinity) {
+                    d[neighID] = d[u.id] + 1;
                 }
                 else {
-                    if (d[v.id] > d[u.id] + 1) {
-                        d[v.id] = d[u.id] + 1;
+                    if (d[neighID] > d[u.id] + 1) {
+                        d[neighID] = d[u.id] + 1;
                     }
                 }
             }
 
 
         }
-
-        if (d[endVertex.id] != Infinity) return true; // istnieje ścieżka pomiędzy wierzchołkami
+        console.log(d);
+        if (d[endVertex.id] !== Infinity) return true; // istnieje ścieżka pomiędzy wierzchołkami
         else return false;
     }
 

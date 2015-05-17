@@ -11,18 +11,18 @@ function CoverabilityGraph(ptnGraph) {
     //this.ptnGraph = Utils.clone(ptnGraph);
     //console.log(this.ptnGraph);
     this.ptnGraph = ptnGraph;
-    this.tree = new Graph(new VertexStorage(), new EdgeStorage());
+    this.coverGraph = new Graph(new VertexStorage(), new EdgeStorage());
 
     this.treeRoot = null;
 
     this.mergeQueue = {};
     this.mergeIndexes = {};
-    
+
     this.IsConservative = true; // czy sieć jest zachowawcza
 
     this.getParent = function(vertex) {
         try {
-            return this.tree.getReferencing(vertex)[0];
+            return this.coverGraph.getReferencing(vertex)[0];
         } catch(e) {
             return null;
         }
@@ -34,7 +34,7 @@ function CoverabilityGraph(ptnGraph) {
         var list = [];
 
         var root = this.ptnGraph.getState();
-        this.tree.AddVertex( root );
+        this.coverGraph.AddVertex( root );
         list.push(root);
 
         this.treeRoot = root;
@@ -86,8 +86,8 @@ function CoverabilityGraph(ptnGraph) {
                                 console.log("newState set to OLD");
                                 newState.setLabel(State.OLD);
 
-                                this.tree.AddVertex( newState );
-                                this.tree.AddEdge(current.id,newState.id,{transition:transition});
+                                this.coverGraph.AddVertex( newState );
+                                this.coverGraph.AddEdge(current.id,newState.id,{transition:transition});
 
                                 this.addToMergeQueue(innerparent);
                                 this.addToMergeQueue(newState);
@@ -103,8 +103,8 @@ function CoverabilityGraph(ptnGraph) {
 
                             }
 
-                            this.tree.AddVertex( newState );
-                            this.tree.AddEdge(current.id,newState.id,{transition:transition});
+                            this.coverGraph.AddVertex( newState );
+                            this.coverGraph.AddEdge(current.id,newState.id,{transition:transition});
                             list.push( newState );
 
                         } while( innerparent = this.getParent(innerparent) );
@@ -144,7 +144,7 @@ function CoverabilityGraph(ptnGraph) {
             var merger = tab.pop();
             while(tab.length) {
                 var popped = tab.pop();
-                this.tree.MergeVertices(popped.id, merger.id);
+                this.coverGraph.MergeVertices(popped.id, merger.id);
             }
         }
 
@@ -163,7 +163,7 @@ function CoverabilityGraph(ptnGraph) {
         // wszystkich pozostałych wierzchołków.
 
         // var vertices = this.graph.getVertices();
-        var vertices = this.tree.GetVertices(); // TODO: Zmienić drzewo na graf
+        var vertices = this.coverGraph.GetVertices(); // TODO: Zmienić drzewo na graf
 
         var d = {};
         //var Q = {};
@@ -282,7 +282,7 @@ function CoverabilityGraph(ptnGraph) {
             // czy to nie działa bo nie działam na grafie??
             console.log(u);
             var uv = vertices[u.vert.id];
-            var tmp = this.tree.GetNeighbours(vertices[u.vert.id]);
+            var tmp = this.coverGraph.GetNeighbours(vertices[u.vert.id]);
 
             // Nie działają funkcje zwracające sąsiadów
         var uNeighbours = null;

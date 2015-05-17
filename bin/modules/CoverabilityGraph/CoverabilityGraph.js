@@ -131,7 +131,7 @@ function CoverabilityGraph(ptnGraph) {
         // dla wszystkich wierzchołków grafu.
         // Na początku d[s]=0, zaś d[v]=\infty dla
         // wszystkich pozostałych wierzchołków.
-        var vertices = this.tree.GetVertices();
+        var vertices = this.tree.GetVertices(); // TODO: Zmienić drzewo na graf
         var d = {};
         var Q = {};
 

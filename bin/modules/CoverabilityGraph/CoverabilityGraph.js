@@ -3,6 +3,8 @@ var VertexStorage = require('../Graph/DefaultVertexStorage');
 var EdgeStorage = require('../Graph/DenseDirectedEdgeStorage');
 var Utils = require('../utils/Utils');
 var State = require('../State');
+var PriorityQueue = require('priorityqueuejs');
+
 
 
 function CoverabilityGraph(ptnGraph) {
@@ -131,13 +133,19 @@ function CoverabilityGraph(ptnGraph) {
         // dla wszystkich wierzchołków grafu.
         // Na początku d[s]=0, zaś d[v]=\infty dla
         // wszystkich pozostałych wierzchołków.
+        // var vertices = this.graph.getVertices();
         var vertices = this.tree.GetVertices(); // TODO: Zmienić drzewo na graf
         var d = {};
         var Q = {};
 
 
+
+        var queue = new PriorityQueue(function(a, b) {
+            return a.cash - b.cash;
+        });
+
             for (var i in vertices){
-                if(vertices[i] == startVertex) d[startVertex.id] = 0;
+                if(vertices[i].id == startVertex.id) d[startVertex.id] = 0;
                 else d[vertices[i].id] = Infinity;
 
                 if(Q[d[vertices[i]]] === undefined) // nie miałem jeszcze takiej odleglości/priorytetu

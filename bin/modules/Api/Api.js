@@ -1,7 +1,17 @@
 var PTNGraph = require('../PTNGraph');
+var GraphExporter = require('../GraphExporter');
 
 var Api = function() {
+    this.exporter = new GraphExporter();
     this.ptnGraph = null;
+
+    this.exportGraph = function() {
+        if (this.exporter.exportGraph(this.ptnGraph)) {
+            return GraphExporter.TMP_FILE;
+        }
+
+        return false;
+    };
 
     this.createGraph = function(data) {
         try {

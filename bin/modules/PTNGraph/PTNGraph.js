@@ -150,9 +150,9 @@ PTNGraph.prototype = {
             var vertex = vertices[i];
 
             if (vertex.type === 'Place') {
-                this.createPlace(vertex.label, vertex.markers);
+                this.createPlace(vertex.label, vertex.markers, vertex.position);
             } else if (vertex.type === 'Transition') {
-                this.createTransition(vertex.label, vertex.priority)
+                this.createTransition(vertex.label, vertex.priority, vertex.position)
             }
 
             for (var n in vertex.neighbours) {

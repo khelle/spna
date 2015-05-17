@@ -70,7 +70,7 @@ Vertex.prototype = {
     },
 
     export: function() {
-        var obj = {type: 'Vertex', id: this.id, label: this.label, neighbours: []};
+        var obj = {type: 'Vertex', id: this.id, label: this.label, position: this.position, neighbours: []};
 
         var neighbours = this.getNeighbours();
         for (var i in neighbours) {

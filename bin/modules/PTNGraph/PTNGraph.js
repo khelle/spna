@@ -26,21 +26,24 @@ PTNGraph.prototype = {
         return this.graph.GetVertices()['Place'];
     },
 
-    createPlace: function(label, markers) {
-        return this.graph.AddVertex(new Place(this.graph, label, markers));
+    createPlace: function(label, markers, position) {
+        return this.graph.AddVertex(new Place(this.graph, label, position, markers));
     },
 
     getTransitions: function() {
         return this.graph.GetVertices()['Transition'];
     },
 
-    createTransition: function(label, priority) {
-        return this.graph.AddVertex(new Transition(this.graph, label, priority));
+    createTransition: function(label, priority, position) {
+        return this.graph.AddVertex(new Transition(this.graph, label, position, priority));
+    },
+
+    getVertex: function(id) {
+        return this.graph.GetVertex(id);
     },
 
     removeVertex: function(vertex) {
-        this.graph.RemoveVertex(vertex.id);
-        return this;
+        return this.graph.RemoveVertex(vertex.id);
     },
 
     /*

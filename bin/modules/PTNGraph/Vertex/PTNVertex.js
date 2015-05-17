@@ -3,8 +3,8 @@ var Class = require('../../utils/Class');
 var Utils = require('../../utils/Utils');
 
 /** Place class*/
-function Place(graph, label, markers) {
-    Vertex.call(this, graph, Utils.getValue(label, 'Place'));
+function Place(graph, label, position, markers) {
+    Vertex.call(this, graph, position, Utils.getValue(label, 'Place'));
     this.setMarkers(Utils.getValue(markers, 0));
 }
 
@@ -44,15 +44,13 @@ Place.prototype = {
     connect: function(transition, weight) {
         validateTransition(transition);
 
-        this.addNeighbour(transition, weight);
-        return this;
+        return this.addNeighbour(transition, weight);
     },
 
     disconnect: function(transition) {
         validateTransition(transition);
 
-        this.removeNeighbour(transition);
-        return this;
+        return this.removeNeighbour(transition);
     },
 
     export: function() {
@@ -68,8 +66,8 @@ Place.prototype = {
 Class.extend(Vertex, Place);
 
 /** Transition class */
-function Transition(graph, label, priority) {
-    Vertex.call(this, graph, Utils.getValue(label, 'Transition'));
+function Transition(graph, label, position, priority) {
+    Vertex.call(this, graph, position, Utils.getValue(label, 'Transition'));
     this.setPriority(Utils.getValue(priority, 0));
 }
 
@@ -86,15 +84,13 @@ Transition.prototype = {
     connect: function(place, weight) {
         validatePlace(place);
 
-        this.addNeighbour(place, weight);
-        return this;
+        return this.addNeighbour(place, weight);
     },
 
     disconnect: function(place) {
         validatePlace(place);
 
-        this.removeNeighbour(place);
-        return this;
+        return this.removeNeighbour(place);
     },
 
     /*

@@ -35,13 +35,17 @@ var Graph = function(VerticesStorage, EdgeStorage) {
 
     this.MergeVertices = function(source, target) {
         this.GetReferencing(source).forEach(function(vertex) {
-            var data = this.GetEdgeBetween(vertex.id, source).data;
-            this.AddEdge(vertex.id, target, data);
+            var eid = this.edgesStorage.GetEdgeBetween(vertex.id, source);
+            var edge = this.GetEdgeBetween(vertex.id, source);
+            this.AddEdge(vertex.id, target, edge.data);
+            this.RemoveEdge(eid);
         }, this);
 
         this.GetNeighbours(source).forEach(function(vertex) {
-            var data = this.GetEdgeBetween(source, vertex.id).data;
-            this.AddEdge(target, vertex.id, data);
+            var eid = this.edgesStorage.GetEdgeBetween(source, vertex.id);
+            var edge = this.GetEdgeBetween(source, vertex.id);
+            this.AddEdge(target, vertex.id, edge.data);
+            this.RemoveEdge(eid);
         }, this);
 
         this.RemoveVertex(source);

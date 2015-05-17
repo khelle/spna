@@ -1,4 +1,4 @@
-var DenseDirectedEdgeStorage = function() {
+var DenseMultiDirectedEdgeStorage = function() {
     this.edges      = {};
     this.edgesCount = 0;
     this.outRefs  = {};
@@ -15,9 +15,11 @@ var DenseDirectedEdgeStorage = function() {
 
         if (this.outRefs[source] === undefined) { this.outRefs[source] = {}; }
         if (this.inRefs[target] === undefined) { this.inRefs[target] = {}; }
+        if (this.outRefs[source][target] === undefined) { this.outRefs[source][target] = []; }
+        if (this.inRefs[target][source] === undefined) { this.inRefs[target][source] = []; }
 
-        this.outRefs[source][target] = this.lastID;
-        this.inRefs[target][source] = this.lastID;
+        this.outRefs[source][target].push(this.lastID);
+        this.inRefs[target][source].push(this.lastID);
 
         this.lastID++;
         this.edgesCount++;
@@ -34,6 +36,14 @@ var DenseDirectedEdgeStorage = function() {
 
     this.GetEdgeBetween = function(source, target) {
         try {
+            return this.outRefs[source][target][0];
+        } catch (e) {
+            return null;
+        }
+    };
+
+    this.GetEdgesBetween = function(source, target) {
+        try {
             return this.outRefs[source][target];
         } catch (e) {
             return null;
@@ -47,8 +57,11 @@ var DenseDirectedEdgeStorage = function() {
 
         var edge = this.edges[id];
 
-        delete this.outRefs[edge.source][edge.target];
-        delete this.inRefs[edge.target][edge.source];
+        var inRefs = this.outRefs[edge.source][edge.target];
+        var outRefs = this.inRefs[edge.target][edge.source];
+
+        inRefs.splice(inRefs.indexOf(id),1);
+        outRefs.splice(outRefs.indexOf(id),1);
         delete this.edges[id];
 
         this.edgesCount--;
@@ -75,7 +88,13 @@ var DenseDirectedEdgeStorage = function() {
 
         var arr = [];
         for (var i in this.outRefs[id]) {
-            arr.push(this.GetEdge(this.outRefs[id][i]));
+            if (this.outRefs[id][i] === undefined) {
+                continue;
+            }
+
+            for (var e in this.outRefs[id][i]) {
+                arr.push(this.GetEdge(this.outRefs[id][i][e]));
+            }
         }
 
         return arr;
@@ -96,7 +115,13 @@ var DenseDirectedEdgeStorage = function() {
 
         var arr = [];
         for (var i in this.inRefs[id]) {
-            arr.push(this.GetEdge(this.inRefs[id][i]));
+            if (this.inRefs[id][i] === undefined) {
+                continue;
+            }
+
+            for (var e in this.inRefs[id][i]) {
+                arr.push(this.GetEdge(this.inRefs[id][i][e]));
+            }
         }
 
         return arr;
@@ -113,4 +138,4 @@ var DenseDirectedEdgeStorage = function() {
     return this;
 };
 
-module.exports = DenseDirectedEdgeStorage;
+module.exports = DenseMultiDirectedEdgeStorage;

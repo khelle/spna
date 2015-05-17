@@ -1,40 +1,42 @@
-Wszystko to POST.
+
 Pod routem jest lista parametrów, jakie należy przesłać jako obiekt json.
 
-/graph/create : void
+GET /api/graph : string url - względna ścieżka do grafu
+
+POST /api/graph/create : void
 name	- string
 
-/place/create : int id
+POST /place/create : int id
 label	- string
 markers	- int
 posx	- int
 posy	- int
 
-/transition/create : int id
+POST /api/transition/create : int id
 label	- string
 posx	- int
 posy	- int
 
-/place/markers : void
+POST /api/place/markers : void
 id	- int
 markers	- int
 
-/vertex/label : void
+POST /api/vertex/label : void
 id	- int
 label	- string
 
-/vertex/position : void
+POST /api/vertex/position : void
 id	- int
 posx	- int
 posy	- int
 
-/vertex/remove : void
+POST /api/vertex/remove : void
 id	- int
 
-/vertex/connect : int id
+POST /api/vertex/connect : int id
 source	- int
 target	- int
 
-/vertex/disconnect : void
+POST /api/vertex/disconnect : void
 source	- int
 target	- int

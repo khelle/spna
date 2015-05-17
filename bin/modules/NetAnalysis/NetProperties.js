@@ -128,7 +128,7 @@ function NetProperties(PTNGraph) {
 
     };
 
-    this.isVital = function () {
+    this.isVital = function () { //TODO: czy taka definicja żywotności wystarcza?
         // musimy udowodnić, że dla dowolnego stanu, dla każdego z przejść istnieje sekwencja odpaleń innych przejść, która
         // uaktywnia to przejście
         // innymi słowy - w sieci nie  może być zakleszczeń
@@ -147,10 +147,24 @@ function NetProperties(PTNGraph) {
             console.log(vv);
             console.log(vv.id);
             console.log(vv.getLabel());
-            if(vv.getLabel() === State.DEAD ) return false;
+            if(vv.getLabel() === State.DEAD ) return false; // jeśli którykolwiek stan grafu pokrycia jest martwy
+            // to znaczy że sieć może utknąć w martwym punkcie (zakleszczyć się) -> nie jest żywotna
         }
         return true;
     };
+
+    this.Analyze = function()
+    {
+        return {
+            "NetLimit": this.KLimit(),
+            "Conservative": this.isConservative(),
+            "Reversable" : this.isReversable(),
+            "Vital" : this.isVital()
+        };
+    };
+
+
+
 
     return this;
 

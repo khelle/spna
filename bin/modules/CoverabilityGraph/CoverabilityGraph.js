@@ -163,18 +163,41 @@ function CoverabilityGraph(ptnGraph) {
 
         // var vertices = this.graph.getVertices();
         var vertices = this.tree.GetVertices(); // TODO: Zmienić drzewo na graf
+
         var d = {};
         //var Q = {};
 
 
 
         var Q = new PriorityQueue(function(a, b) { // zdefiniuj mi kolejkę, gdzie komparatorem jest różnica pomiędzy
-            return a.distance - b.distance;
-            //TODO: czy taka funkcja porównująca zadziała?
+            var comp = null;
+            if( (a.distance == Infinity) && (b.distance != Infinity))
+            {
+                comp =  -1;
+            }
+            else if ((b.distance == Infinity) && (a.distance != Infinity))
+            {
+                comp = 0;
+            }
+            else if((a.distance == Infinity) && (b.distance == Infinity))
+            {
+                comp =  0
+            }
+            else
+            {
+                comp =  b.distance- a.distance;
+            }
+            console.log("Comparison = " + comp);
+            return comp;
+            //TODO: jak poradzić sobie z nieskończonością?
+            // działa chyba dobrze
+
         });
 
 
+
         for (var i in vertices){
+
             var di = null;
             if(vertices[i].id == startVertex.id)
             {
@@ -186,7 +209,9 @@ function CoverabilityGraph(ptnGraph) {
 
             }
             d[vertices[i].id] = di;
-            Q.enq({vertex: vertices[i], distance: di});
+            console.log("Distance = " + di);
+
+            Q.enq({distance: i, vert: vertices[i]});
 
                     /*
                     if(Q[d[vertices[i]]] === undefined) // nie miałem jeszcze takiej odleglości/priorytetu
@@ -202,12 +227,25 @@ function CoverabilityGraph(ptnGraph) {
 
         }
 
+        Q.forEach(function (v)
+        {
+            var ver = v.vert.id;
+            var prior = v.distance;
+            console.log("Vertex : " + ver + ", its distance: " + prior);
+        })
+
+
+
+
+
+
         // Utwórz kolejkę priorytetową Q wszystkich wierzchołków grafu. Priorytetem kolejki jest aktualnie wyliczona odległość od wierzchołka źródłowego s.
         // Stwórz tablicę wierzchołków, sortuj ją stabilnie
 
         //TODO: Dodać jakąś wersję kolejki priorytetowej z internetu
         //TODO: Przetestować
 
+        var u = null;
         while(!Q.isEmpty()) // Dopóki kolejka nie jest pusta:
         {
             /*
@@ -229,39 +267,54 @@ function CoverabilityGraph(ptnGraph) {
             }
             u = Q[minIndex].pop();
              */
-            u = Q.deq;
+
+            u = Q.deq(); // dlaczego nie zwraca elementu o
+            var uID = u.vert.id;
+            var pr = u.distance;
+            console.log("d vertex id: " + uID + ", its distance: " + pr);
+
             //Dla każdego sąsiada v wierzchołka u dokonaj relaksacji poprzez u: jeśli d[u] + w(u, v) < d[v]
             //(poprzez u da się dojść do v szybciej niż dotychczasową ścieżką), to d[v] := d[u] + w(u, v).
-            var uNeighbours = vertices[u.id].getNeighbours();
-            for(var v in uNeighbours)
-            {
-                //w(u,w) - waga krawędzi pomiędzy u i w
 
-                // sprawdź, czy v jest elementem Q
+            //console.log(u.vertex + );
+            //var uNeighbours = vertices[uID];
+            // czy to nie działa bo nie działam na grafie??
+            console.log(u);
+            var uv = vertices[u.vert.id];
+            var tmp = this.tree.GetNeighbours(vertices[u.vert.id]);
 
-                var isElement = false;
-                Q.forEach(function(i) {
-                    console.log(i);
-                    if(i.id == v.id) isElement = true;
-                });
-                /*
-                if((w = u.getEdgeTo(v) == null))
-                {
-                    w = Infinity;
-                }
-                else w = 1;
-                */
-                if(isElement == true) {
-                    if (d[v.id] > d[u.id] + w) {
-                        d[v.id] = d[u.id] + w;
-                    }
+            // Nie działają funkcje zwracające sąsiadów
+        var uNeighbours = null;
+        for(var v in uNeighbours)
+        {
+            //w(u,w) - waga krawędzi pomiędzy u i w
+
+            // sprawdź, czy v jest elementem Q
+            var w = Infinity;
+            var isElement = false;
+            Q.forEach(function(i) {
+                console.log(i);
+                if(i.id == v.id) isElement = true;
+            });
+
+             if((w = u.getEdgeTo(v) != null))
+             {
+                 w = 1;
+             }
+
+
+            if(isElement == true) {
+                if (d[v.id] > d[u.id] + w) {
+                    d[v.id] = d[u.id] + w;
                 }
             }
-
-
         }
-        if(d[endVertex.id] != Infinity) return true; // istnieje ścieżka pomiędzy wierzchołkami
-        else return false;
+
+
+    }
+    if(d[endVertex.id] != Infinity) return true; // istnieje ścieżka pomiędzy wierzchołkami
+    else return false;
+
     }
 
     return this;

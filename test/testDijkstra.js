@@ -48,7 +48,7 @@ t2.connect(p4,1);
 
 
 
-consle.log( g.print() );
+console.log( g.print() );
 
 //console.log( g.findTransitionsToExecute() );
 //g.executeTransition(t1);
@@ -63,9 +63,13 @@ consle.log( g.print() );
 
 var testing = new CoverabilityGraph(g);
 testing.buildCoverabilityTree();
-var treeVertices = testing.tree.GetVertices;
+var treeVertices = testing.tree.GetVertices();
 var treeVerticesCount = testing.tree.GetVerticesCount();
+var startVertex = treeVertices[0];
+var endVertex =  treeVertices[5];
 console.log(treeVerticesCount);
-//var testo = testing.Dijkstra();
 
-//console.log( testing.printTree() );
+console.log(startVertex, endVertex);
+
+var test = testing.Dijkstra(startVertex, endVertex);
+

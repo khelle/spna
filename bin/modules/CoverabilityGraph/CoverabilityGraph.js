@@ -18,7 +18,9 @@ function CoverabilityGraph(ptnGraph) {
 
     this.getParent = function(vertex) {
         try {
-            return this.graph.getReferencing(vertex)[0];
+            //return this.graph.GetReferencing(vertex)[0];\\
+            var out = this.graph.GetReferencing(vertex.id)[0];
+            return out;
         } catch(e) {
             return null;
         }
@@ -31,6 +33,8 @@ function CoverabilityGraph(ptnGraph) {
 
     //BUILD
     this.buildCoverabilityTree = function() {
+
+        console.log("buildCoverabilityTree...");
 
         var list = [];
 
@@ -50,7 +54,7 @@ function CoverabilityGraph(ptnGraph) {
             while( parent = this.getParent(parent) ) {
                 if(current.isEqual(parent)) {
 
-                    //console.log("current set to OLD");
+                    console.log("current set to OLD");
                     current.setLabel(State.OLD);
 
                     this.addToMergeQueue(parent);
@@ -67,24 +71,52 @@ function CoverabilityGraph(ptnGraph) {
 
                 if(!TMPtrans.length) {
                     current.setLabel(State.DEAD);
-                    //console.log("current set to DEAD");
+                    console.log("current set to DEAD");
                 }
                 else {
-                    //console.log("current in checking executable transitions");
+                    console.log("current in checking executable transitions");
 
+                    var OneTimeAdd = false;
                     TMPtrans.forEach(function(transition) {
 
-                        //console.log("(one) + transition name: " + transition.getLabel());
+                        console.log("(one) + transition name: " + transition.getLabel());
 
                         this.ptnGraph.setState(current);
                         this.ptnGraph.executeTransition(transition);
                         newState = this.ptnGraph.getState();
 
+                        this.graph.AddVertex( newState );
+                        this.graph.AddEdge(current.id,newState.id,{transition:transition});
+                        list.push( newState );
+
                         innerparent = current;
+
 
                         do {
                             if(newState.isEqual(innerparent)) {
-                                //console.log("newState set to OLD");
+                                console.log("newState set to OLD");
+                                newState.setLabel(State.OLD);
+
+                                this.addToMergeQueue(innerparent);
+                                this.addToMergeQueue(newState);
+
+                                break;
+                            }
+
+                            if(newState.setInfinity(innerparent)) {
+                                // TODO:
+                                this.isConservative = false;
+                                console.log("newState has Inf now");
+                                console.log(newState.print());
+
+                            }
+
+                        } while( innerparent = this.getParent(innerparent) );
+
+                        /*
+                        do {
+                            if(newState.isEqual(innerparent)) {
+                                console.log("newState set to OLD");
                                 newState.setLabel(State.OLD);
 
                                 this.graph.AddVertex( newState );
@@ -99,16 +131,22 @@ function CoverabilityGraph(ptnGraph) {
                             if(newState.setInfinity(innerparent)) {
                                 // TODO:
                                 this.isConservative = false;
-                                //console.log("newState has Inf now");
-                                //console.log(newState.print());
+                                console.log("newState has Inf now");
+                                console.log(newState.print());
 
                             }
 
-                            this.graph.AddVertex( newState );
-                            this.graph.AddEdge(current.id,newState.id,{transition:transition});
-                            list.push( newState );
+                            if(!OneTimeAdd) {
+                                this.graph.AddVertex( newState );
+                                this.graph.AddEdge(current.id,newState.id,{transition:transition});
+                                list.push( newState );
+
+                                OneTimeAdd = true;
+                            }
 
                         } while( innerparent = this.getParent(innerparent) );
+*/
+
 
                     }, this);
                 }
@@ -117,6 +155,8 @@ function CoverabilityGraph(ptnGraph) {
 
         }
 
+
+        console.log("build Tree finished!");
     };
     //!BUILD
 
@@ -138,6 +178,9 @@ function CoverabilityGraph(ptnGraph) {
 
     //tree2graph
     this.buildCoverabilityGraph = function() {
+
+        console.log("buildCoverabilityGraph...");
+
         for (var i in this.mergeQueue) {
             var tab = this.mergeQueue[i];
 
@@ -164,6 +207,8 @@ function CoverabilityGraph(ptnGraph) {
                 }
             }
         }
+
+        console.log("build Graph finished!");
     };
     //!tree2graph
 

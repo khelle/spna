@@ -4,6 +4,12 @@
 
 
 
+
+
+
+
+//console.log(tmp);
+
 var PTNGraph = require('../bin/modules/PTNGraph');  // load graph module
 var CoverabilityGraph = require('../bin/modules/CoverabilityGraph');  // load graph module
 
@@ -76,9 +82,3 @@ console.log("Is conservative? " + testing.isConservative());
 console.log("Is reversable? " + testing.isReversable());
 console.log("Is vital? " + testing.isVital());
 console.log(testing.Analyze());
-
-
-
-//console.log(tmp);
-
-}

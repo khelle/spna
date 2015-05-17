@@ -62,12 +62,11 @@ console.log( g.print() );
 
 
 var testing = new CoverabilityGraph(g);
-testing.buildCoverabilityTree();
-var treeVertices = testing.tree.GetVertices();
-var treeVerticesCount = testing.tree.GetVerticesCount();
-var startVertex = treeVertices[0];
-var endVertex =  treeVertices[5];
-console.log(treeVerticesCount);
+var graphVertices = testing.graph.GetVertices();
+var graphVerticesCount = testing.graph.GetVerticesCount();
+var startVertex = graphVertices[10];
+var endVertex =  graphVertices[4];
+console.log(graphVerticesCount);
 
 console.log(startVertex, endVertex);
 

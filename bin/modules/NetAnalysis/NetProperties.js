@@ -2,9 +2,9 @@
  * Created by Rael on 2015-05-16.
  */
 
-//var CoverabilityGraph = require('./CoverabilityGraph');
+var CoverabilityGraph = require('../CoverabilityGraph');
 
-function NetProperties() {
+function NetProperties(PTNGraph) {
 
 
 // TODO: metoda, która przejdzie po wszystkich węzłach grafu pokrycia (DFS, BFS)
@@ -19,17 +19,25 @@ function NetProperties() {
     // graf pokrycia - scalamy węzły, które zwiększają tylko  1 miejsce do nieskończoności?
     // graf osiągalności - bez symbolu nieskończoności, sklejone duplikaty
 
-   // this.limit =
+   this.PTNgraph = PTNGraph;
+   this.CoverabilityGraph = CoverabilityGraph(PTNGraph);
+   this.graph = this.CoverabilityGraph.graph;
 
     this.isKLimited = function ()
+    {
         // sieć jest k-ograniczona, jeśli istnieje liczba naturalna k,
         // taka że w każdym miejscu nigdy nie będzie więcej niż (k) kropek.
-    {
+
         // przeiteruj po tablicy wierzchołków w grafie pokrycia, które są stanami
             //wybierz maksymalną wartość z tablicy stanów i ją zwróć (w szczególności inf)
             //
         // jeśli któryś z węzłów ma więcej niż k znaczników zwróć fałsz
-
+        var vertices = this.graph.GetVertices();
+        for (var v in vertices)
+        {
+            var state = v.getState();
+            console.log(state);
+        }
 
     };
 

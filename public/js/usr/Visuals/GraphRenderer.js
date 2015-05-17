@@ -802,12 +802,12 @@ var GraphRenderer = function(app, renderingRoot) {
 
                 if (edge.target === id) {
                     node = this.app.Storage.GetPlace(edge.source);
-                    this.AddTooltipEdge(tooltipIEdgesDiv, edge.id, node.label + '->cost', 'cost', edge.cost);
+                    this.AddTooltipEdge(tooltipIEdgesDiv, edge.id, node.label + '::cost', 'cost', edge.cost);
                     val[0]++;
                 }
                 else if (edge.source === id) {
                     node = this.app.Storage.GetPlace(edge.target);
-                    this.AddTooltipEdge(tooltipOEdgesDiv, edge.id, node.label + '->cost', 'cost', edge.cost);
+                    this.AddTooltipEdge(tooltipOEdgesDiv, edge.id, node.label + '::cost', 'cost', edge.cost);
                     val[1]++;
                 }
             }

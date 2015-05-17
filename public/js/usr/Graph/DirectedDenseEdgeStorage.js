@@ -46,6 +46,7 @@ var DirectedDenseEdgeStorage = function() {
         edge = this.edges[id];
 
         delete this.edgesIn[edge.id1][edge.id2];
+        delete this.edgesOut[edge.id2][edge.id1];
         delete this.edges[id];
 
         this.edgesCount--;

@@ -66,6 +66,10 @@ router.post('/vertex/disconnect', function(request, response) {
     response.json(createResponse(status, {}));
 });
 
+router.get('/hello', function(request, response) {
+    response.json(createResponse(true, [1,2,3,4]));
+});
+
 function createResponse(status, data) {
     return {status: status, data: data};
 }

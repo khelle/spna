@@ -46,6 +46,10 @@ PTNGraph.prototype = {
         return this.graph.RemoveVertex(vertex.id);
     },
 
+    getEdge: function(id) {
+        return this.graph.GetEdge(id);
+    },
+
     /*
      Finds and returns array of all transitions that can be executed at this stance of network
      */

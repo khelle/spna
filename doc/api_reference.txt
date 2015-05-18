@@ -36,6 +36,7 @@ id	- int
 POST /api/vertex/connect : int id
 source	- int
 target	- int
+weight    - int
 
 POST /api/vertex/disconnect : void
 source	- int

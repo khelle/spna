@@ -79,7 +79,7 @@ var Api = function() {
             var source = this.ptnGraph.getVertex(data.source);
             var target = this.ptnGraph.getVertex(data.target);
 
-            return source.connect(target);
+            return source.connect(target, data.weight);
         } catch (e) {
             return false;
         }
@@ -91,6 +91,15 @@ var Api = function() {
             var target = this.ptnGraph.getVertex(data.target);
 
             return source.disconnect(target);
+        } catch (e) {
+            return false;
+        }
+    };
+
+    this.setEdgeWeight = function(data) {
+        try {
+            this.ptnGraph.getEdge(data.id).data.weight = data.weight;
+            return true;
         } catch (e) {
             return false;
         }

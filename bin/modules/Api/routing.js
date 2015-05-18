@@ -91,6 +91,13 @@ router.post('/vertex/disconnect', function(request, response) {
     response.json(createResponse(status, {}));
 });
 
+router.post('/edge/weight', function(request, response) {
+    var data = request.body;
+    var status = api.setEdgeWeight(data);
+
+    response.json(createResponse(status, {}));
+});
+
 router.get('/hello', function(request, response) {
     response.json(createResponse(true, [1,2,3,4]));
 });

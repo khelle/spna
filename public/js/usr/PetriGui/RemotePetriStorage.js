@@ -16,7 +16,7 @@ var RemotePetriStorage = function() {
             }
         );
 
-        return { response: response, status: status };
+        return { data: response.data, status: response.status };
     };
 
     this.CreatePlace = function(label, markers, posx, posy) {
@@ -37,7 +37,7 @@ var RemotePetriStorage = function() {
             }
         );
 
-        return { response: response, status: status };
+        return { data: response.data, status: response.status };
     };
 
     this.CreateTransition = function(label, posx, posy) {
@@ -57,10 +57,10 @@ var RemotePetriStorage = function() {
             }
         );
 
-        return { response: response, status: status };
+        return { data: response.data, status: response.status };
     };
 
-    this.SetPlaceMarkers = function(id, markers) {
+    this.SetVertexMarkers = function(id, markers) {
         var response;
         var status;
 
@@ -76,7 +76,7 @@ var RemotePetriStorage = function() {
             }
         );
 
-        return { response: response, status: status };
+        return { data: response.data, status: response.status };
     };
 
     this.SetVertexLabel = function(id, label) {
@@ -95,7 +95,7 @@ var RemotePetriStorage = function() {
             }
         );
 
-        return { response: response, status: status };
+        return { data: response.data, status: response.status };
     };
 
     this.SetVertexPosition = function(id, posx, posy) {
@@ -115,7 +115,7 @@ var RemotePetriStorage = function() {
             }
         );
 
-        return { response: response, status: status };
+        return { data: response.data, status: response.status };
     };
 
     this.RemoveVertex = function(id) {
@@ -133,10 +133,10 @@ var RemotePetriStorage = function() {
             }
         );
 
-        return { response: response, status: status };
+        return { data: response.data, status: response.status };
     };
 
-    this.Connect = function(source, target, cost) {
+    this.CreateConnection = function(source, target, cost) {
         var response;
         var status;
 
@@ -144,7 +144,8 @@ var RemotePetriStorage = function() {
             "/api/vertex/connect",
             {
                 source: source,
-                target: target
+                target: target,
+                weight: cost
             },
             function(r, s) {
                 response = r;
@@ -152,10 +153,10 @@ var RemotePetriStorage = function() {
             }
         );
 
-        return { response: response, status: status };
+        return { data: response.data, status: response.status };
     };
 
-    this.Disconnect = function(source, target) {
+    this.RemoveConnection = function(source, target) {
         var response;
         var status;
 
@@ -171,14 +172,26 @@ var RemotePetriStorage = function() {
             }
         );
 
-        return { response: response, status: status };
+        return { data: response, status: status };
     };
 
-    this.SetConnectionCost = function(source, target, cost) {
+    this.SetConnectionCost = function(id, cost) {
         var response;
         var status;
 
-        return { response: {}, status: true };
+        this.ajax.Request(
+            "/api/edge/weight",
+            {
+                id: id,
+                weight: cost
+            },
+            function(r, s) {
+                response = r;
+                status = s;
+            }
+        );
+
+        return { data: response, status: status };
     };
 
     return this;

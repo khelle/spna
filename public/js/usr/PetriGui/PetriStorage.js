@@ -10,6 +10,7 @@ var PetriStorage = function(app) {
 
     this.Init = function() {
         this.Graph = new Graph(new DefaultVertexStorage(), new DirectedDenseEdgeStorage());
+        this.Remote.UseGraph("petri");
 
         return this;
     };
@@ -27,14 +28,47 @@ var PetriStorage = function(app) {
     };
 
     this.SetPlaceData = function(id, type, val) {
+        switch (type) {
+            case 'label': return this.SetPlaceLabel(id, val);
+            case 'markers': return this.SetPlaceMarkers(id, val);
+            default: return;
+        }
+    };
+
+    this.SetPlaceLabel = function(id, label) {
         var vertex;
+        var response;
+
+        response = this.Remote.SetVertexLabel(id, label);
+        if (!response.status) {
+            return;
+        }
 
         vertex = this.Graph.GetVertex(id).GetData();
-        vertex[type] = val;
+        vertex.label = label;
+    };
+
+    this.SetPlaceMarkers = function(id, markers) {
+        var vertex;
+        var response;
+
+        response = this.Remote.SetVertexMarkers(id, markers);
+        if (!response.status) {
+            return;
+        }
+
+        vertex = this.Graph.GetVertex(id).GetData();
+        vertex.markers = markers;
     };
 
     this.SetPlacePos = function(id, x, y) {
         var vertex;
+        var response;
+
+        response = this.Remote.SetVertexPosition(id, x, y);
+        if (!response.status) {
+            return;
+        }
 
         vertex = this.Graph.GetVertex(id).GetData();
         vertex.x = x;
@@ -42,14 +76,36 @@ var PetriStorage = function(app) {
     };
 
     this.SetConnectionData = function(id, type, val) {
+        switch (type) {
+            case 'cost': return this.SetConnectionCost(id, val);
+            default: return;
+        }
+    };
+
+    this.SetConnectionCost = function(id, cost) {
         var conn;
+        var response;
+
+        response = this.Remote.SetConnectionCost(id, cost);
+        if (!response.status) {
+            return;
+        }
 
         conn = this.Graph.GetEdge(id).GetData();
-        conn[type] = val;
+        conn.cost = cost;
     };
 
     this.AddPlace = function(posx, posy, label, markers) {
-        var id = this.GetCurrentVertexID();
+        var id;
+        var response;
+
+        //var id = this.GetCurrentVertexID();
+
+        response = this.Remote.CreatePlace(label, markers, posx, posy);
+        if (!response.status) {
+            return this;
+        }
+        id = response.data.id;
 
         this.Graph.AddVertex(
             id,
@@ -61,7 +117,16 @@ var PetriStorage = function(app) {
     };
 
     this.AddTransition = function(posx, posy, label) {
-        var id = this.GetCurrentVertexID();
+        var id;
+        var response;
+
+        //var id = this.GetCurrentVertexID();
+
+        response = this.Remote.CreateTransition(label, posx, posy);
+        if (!response.status) {
+            return this;
+        }
+        id = response.data.id;
 
         this.Graph.AddVertex(
             id,
@@ -73,11 +138,18 @@ var PetriStorage = function(app) {
     };
 
     this.AddConnection = function(source, target, cost) {
+        var response;
+
         if (this.Graph.GetEdgeBetween(source, target) !== null) {
             return this;
         }
 
         if (this.Graph.GetVertex(source).GetData().type === this.Graph.GetVertex(target).GetData().type) {
+            return this;
+        }
+
+        response = this.Remote.CreateConnection(source, target, cost);
+        if (!response.status) {
             return this;
         }
 
@@ -92,7 +164,15 @@ var PetriStorage = function(app) {
 
     this.RemovePlace = function(id) {
         var key;
-        var incidents = this.Graph.GetIncidentEdges(id);
+        var response;
+        var incidents;
+
+        response = this.Remote.RemoveVertex(id);
+        if (!response.status) {
+            return this;
+        }
+
+        incidents = this.Graph.GetIncidentEdges(id);
 
         for (key in incidents) {
             if (incidents.hasOwnProperty(key) !== false) {
@@ -106,7 +186,15 @@ var PetriStorage = function(app) {
 
     this.RemoveTransition = function(id) {
         var key;
-        var incidents = this.Graph.GetIncidentEdges(id);
+        var incidents;
+        var response;
+
+        response = this.Remote.RemoveVertex(id);
+        if (!response.status) {
+            return this;
+        }
+
+        incidents = this.Graph.GetIncidentEdges(id);
 
         for (key in incidents) {
             if (incidents.hasOwnProperty(key) !== false) {
@@ -120,6 +208,12 @@ var PetriStorage = function(app) {
 
     this.RemoveConnection = function(source, target) {
         var E;
+        var response;
+
+        response = this.Remote.RemoveConnection(source, target);
+        if (!response.status) {
+            return this;
+        }
 
         if ((E = this.Graph.GetEdgeBetween(source, target)) === null) {
             return this;

@@ -1,8 +1,6 @@
 var Ajax = function() {
 
     this.Request = function(url, params, callback) {
-        var status;
-
         $.ajax({
             url: url,
             type: 'POST',
@@ -10,15 +8,17 @@ var Ajax = function() {
             data: params,
             dataType: 'json',
             success: function(data, status) {
-                status = true;
-                callback(data, status);
+                if (data.status === true) {
+                    callback(data, status);
+                }
+                else {
+                    callback({}, false);
+                }
             },
             error: function() {
-                status = false;
+                callback({}, false);
             }
         });
-
-        return status;
     };
 
     return this;

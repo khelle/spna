@@ -19,15 +19,7 @@ var AppController = function() {
 
         evenement.Register(window, 'resize', $.proxy(app.AdjustAppSize, app));
         //evenement.Register(window, 'beforeunload', $.proxy(app.ExitMessage, app));
-        //window.onbeforeunload = app.ExitMessage;
-
-        //var canvas = this.app.GraphRenderer.GetCanvas();
-        //evenement.Register(
-        //    canvas, 'click', $.proxy(this.AddPlace, this)
-        //);
-        //evenement.Register(
-        //    canvas, 'contextmenu', $.proxy(this.AddTransition, this)
-        //);
+        window.onbeforeunload = app.ExitMessage;
 
         evenement.Register($('#btn-1')[0], 'click', $.proxy(app.BuildModeSwitch, app));
         evenement.Register($('#btn-2')[0], 'click', $.proxy(app.DemolishModeSwitch, app));

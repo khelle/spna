@@ -1,5 +1,6 @@
 var PetriStorage = function(app) {
     this.app    = app;
+    this.Remote = new RemotePetriStorage();
     this.Graph  = null;
     this.placeCurrentID      = 1;
     this.transitionCurrentID = 1;

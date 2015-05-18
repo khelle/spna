@@ -41,3 +41,7 @@ weight    - int
 POST /api/vertex/disconnect : void
 source	- int
 target	- int
+
+POST /api/edge/weight : void
+id	    - int
+weight	- int

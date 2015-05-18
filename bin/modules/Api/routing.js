@@ -5,12 +5,12 @@ var api = require('./Api');
 router.get('/graph', function(request, response) {
     var path = api.exportGraph();
 
-    if (path) {
-        response.json(createResponse(true, {path: path}));
+    if (path === false) {
+        response.json(createResponse(false, {}));
         return;
     }
 
-    response.json(createResponse(false, {}));
+    response.json(createResponse(true, {path: path}));
 });
 
 router.post('/graph/create', function(request, response) {
@@ -76,8 +76,12 @@ router.post('/vertex/connect', function(request, response) {
     var data = request.body;
     var id = api.connectVertex(data);
 
-    var status = id !== false;
-    response.json(createResponse(status, {id: id}));
+    if (id === false) {
+        response.json(createResponse(false, {}));
+        return;
+    }
+
+    response.json(createResponse(true, {id: id}));
 });
 
 router.post('/vertex/disconnect', function(request, response) {

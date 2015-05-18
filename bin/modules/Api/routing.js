@@ -7,6 +7,7 @@ router.get('/graph', function(request, response) {
 
     if (path) {
         response.json(createResponse(true, {path: path}));
+        return;
     }
 
     response.json(createResponse(false, {}));
@@ -23,6 +24,11 @@ router.post('/place/create', function(request, response) {
     var data = request.body;
     var id = api.createPlace(data);
 
+    if (id === false) {
+        response.json(createResponse(false, {}));
+        return;
+    }
+
     response.json(createResponse(true, {id: id}));
 });
 
@@ -36,6 +42,11 @@ router.post('/place/markers', function(request, response) {
 router.post('/transition/create', function(request, response) {
     var data = request.body;
     var id = api.createTransition(data);
+
+    if (id === false) {
+        response.json(createResponse(false, {}));
+        return;
+    }
 
     response.json(createResponse(true, {id: id}));
 });

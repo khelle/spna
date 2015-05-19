@@ -65,6 +65,11 @@ var PetriStorage = function(app) {
         var vertex;
         var response;
 
+        vertex = this.Graph.GetVertex(id).GetData();
+        if (~~vertex.x === ~~x && ~~vertex.y === ~~y) {
+            return;
+        }
+
         response = this.Remote.SetVertexPosition(id, x, y);
         if (!response.status) {
             return;

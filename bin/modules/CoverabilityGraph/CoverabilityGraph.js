@@ -56,6 +56,44 @@ function CoverabilityGraph(ptnGraph) {
             //for (var v in vertices){
             //   if(v === current) continue;
 
+            var vertices = this.graph.GetVertices();
+            var GotOLD = false;
+            var OLDWasCheckedAlready = false;
+
+            for(var v in vertices) {
+
+                if(vertices[v] === current) {
+                    //continue;
+                    //console.log("The same vertex");
+                } else {
+                    if(current.isEqual(vertices[v])) {
+
+                        console.log("current set to OLD");
+                        current.setLabel(State.OLD);
+
+                        this.addToMergeQueue(vertices[v]);
+                        this.addToMergeQueue(current);
+
+                        //IMPORTANT!
+                        GotOLD = true;
+                        if( this.graph.GetNeighbours(vertices[v].id).length > 0 ) {
+                            OLDWasCheckedAlready = true;
+                        }
+
+                        //break;
+                    }
+                }
+            }
+
+            //IMPORTANT!
+            if(GotOLD && !OLDWasCheckedAlready) {
+                console.log("DAYUM! current set BACK to NEW");
+                current.setLabel(State.NEW);
+            }
+
+
+
+            /*
             while( parent = this.getParent(parent) ) {
                 if(current.isEqual(parent)) {
 
@@ -69,6 +107,7 @@ function CoverabilityGraph(ptnGraph) {
                     break;
                 }
             }
+            */
 
             if(current.getLabel()==State.NEW) {
 
@@ -99,6 +138,7 @@ function CoverabilityGraph(ptnGraph) {
 
 
                         do {
+                            /*
                             if(newState.isEqual(innerparent)) {
                                 console.log("newState set to OLD");
                                 newState.setLabel(State.OLD);
@@ -108,6 +148,7 @@ function CoverabilityGraph(ptnGraph) {
 
                                 break;
                             }
+                            */
 
                             if(newState.setInfinity(innerparent)) {
                                 // TODO:

@@ -52,15 +52,9 @@ function CoverabilityGraph(ptnGraph) {
             current = list.pop();
 
             parent = current;
-            var vertices = this.graph.GetVertices();
-            for (var v in vertices){
 
-                if(v === current) continue;
-
-
-
-            //while( parent = this.getParent(parent) ) {
-                if(current.isEqual(vertices[v])) {
+            while( parent = this.getParent(parent) ) {
+                if(current.isEqual(parent)) {
 
                     console.log("current set to OLD");
                     current.setLabel(State.OLD);

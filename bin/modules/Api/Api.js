@@ -4,7 +4,7 @@ var NetProperties = require('../NetAnalysis');
 
 var Api = function() {
     this.exporter = new GraphExporter();
-    this.netProperties = null;
+    this.netProperties = new NetProperties();
     this.ptnGraph = null;
 
     this.exportGraph = function() {
@@ -14,6 +14,15 @@ var Api = function() {
 
         return false;
     };
+
+    this.analyzeGraph = function() {
+        try {
+            return this.netProperties.Analyze(this.ptnGraph);
+        } catch (e) {
+            return false;
+        }
+    };
+
 
     this.createGraph = function(data) {
         try {
@@ -34,7 +43,7 @@ var Api = function() {
 
     this.setPlaceMarkers = function(data) {
         try {
-            this.ptnGraph.getVertex(data.id).setMarkers(data.markers);
+            this.ptnGraph.getVertex(data.id).setMarkers(parseInt(data.markers));
             return true;
         } catch (e) {
             return false;
@@ -102,17 +111,6 @@ var Api = function() {
         try {
             this.ptnGraph.getEdge(data.id).data.weight = data.weight;
             return true;
-        } catch (e) {
-            return false;
-        }
-    };
-
-    this.analyze = function() {
-        try {
-            if (this.netProperties === null) {
-                this.netProperties = new NetProperties(this.ptnGraph);
-            }
-            return this.netProperties.Analyze();
         } catch (e) {
             return false;
         }

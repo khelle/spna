@@ -14,7 +14,7 @@ router.get('/graph', function(request, response) {
 });
 
 router.get('/graph/analyze', function(request, response) {
-    var analysis = api.analyze();
+    var analysis = api.analyzeGraph();
 
     if (analysis === false) {
         response.json(createResponse(false, {}));

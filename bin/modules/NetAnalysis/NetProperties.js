@@ -4,7 +4,8 @@
 
 var CoverabilityGraph = require('../CoverabilityGraph');
 var State = require('../State');
-function NetProperties(PTNGraph) {
+
+function NetProperties() {
 
 
 // TODO: metoda, która przejdzie po wszystkich węzłach grafu pokrycia (DFS, BFS)
@@ -19,10 +20,9 @@ function NetProperties(PTNGraph) {
     // graf pokrycia - scalamy węzły, które zwiększają tylko  1 miejsce do nieskończoności?
     // graf osiągalności - bez symbolu nieskończoności, sklejone duplikaty
 
-   this.PTNgraph = PTNGraph;
-   this.CoverabilityGraph = CoverabilityGraph(PTNGraph);
-   this.graph = this.CoverabilityGraph.graph;
-
+   this.PTNgraph = null;
+   this.CoverabilityGraph = null;
+   this.graph = null;
 
     this.KLimit = function ()
     {
@@ -65,7 +65,7 @@ function NetProperties(PTNGraph) {
         // JEŚLI CoverabilityGraph.isConservative = true - sprawdź:
         // Jeśli false- zwróc false
 
-        if(!graph.isConservative)
+        if(!this.CoverabilityGraph.isConservative)
         {
             return false;
         }
@@ -153,8 +153,10 @@ function NetProperties(PTNGraph) {
         return true;
     };
 
-    this.Analyze = function()
+    this.Analyze = function(PTNGraph)
     {
+        this.SetGraph(PTNGraph);
+
         return {
             "NetLimit": this.KLimit(),
             "Conservative": this.isConservative(),
@@ -163,8 +165,12 @@ function NetProperties(PTNGraph) {
         };
     };
 
-
-
+    this.SetGraph = function(PTNGraph)
+    {
+        this.PTNgraph = PTNGraph;
+        this.CoverabilityGraph = new CoverabilityGraph(PTNGraph);1
+        this.graph = this.CoverabilityGraph.graph;
+    };
 
     return this;
 

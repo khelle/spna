@@ -3,6 +3,8 @@ Pod routem jest lista parametrów, jakie należy przesłać jako obiekt json.
 
 GET /api/graph : string url - względna ścieżka do grafu
 
+GET /api/graph/analyze : json analyzis - obiekt zawierający właściwości grafu
+
 POST /api/graph/create : void
 name	- string
 

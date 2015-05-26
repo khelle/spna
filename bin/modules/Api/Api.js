@@ -1,8 +1,10 @@
 var PTNGraph = require('../PTNGraph');
 var GraphExporter = require('../GraphExporter');
+var NetProperties = require('../NetAnalysis');
 
 var Api = function() {
     this.exporter = new GraphExporter();
+    this.netProperties = null;
     this.ptnGraph = null;
 
     this.exportGraph = function() {
@@ -104,10 +106,24 @@ var Api = function() {
             return false;
         }
     };
+
+    this.analyze = function() {
+        try {
+            if (this.netProperties === null) {
+                this.netProperties = new NetProperties(this.ptnGraph);
+            }
+            return this.netProperties.Analyze();
+        } catch (e) {
+            return false;
+        }
+    };
 };
 
 function createPosition(data) {
-    return {x: data.posx, y: data.posy};
+    return {
+        x: data.posx,
+        y: data.posy
+    };
 }
 
 module.exports = new Api();

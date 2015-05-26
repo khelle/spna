@@ -13,6 +13,17 @@ router.get('/graph', function(request, response) {
     response.json(createResponse(true, {path: path}));
 });
 
+router.get('/graph/analyze', function(request, response) {
+    var analysis = api.analyze();
+
+    if (analysis === false) {
+        response.json(createResponse(false, {}));
+        return;
+    }
+
+    response.json(createResponse(true, {analysis: analysis}));
+});
+
 router.post('/graph/create', function(request, response) {
     var data = request.body;
     var status = api.createGraph(data);

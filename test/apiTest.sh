@@ -45,3 +45,8 @@ echo
 echo 'Set edge weight:'
 curl -X POST -H "Content-Type: application/json" localhost:3000/api/edge/weight -d '{"id": 1, "weight": 8}'
 echo
+
+echo 'Analyze graph:'
+curl localhost:3000/api/graph/analyze
+echo
+

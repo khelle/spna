@@ -1,8 +1,10 @@
 var PTNGraph = require('../PTNGraph');
 var GraphExporter = require('../GraphExporter');
+var NetProperties = require('../NetAnalysis');
 
 var Api = function() {
     this.exporter = new GraphExporter();
+    this.netProperties = new NetProperties();
     this.ptnGraph = null;
 
     this.exportGraph = function() {
@@ -12,6 +14,15 @@ var Api = function() {
 
         return false;
     };
+
+    this.analyzeGraph = function() {
+        try {
+            return this.netProperties.Analyze(this.ptnGraph);
+        } catch (e) {
+            return false;
+        }
+    };
+
 
     this.createGraph = function(data) {
         try {
@@ -32,7 +43,7 @@ var Api = function() {
 
     this.setPlaceMarkers = function(data) {
         try {
-            this.ptnGraph.getVertex(data.id).setMarkers(data.markers);
+            this.ptnGraph.getVertex(data.id).setMarkers(parseInt(data.markers));
             return true;
         } catch (e) {
             return false;
@@ -79,7 +90,7 @@ var Api = function() {
             var source = this.ptnGraph.getVertex(data.source);
             var target = this.ptnGraph.getVertex(data.target);
 
-            return source.connect(target);
+            return source.connect(target, data.weight);
         } catch (e) {
             return false;
         }
@@ -95,10 +106,22 @@ var Api = function() {
             return false;
         }
     };
+
+    this.setEdgeWeight = function(data) {
+        try {
+            this.ptnGraph.getEdge(data.id).data.weight = data.weight;
+            return true;
+        } catch (e) {
+            return false;
+        }
+    };
 };
 
 function createPosition(data) {
-    return {x: data.posx, y: data.posy};
+    return {
+        x: data.posx,
+        y: data.posy
+    };
 }
 
 module.exports = new Api();

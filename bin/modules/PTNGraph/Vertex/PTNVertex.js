@@ -4,7 +4,7 @@ var Utils = require('../../utils/Utils');
 
 /** Place class*/
 function Place(graph, label, position, markers) {
-    Vertex.call(this, graph, position, Utils.getValue(label, 'Place'));
+    Vertex.call(this, graph, Utils.getValue(label, 'Place'), position);
     this.setMarkers(Utils.getValue(markers, 0));
 }
 
@@ -67,7 +67,7 @@ Class.extend(Vertex, Place);
 
 /** Transition class */
 function Transition(graph, label, position, priority) {
-    Vertex.call(this, graph, position, Utils.getValue(label, 'Transition'));
+    Vertex.call(this, graph, Utils.getValue(label, 'Transition'), position);
     this.setPriority(Utils.getValue(priority, 0));
 }
 

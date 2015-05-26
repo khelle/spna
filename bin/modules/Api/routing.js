@@ -5,11 +5,23 @@ var api = require('./Api');
 router.get('/graph', function(request, response) {
     var path = api.exportGraph();
 
-    if (path) {
-        response.json(createResponse(true, {path: path}));
+    if (path === false) {
+        response.json(createResponse(false, {}));
+        return;
     }
 
-    response.json(createResponse(false, {}));
+    response.json(createResponse(true, {path: path}));
+});
+
+router.get('/graph/analyze', function(request, response) {
+    var analysis = api.analyzeGraph();
+
+    if (analysis === false) {
+        response.json(createResponse(false, {}));
+        return;
+    }
+
+    response.json(createResponse(true, {analysis: analysis}));
 });
 
 router.post('/graph/create', function(request, response) {
@@ -22,6 +34,11 @@ router.post('/graph/create', function(request, response) {
 router.post('/place/create', function(request, response) {
     var data = request.body;
     var id = api.createPlace(data);
+
+    if (id === false) {
+        response.json(createResponse(false, {}));
+        return;
+    }
 
     response.json(createResponse(true, {id: id}));
 });
@@ -36,6 +53,11 @@ router.post('/place/markers', function(request, response) {
 router.post('/transition/create', function(request, response) {
     var data = request.body;
     var id = api.createTransition(data);
+
+    if (id === false) {
+        response.json(createResponse(false, {}));
+        return;
+    }
 
     response.json(createResponse(true, {id: id}));
 });
@@ -65,13 +87,24 @@ router.post('/vertex/connect', function(request, response) {
     var data = request.body;
     var id = api.connectVertex(data);
 
-    var status = id !== false;
-    response.json(createResponse(status, {id: id}));
+    if (id === false) {
+        response.json(createResponse(false, {}));
+        return;
+    }
+
+    response.json(createResponse(true, {id: id}));
 });
 
 router.post('/vertex/disconnect', function(request, response) {
     var data = request.body;
     var status = api.disconnectVertex(data);
+
+    response.json(createResponse(status, {}));
+});
+
+router.post('/edge/weight', function(request, response) {
+    var data = request.body;
+    var status = api.setEdgeWeight(data);
 
     response.json(createResponse(status, {}));
 });

@@ -571,9 +571,13 @@ var GraphRenderer = function(app, renderingRoot) {
             this.blockclick = true;
             this.AddConnection(this.selectedNode, node.storageID);
         }
-        else {
+        else if (this.selectedNode !== node.storageID) {
             this.blockclick = true;
             this.SelectNode(node.storageID);
+        }
+        else {
+            this.blockclick = true;
+            this.DeselectNode(this.selectedNode);
         }
     };
 

@@ -22,6 +22,10 @@ echo 'Disconnect nodes:'
 curl -X POST -H "Content-Type: application/json" localhost:3000/api/vertex/disconnect -d '{"source": 0, "target": 2}'
 echo
 
+echo 'Connect nodes again:'
+curl -X POST -H "Content-Type: application/json" localhost:3000/api/vertex/connect -d '{"source": 0, "target": 2}'
+echo
+
 echo 'Remove nodes:'
 curl -X POST -H "Content-Type: application/json" localhost:3000/api/vertex/remove -d '{"id": 1}'
 echo
@@ -37,3 +41,12 @@ echo
 echo 'Set place position:'
 curl -X POST -H "Content-Type: application/json" localhost:3000/api/vertex/position -d '{"id": 0, "posx": 3, "posy": 8}'
 echo
+
+echo 'Set edge weight:'
+curl -X POST -H "Content-Type: application/json" localhost:3000/api/edge/weight -d '{"id": 1, "weight": 8}'
+echo
+
+echo 'Analyze graph:'
+curl localhost:3000/api/graph/analyze
+echo
+

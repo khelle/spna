@@ -5,8 +5,9 @@ var Ajax = function() {
             url: url,
             type: 'POST',
             async: false,
-            data: params,
+            data: JSON.stringify(params),
             dataType: 'json',
+            contentType: "application/json",
             success: function(data, status) {
                 if (data.status === true) {
                     callback(data, status);

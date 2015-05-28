@@ -3,8 +3,8 @@ var Class = require('../../utils/Class');
 var Utils = require('../../utils/Utils');
 
 /** Place class*/
-function Place(graph, label, position, markers) {
-    Vertex.call(this, graph, Utils.getValue(label, 'Place'), position);
+function Place(ptnGraph, graph, label, position, markers) {
+    Vertex.call(this, ptnGraph, graph, Utils.getValue(label, 'Place'), position);
     this.setMarkers(Utils.getValue(markers, 0));
 }
 
@@ -66,14 +66,18 @@ Place.prototype = {
 Class.extend(Vertex, Place);
 
 /** Transition class */
-function Transition(graph, label, position, priority) {
-    Vertex.call(this, graph, Utils.getValue(label, 'Transition'), position);
+function Transition(ptnGraph, graph, label, position, priority) {
+    Vertex.call(this, ptnGraph, graph, Utils.getValue(label, 'Transition'), position);
     this.setPriority(Utils.getValue(priority, 0));
 }
 
 Transition.prototype = {
     getPriority: function() {
-        return this.priority;
+        if (this.ptnGraph.hasPriorities()) {
+            return this.priority;
+        }
+
+        return 1;
     },
 
     setPriority: function(priority) {

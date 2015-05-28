@@ -7,9 +7,10 @@ var PTNVertex = require('./Vertex/PTNVertex');
 var Transition = PTNVertex.Transition;
 var Place = PTNVertex.Place;
 
-function PTNGraph(name) {
+function PTNGraph(name, priorities) {
     this.graph = new Graph(new VertexStorage(['Place', 'Transition']), new EdgeStorage());
     this.setName(Utils.getValue(name, 'Graph'));
+    this.setPriorities(Utils.getValue(priorities, true));
 }
 
 PTNGraph.prototype = {
@@ -22,12 +23,21 @@ PTNGraph.prototype = {
         return this;
     },
 
+    setPriorities: function(priorities) {
+        this.priorities = priorities;
+        return this;
+    },
+
+    hasPriorities: function() {
+        return this.priorities;
+    },
+
     getPlaces: function() {
         return this.graph.GetVertices()['Place'];
     },
 
     createPlace: function(label, markers, position) {
-        return this.graph.AddVertex(new Place(this.graph, label, position, markers));
+        return this.graph.AddVertex(new Place(this, this.graph, label, position, markers));
     },
 
     getTransitions: function() {
@@ -35,7 +45,7 @@ PTNGraph.prototype = {
     },
 
     createTransition: function(label, priority, position) {
-        return this.graph.AddVertex(new Transition(this.graph, label, position, priority));
+        return this.graph.AddVertex(new Transition(this, this.graph, label, position, priority));
     },
 
     getVertex: function(id) {
@@ -115,7 +125,7 @@ PTNGraph.prototype = {
 
 
     print: function() {
-        var string = 'Graph: ' + this.name;
+        var string = 'Graph: ' + this.name + ', Priorities: ' + this.priorities;
 
         string += "\nPlaces:\n\t";
 
@@ -135,6 +145,10 @@ PTNGraph.prototype = {
     },
 
     serialize: function() {
+        var serializedGraph = {
+            priorities: this.priorities
+        };
+
         var vertices = this.graph.GetVertices();
         var v = [];
 
@@ -144,14 +158,18 @@ PTNGraph.prototype = {
             }
         }
 
-        return JSON.stringify(v);
+        serializedGraph['vertices'] = v;
+
+        return JSON.stringify(serializedGraph);
     },
 
     deserialize: function(json) {
-        var vertices = JSON.parse(json);
+        var serializedGraph = JSON.parse(json);
 
-        for (var i in vertices) {
-            var vertex = vertices[i];
+        this.setPriorities(serializedGraph['priorities']);
+
+        for (var i in serializedGraph['vertices']) {
+            var vertex = serializedGraph['vertices'][i];
 
             if (vertex.type === 'Place') {
                 this.createPlace(vertex.label, vertex.markers, vertex.position);

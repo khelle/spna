@@ -23,6 +23,14 @@ var Api = function() {
         }
     };
 
+    this.setGraphPriorities = function (data) {
+        try {
+            this.ptnGraph.setPriorities(data.priorities);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    };
 
     this.createGraph = function(data) {
         try {

@@ -171,6 +171,7 @@ var PetriStorage = function(app) {
         var key;
         var response;
         var incidents;
+        var eid;
 
         response = this.Remote.RemoveVertex(id);
         if (!response.status) {
@@ -178,10 +179,10 @@ var PetriStorage = function(app) {
         }
 
         incidents = this.Graph.GetIncidentEdges(id);
-
         for (key in incidents) {
             if (incidents.hasOwnProperty(key) !== false) {
-                this.Graph.RemoveEdge(key);
+                eid = incidents[key];
+                this.Graph.RemoveEdge(eid);
             }
         }
 
@@ -193,6 +194,7 @@ var PetriStorage = function(app) {
         var key;
         var incidents;
         var response;
+        var eid;
 
         response = this.Remote.RemoveVertex(id);
         if (!response.status) {
@@ -203,7 +205,8 @@ var PetriStorage = function(app) {
 
         for (key in incidents) {
             if (incidents.hasOwnProperty(key) !== false) {
-                this.Graph.RemoveEdge(key);
+                eid = incidents[key];
+                this.Graph.RemoveEdge(eid);
             }
         }
 

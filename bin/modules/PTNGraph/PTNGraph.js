@@ -83,14 +83,18 @@ PTNGraph.prototype = {
     findPrioritizedTransitionsToExecute: function(AllTransitions) {
         //var AllTransitions = this.findTransitoionsToExecute();
 
-        for (var i in trasitions) {
-            for (var j in transitions){
+        for (var i in AllTransitions) {
+            for (var j in AllTransitions){
             // nazwa funkcji od małej litert - PTN GRAPH
                 if (AllTransitions[i] !== AllTransitions[j]){
-                    // czy współdzielą chociaż jeden zasób?
+                    // czy para wierzchołków współdzieli chociaż jeden zasób?
                     iPrecedecesors = AllTransitions[i].getReferencing();
                     jPrecedecesors = AllTransitions[j].getReferencing();
                     var intersection = Array.intersect(iPrecedecesors,jPrecedecesors);
+                    if (!intersection.isEmpty) //
+                    {
+
+                    }
                     console.log(intersection);
                 }
             }

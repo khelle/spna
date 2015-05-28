@@ -34,17 +34,22 @@ function NetProperties() {
             //
         // jeśli któryś z węzłów ma więcej niż k znaczników zwróć fałsz
         var vertices = this.graph.GetVertices();
-        var maxK = 1;
+        var maxK = 0;
         for (var v in vertices) // v to indeks a nie obiekt!!!
         {
             var state = vertices[v].getState();
             var tmp = 0;
+            //console.log("State : " + state);
+
             for(var m in state)
             {
                 tmp = Math.max(state[m]);
+                //console.log("m =" + m + ", tmp = " + tmp + ", maxK = " + maxK);
+                if (tmp > maxK) maxK = tmp;
             }
-            if (tmp > maxK) maxK = tmp;
+
          }
+        //console.log("Finallly, maxK = " + maxK);
         return maxK; // funkcja może zwrócić nieskończoność!!!
         // TODO: sprawdzić obliczanie max
     };

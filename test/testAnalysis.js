@@ -68,9 +68,10 @@ console.log( g.print() );
 
 
 
-var testing = new NetProperties(g);
+var testing = new NetProperties();
+testing.Analyze(g);
 var graphVertices = testing.graph.GetVertices();
-console.log(graphVertices);
+//console.log(graphVertices);
 
 var graphVerticesCount = testing.graph.GetVerticesCount();
 console.log(graphVerticesCount);

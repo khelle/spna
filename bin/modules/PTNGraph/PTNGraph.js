@@ -1,4 +1,5 @@
 var Utils = require('../utils/Utils');
+var Array = require('../utils/Array');
 var Graph = require('../Graph/DirectedGraph');
 var VertexStorage = require('../Graph/TypedVertexStorage');
 var EdgeStorage = require('../Graph/DenseDirectedEdgeStorage');
@@ -10,6 +11,7 @@ var Place = PTNVertex.Place;
 function PTNGraph(name) {
     this.graph = new Graph(new VertexStorage(['Place', 'Transition']), new EdgeStorage());
     this.setName(Utils.getValue(name, 'Graph'));
+
 }
 
 PTNGraph.prototype = {
@@ -64,6 +66,28 @@ PTNGraph.prototype = {
         }
 
         return ExecutableTransitions;
+    },
+
+
+
+
+    findPrioritizedTransitionsToExecute: function(AllTransitions) {
+        //var AllTransitions = this.findTransitoionsToExecute();
+
+        for (var i in trasitions) {
+            for (var j in transitions){
+            // nazwa funkcji od małej litert - PTN GRAPH
+                if (AllTransitions[i] !== AllTransitions[j]){
+                    // czy współdzielą chociaż jeden zasób?
+                    iPrecedecesors = AllTransitions[i].getReferencing();
+                    jPrecedecesors = AllTransitions[j].getReferencing();
+                    var intersection = Array.intersect(iPrecedecesors,jPrecedecesors);
+                    console.log(intersection);
+                }
+            }
+
+        }
+
     },
 
     /*

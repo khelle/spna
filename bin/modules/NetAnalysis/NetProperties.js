@@ -173,7 +173,7 @@ function NetProperties() {
     this.SetGraph = function(PTNGraph)
     {
         this.PTNgraph = PTNGraph;
-        this.CoverabilityGraph = new CoverabilityGraph(PTNGraph);1
+        this.CoverabilityGraph = new CoverabilityGraph(PTNGraph);
         this.graph = this.CoverabilityGraph.graph;
     };
 

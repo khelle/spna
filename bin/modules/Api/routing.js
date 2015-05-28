@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var api = require('./Api');
 
-router.get('/graph', function(request, response) {
+router.get('/graph/export', function(request, response) {
     var path = api.exportGraph();
 
     if (path === false) {
@@ -22,6 +22,13 @@ router.get('/graph/analyze', function(request, response) {
     }
 
     response.json(createResponse(true, {analysis: analysis}));
+});
+
+router.post('/graph/priorities', function(request, response) {
+    var data = request.body;
+    var status = api.setGraphPriorities(data);
+
+    response.json(createResponse(status, {}));
 });
 
 router.post('/graph/create', function(request, response) {

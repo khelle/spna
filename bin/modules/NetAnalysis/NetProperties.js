@@ -188,10 +188,10 @@ function NetProperties() {
      żadnym ciągu przejsć należących  do  zbioru  L(M0)
       */
 
-    this.getDeadTransitions = function () {
+    this.getTransitionsVitality = function () {
 
         /*
-        Zwróć nazwy martwych przejść w sieci
+        Zwróć tablicę obiektów postaci { transitionName: 't0', vitality: 'L0' }
          */
         var transitionsPTN = this.PTNgraph.getTransitions();
         var edges = this.graph.GetEdges();
@@ -210,15 +210,36 @@ function NetProperties() {
             var num = transitionsCover[i];
             counts[num] = counts[num] ? counts[num]+1 : 1;
         }
-        var deadTransitions = [];
+
+        var transitionsVitality = [];
         for(var p in transitionsPTN)
         {
-            if(counts[transitionsPTN[p]] === undefined) deadTransitions.push(transitionsPTN[p]);
-        }
-        console.log("Dead = " + deadTransitions);
+            if(counts[transitionsPTN[p]] === undefined)
+            {
+                transitionsVitality.push({transitionName: transitionsPTN[p].label, vitality: 'L0'});
+            }
+            else  (counts[transitionsPTN[p]] )
+            {
+                transitionsVitality.push({transitionName: transitionsPTN[p].label, vitality: 'L1'});
+            }
+            /*
+            TODO: sprawdzenie innych stopni żywotności
 
-        //TODO: inne definicje żywotności przejścia?
-        return deadTransitions;
+             Przejście t  sieci  N  jest L2 - żywe  wtedy i tylko  wtedy  , gdy dla dowolnej  liczby
+             k  istnieje  droga  w  grafie  osiągalności/pokrycia,  w  której  co  najmniej  k  raz  występuje  łuk
+             z  etykietą t.
+
+             L3 - musi być pętla, w której jedna z krawędzi ma etykietę t (wykrywanie pętli DFS)
+             L4 -  Jeżeli  graf osiągalności jest  grafem  silnie  spójnym  i  występuje  w  nim  łuk z  etykietą  t,
+             to  przejście t jest  żywe ( L4 - żywe) .
+             */
+
+
+
+        }
+        //console.log(transitionsVitality);
+
+        return transitionsVitality;
 
     };
 

@@ -129,4 +129,4 @@ var graphVertices = testing.graph.GetVertices();
 var graphVerticesCount = testing.graph.GetVerticesCount();
 console.log("Size of coverability graph: " + graphVerticesCount);
 
-testing.getVitalTransitions();
+testing.getTransitionsVitality();

@@ -66,16 +66,32 @@ function NetProperties() {
     };
 
 
-    this.isConservative = function () { // TODO: Potrzebuję do testu sieci, w której nie pojawiają się nieskończoności w grafie pokrycia
+    this.isConservative = function (weightsVector) { // TODO: Potrzebuję do testu sieci, w której nie pojawiają się nieskończoności w grafie pokrycia
         // JEŚLI CoverabilityGraph.isConservative = true - sprawdź:
         // Jeśli false- zwróc false
+        // TODO: czy takie rozwiazanie z argumentem domyślnym dla funkcji jest ok?
+        //TODO: co powinniśmy zwrócić użytkownikowi w przypadku podania wektora wag o złej długości
+        //TODO: jak użytkownik poda wektor (przycisk + osobne okienko dialogowe?)
+        var vertices = this.graph.GetVertices();
+        var sums = [];
+        var sampleState = undefined;
 
-        if(!this.CoverabilityGraph.isConservative)
-        {
-            return false;
+
+        if (typeof(weightsVector)==='undefined'){
+            weightsVector = [];
+            // TODO: jak mogę pobrać pierwszy stan (pierwszy element tablicy)?
+            for (var s in vertices)
+            {
+                sampleState = vertices[s].getState();
+                break;
+            }
+            for(var i in sampleState)
+            // TODO: dlaczego nie mogę pobrać rozmiaru stanu metodą size/length?
+            {
+                weightsVector.push(1);
+            }
+            console.log("weightsVector: " + weightsVector);
         }
-        var sum = null;
-        var sumPrev = null;
 
         // sieć jest zachowawcza, jeśli  łączna liczba znaczników
         // w sieci pozostaje stała dla każdego znakowania
@@ -89,6 +105,7 @@ function NetProperties() {
         // we wszystkich getState, klasa State;
 
         // jeśli gdziekolwiek w grafie pokrycia pojawi się nam symbol nieskończnoności, to sieć nie jest zachowawcza
+
         var vertices = this.graph.GetVertices();
         var sums = [];
 
@@ -98,18 +115,20 @@ function NetProperties() {
             var sum = 0;
             for(var m in state)
             {
-                sum  +=  state[m];
+                sum  +=  state[m] * weightsVector[m];
             }
-            console.log(sum);
+            if(sum === Infinity) return false;
+            console.log("Sum in state " + i + " = " + sum);
             sums.push(sum);
         }
-        console.log(sums);
-        for (var s in sums)
+        console.log("Sums of markers in each state: " + sums);
+        for (var s = 0; s < sums.length - 1; s++)
         {
-            if( (sums[i]-sums[i-1]) !== 0) return false;
+            if( (sums[s+1]-sums[s]) !== 0) return false;
         }
         return true;
     };
+
 
     this.isReversable = function () {
         // sieć jest odwracalna, jeśli z każdego znakowania M, stan początkowy M0 jest z niego osiągalny

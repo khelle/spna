@@ -29,6 +29,7 @@ var g = new PTNGraph('G1');     // create a new Graph
 //t1.connectPlace(p1,1);
 
 //* COMPLEX EX1:
+/*
 var p1 = g.createPlace('p1',1);
 var p2 = g.createPlace('p2',0);
 
@@ -51,10 +52,27 @@ t1.connect(p1,1);
 p3.connect(t2,1);
 t2.connect(p3,1);
 t2.connect(p4,1);
+*/
 
+// Przykłąd z książki Szypyrki, strona 25
+var p1 = g.createPlace('p1',1);
+var p2 = g.createPlace('p2',0);
+var p3 = g.createPlace('p3',4);
 
+var t1 = g.createTransition('t1');
+var t2 = g.createTransition('t2');
+var t3 = g.createTransition('t3');
+var t4 = g.createTransition('t4');
 
+p1.connect(t2,1);
+p2.connect(t1,1);
+p3.connect(t3,1);
+p3.connect(t4,1);
 
+t1.connect(p1,1);
+t2.connect(p3,1);
+t3.connect(p2,1);
+t4.connect(p1,1); //sieć przestanie być zachowawacza, gdy zwiększymy wagę tego przejścia
 console.log( g.print() );
 
 //console.log( g.findTransitionsToExecute() );
@@ -69,13 +87,16 @@ console.log( g.print() );
 
 
 var testing = new NetProperties();
-testing.Analyze(g);
+console.log(testing.Analyze(g));
+
+//TODO: jak przekażemy analizie grafu wektor wag względem którego badamy zachowawczość sieci
 var graphVertices = testing.graph.GetVertices();
 //console.log(graphVertices);
 
 var graphVerticesCount = testing.graph.GetVerticesCount();
-console.log(graphVerticesCount);
+console.log("Size of coverability graph: " + graphVerticesCount);
 
+/*
 console.log("Limit: " + testing.KLimit());
 console.log("Is secure? " + testing.isSecure());
 console.log("Is unlimited? " + testing.isUnLimited());
@@ -83,3 +104,4 @@ console.log("Is conservative? " + testing.isConservative());
 console.log("Is reversable? " + testing.isReversable());
 console.log("Is vital? " + testing.isVital());
 console.log(testing.Analyze());
+ */

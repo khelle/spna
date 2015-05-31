@@ -16,6 +16,8 @@ var AppController = function() {
         var evenement = app.Evenement;
         var keyboard  = app.Keyboard;
         var renderer  = app.Renderer;
+        var media     = app.Media;
+        var analyzer  = app.Analyzer;
 
         evenement.Register(window, 'resize', $.proxy(app.AdjustAppSize, app));
         //evenement.Register(window, 'beforeunload', $.proxy(app.ExitMessage, app));
@@ -29,6 +31,9 @@ var AppController = function() {
         evenement.Register($('#btn-5')[0], 'click', $.proxy(app.SaveCameraPosition, app));
         evenement.Register($('#btn-6')[0], 'click', $.proxy(app.RestoreCameraPosition, app));
         evenement.Register($('#btn-7')[0], 'click', $.proxy(renderer.ResetCameraPosition, renderer));
+        evenement.Register($('#btn-8')[0], 'click', $.proxy(media.PrepareDownload, media));
+        evenement.Register($('#btn-9')[0], 'click', $.proxy(media.PrepareUpload, media));
+        evenement.Register($('#btn-10')[0], 'click', $.proxy(analyzer.DownloadAnalysis, analyzer));
 
         keyboard.BindKeyIn(
             keyboard.KEY.LCTRL, 'BuildModeActivator', $.proxy(app.BuildModeOn, app)

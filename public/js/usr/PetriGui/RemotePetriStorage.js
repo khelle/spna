@@ -1,11 +1,11 @@
-var RemotePetriStorage = function() {
-    this.ajax = new Ajax();
+var RemotePetriStorage = function(ajax) {
+    this.ajax = ajax;
 
     this.UseGraph = function(name) {
         var response;
         var status;
 
-        this.ajax.Request(
+        this.ajax.HttpPost(
             "/api/graph/create",
             {
                 name: name
@@ -23,7 +23,7 @@ var RemotePetriStorage = function() {
         var response;
         var status;
 
-        this.ajax.Request(
+        this.ajax.HttpPost(
             "/api/place/create",
             {
                 label: label,
@@ -44,7 +44,7 @@ var RemotePetriStorage = function() {
         var response;
         var status;
 
-        this.ajax.Request(
+        this.ajax.HttpPost(
             "/api/transition/create",
             {
                 label: label,
@@ -64,7 +64,7 @@ var RemotePetriStorage = function() {
         var response;
         var status;
 
-        this.ajax.Request(
+        this.ajax.HttpPost(
             "/api/place/markers",
             {
                 id: id,
@@ -83,7 +83,7 @@ var RemotePetriStorage = function() {
         var response;
         var status;
 
-        this.ajax.Request(
+        this.ajax.HttpPost(
             "/api/vertex/label",
             {
                 id: id,
@@ -102,7 +102,7 @@ var RemotePetriStorage = function() {
         var response;
         var status;
 
-        this.ajax.Request(
+        this.ajax.HttpPost(
             "/api/vertex/position",
             {
                 id: id,
@@ -122,7 +122,7 @@ var RemotePetriStorage = function() {
         var response;
         var status;
 
-        this.ajax.Request(
+        this.ajax.HttpPost(
             "/api/vertex/remove",
             {
                 id: id
@@ -140,7 +140,7 @@ var RemotePetriStorage = function() {
         var response;
         var status;
 
-        this.ajax.Request(
+        this.ajax.HttpPost(
             "/api/vertex/connect",
             {
                 source: source,
@@ -160,7 +160,7 @@ var RemotePetriStorage = function() {
         var response;
         var status;
 
-        this.ajax.Request(
+        this.ajax.HttpPost(
             "/api/vertex/disconnect",
             {
                 source: source,
@@ -179,7 +179,7 @@ var RemotePetriStorage = function() {
         var response;
         var status;
 
-        this.ajax.Request(
+        this.ajax.HttpPost(
             "/api/edge/weight",
             {
                 id: id,

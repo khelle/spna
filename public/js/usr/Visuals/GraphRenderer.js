@@ -664,6 +664,29 @@ var GraphRenderer = function(app, renderingRoot) {
         var curl  = canv.toDataURL( "image/jpeg", 1.0 );
         var saver = document.getElementById('canvas-download');
 
+        var app = this.app;
+        var message = 'File is being downloaded. If you don\'t see downloading wind, please go to your browser default downloading directory.';
+        app.PromptMessage(
+            'Downloading File...',
+            message,
+            [
+                {
+                    type: 'close',
+                    fn: function() {
+                        app.ClosePromptMessage();
+                    }
+                }
+            ],
+            [
+                {
+                    name: 'OK',
+                    fn: function() {
+                        app.ClosePromptMessage();
+                    }
+                }
+            ]
+        );
+
         saver.href = curl;
         saver.click();
 

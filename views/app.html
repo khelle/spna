@@ -68,6 +68,8 @@
     <script content="text/javascript" src="/js/usr/Utils/Evenement.js"></script>
     <script content="text/javascript" src="/js/usr/Utils/Mode.js"></script>
     <script content="text/javascript" src="/js/usr/Utils/ModeManager.js"></script>
+    <script content="text/javascript" src="/js/usr/Utils/MediaManager.js"></script>
+    <script content="text/javascript" src="/js/usr/Utils/Analyzer.js"></script>
     <script content="text/javascript" src="/js/usr/Http/Ajax.js"></script>
     <script content="text/javascript" src="/js/usr/PetriGui/PetriNode.js"></script>
     <script content="text/javascript" src="/js/usr/PetriGui/PetriEdge.js"></script>
@@ -103,12 +105,10 @@
         <input id="canvas-zoom-input" class="header-opt" type="range" min="0" max="56" value="0">
         <div class="app-button-delimiter"></div>
         <div class="app-button" id="btn-4"></div>
-        <div class="app-button-delimiter"></div>
         <div class="app-button" id="btn-8"></div>
         <div class="app-button" id="btn-9"></div>
+        <div class="app-button-delimiter"></div>
         <div class="app-button" id="btn-10"></div>
-        <div class="app-button" id="btn-11"></div>
-        <div class="app-button" id="btn-12"></div>
     </div>
 
     <div id="box-body">
@@ -119,10 +119,17 @@
         </div>
     </div>
 
-    <a href="#" id="canvas-download" download="petri-network"></a>
+    <a href="#" id="canvas-download" download="network-image.png"></a>
     <div id="temp-canvas-container">
         <div id="temp-canvas"></div>
     </div>
+
+    <a href="#" id="graph-download" download="network-graph.json"></a>
+
+    <form id="graph-upload">
+        <input type="file" id="graph-upload-file" name="files[]">
+        <input type="submit" id="graph-upload-submit" value="upload">
+    </form>
 
     <div id="tooltip-box" style="display:none;">
         <div class="tooltip" id="tooltip-place-data" style="display:none;">
@@ -141,6 +148,15 @@
         </div>
     </div>
 
+    <div id="prompt-layer" style="display:none;">
+        <div id="prompt-bg" class="fog"></div>
+
+        <div id="prompt-box" class="prompt">
+            <div id="prompt-header"></div>
+            <div id="prompt-message"></div>
+            <div id="prompt-buttons" class="buttons"></div>
+        </div>
+    </div>
 </div>
 
 </body>

@@ -6,6 +6,8 @@ var AppModel = function() {
     this.Renderer    = null;
     this.Evenement   = null;
     this.ModeManager = null;
+    this.Media       = null;
+    this.Analyzer    = null;
 
     this.MODES = {
         BUILD:      'build',
@@ -15,10 +17,12 @@ var AppModel = function() {
     this.Init = function() {
         this.box         = $('#box');
         this.Keyboard    = new Keyboard();
-        this.Storage     = new PetriStorage(this);
+        this.Storage     = new PetriStorage(this, new Ajax());
         this.Renderer    = new GraphRenderer(this, document.querySelector('#graph-canvas'));
         this.Evenement   = new Evenement(this);
         this.ModeManager = new ModeManager(this);
+        this.Media       = new MediaManager(this, new Ajax());
+        this.Analyzer    = new Analyzer(this, new Ajax());
 
         this
             .AdjustAppSize()
@@ -169,6 +173,107 @@ var AppModel = function() {
         });
 
         return this;
+    };
+
+    this.PromptMessage = function(title, message, icons, buttons) {
+        icons = icons || [];
+        buttons = buttons || [];
+
+        var promptLayer;
+        var promptHeader;
+        var promptMessage;
+        var promptButtons;
+        var i;
+        var icon;
+        var button;
+
+        promptLayer = this.box.find('#prompt-layer');
+        promptHeader  = promptLayer.find('#prompt-header');
+        promptMessage = promptLayer.find('#prompt-message');
+        promptButtons = promptLayer.find('#prompt-buttons');
+
+        promptLayer.stop().css({
+            display: 'block',
+            opacity: 1
+        });
+
+        promptHeader.html('');
+        for (i in icons) {
+            if (icons.hasOwnProperty(i) !== false) {
+                icon = icons[i];
+
+                promptHeader.append(
+                    this.GenerateButton('', 'prompt-icon', icon.fn)
+                )
+            }
+        }
+        promptHeader.append(
+            '<label class="prompt-title">' + title + '</label>'
+        );
+
+        promptMessage.html(message);
+
+        promptButtons.html('');
+        for (i in buttons) {
+            if (buttons.hasOwnProperty(i) !== false) {
+                button = buttons[i];
+
+                promptButtons.append(
+                    this.GenerateButton(button.name, 'prompt-button', button.fn)
+                )
+            }
+        }
+
+        this.AdjustPromptSize();
+
+        return this;
+    };
+
+    this.ClosePromptMessage = function() {
+        var promptLayer;
+
+        promptLayer = this.box.find('#prompt-layer');
+
+        promptLayer.stop().animate({
+            opacity: 0
+        }, 200, "linear", function() {
+            $(this).css({
+                display: 'none'
+            });
+        });
+
+        return this;
+    };
+
+    this.GenerateButton = function(name, type, fn) {
+        var button;
+
+        button = document.createElement('div');
+        button.innerHTML = name;
+        button.className = type;
+        button.onclick = fn;
+
+        return button;
+    };
+
+    this.AdjustPromptSize = function() {
+        var promptBox;
+        var w;
+        var h;
+        var layerWidth;
+        var layerHeight;
+
+        promptBox = this.box.find('#prompt-box');
+
+        w = $(window).width();
+        h = $(window).height();
+        layerWidth  = promptBox.width();
+        layerHeight = promptBox.height();
+
+        promptBox.css({
+            left: ~~((w-layerWidth)*0.5),
+            top: ~~((h-layerHeight)*0.4)
+        });
     };
 
     return this;

@@ -90,7 +90,7 @@ function NetProperties() {
             {
                 weightsVector.push(1);
             }
-            console.log("weightsVector: " + weightsVector);
+            //console.log("weightsVector: " + weightsVector);
         }
 
         // sieć jest zachowawcza, jeśli  łączna liczba znaczników
@@ -118,7 +118,7 @@ function NetProperties() {
                 sum  +=  state[m] * weightsVector[m];
             }
             if(sum === Infinity) return false;
-            console.log("Sum in state " + i + " = " + sum);
+            //console.log("Sum in state " + i + " = " + sum);
             sums.push(sum);
         }
         console.log("Sums of markers in each state: " + sums);
@@ -131,11 +131,16 @@ function NetProperties() {
 
 
     this.isReversable = function () {
-        // sieć jest odwracalna, jeśli z każdego znakowania M, stan początkowy M0 jest z niego osiągalny
-        // sprawdzić, czy dla każdego węzła z grafu osiągalności (pokrycia?) istnieje ścieżka prowadząca do korzenia grafu?
+       /*
+        Sieć N  jest  odwracalna  wtedy  i  tylko  wtedy  ,  gd  wszytkie  znakowania  są jej  znakowaniami  własnymi.
+        Znakowanie  M  sieci  N  nazywamy  znakowaniem  własnym jeżeli  jest  osiągalne z  dowolnego  znakowania
 
-        // Przejdź po wszystkich węzłach grafu pokrycia, dla węzła i:
-            // Sprawdź, czy istnieje ścieżka prowadząca z powrotem
+
+        Sieć N  nazywamy  odwracalną, jeżeli  znakowanie  początkowe jest  osiągalne
+        z  każdego znakowania.
+
+        Dla każdego wierzchołka w grafie pokrycia sprawdź, czy da się dojść do niego z każde
+        */
         var vertices = this.graph.GetVertices();
         var root = this.CoverabilityGraph.treeRoot;
         console.log("Root: " + root.id);
@@ -175,6 +180,46 @@ function NetProperties() {
             // to znaczy że sieć może utknąć w martwym punkcie (zakleszczyć się) -> nie jest żywotna
         }
         return true;
+    };
+
+    /*
+     Żywotność przejścia  oznacza,  że  zawsze  ma  on szansę ponownie być aktywne.
+     Przejście  t  nazywamy  martvvym  ( LO - zywym ) .  jeżeli  przejscie  t  nie  występuje
+     żadnym ciągu przejsć należących  do  zbioru  L(M0)
+      */
+
+    this.getDeadTransitions = function () {
+
+        /*
+        Zwróć nazwy martwych przejść w sieci
+         */
+        var transitionsPTN = this.PTNgraph.getTransitions();
+        var edges = this.graph.GetEdges();
+
+        var transitionsCover = [];
+        for(var j in edges){
+            var e = edges[j];
+            transitionsCover.push(e.data.transition);
+            console.log("Edge = " + e.data.transition);
+        }
+        console.log("TransitionsCover : " + transitionsCover);
+        var counts = {};
+
+        // mapa - nazwa przejścia : ilość wystąpienia przejścia w grafie pokrycia
+        for(var i = 0; i< transitionsCover.length; i++) {
+            var num = transitionsCover[i];
+            counts[num] = counts[num] ? counts[num]+1 : 1;
+        }
+        var deadTransitions = [];
+        for(var p in transitionsPTN)
+        {
+            if(counts[transitionsPTN[p]] === undefined) deadTransitions.push(transitionsPTN[p]);
+        }
+        console.log("Dead = " + deadTransitions);
+
+        //TODO: inne definicje żywotności przejścia?
+        return deadTransitions;
+
     };
 
     this.Analyze = function(PTNGraph)

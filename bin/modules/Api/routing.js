@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var api = require('./Api');
 
-router.get('/graph/export', function(request, response) {
+router.get('/graph', function(request, response) {
     var path = api.exportGraph();
 
     if (path === false) {
@@ -11,6 +11,11 @@ router.get('/graph/export', function(request, response) {
     }
 
     response.json(createResponse(true, {path: path}));
+});
+
+// TODO implement after the format has been settled
+router.post('/graph', function(request, response) {
+    response.json(createResponse(true, {}));
 });
 
 router.get('/graph/analyze', function(request, response) {

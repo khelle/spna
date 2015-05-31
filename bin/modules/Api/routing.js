@@ -3,6 +3,12 @@ var router = express.Router();
 var api = require('./Api');
 
 router.get('/graph', function(request, response) {
+    var graph = api.serializeGraph();
+
+    response.json(createResponse(true, {graph: graph}));
+});
+
+router.get('/graph/file', function(request, response) {
     var path = api.exportGraph();
 
     if (path === false) {
@@ -14,7 +20,7 @@ router.get('/graph', function(request, response) {
 });
 
 // TODO implement after the format has been settled
-router.post('/graph', function(request, response) {
+router.post('/graph/file', function(request, response) {
     response.json(createResponse(true, {}));
 });
 

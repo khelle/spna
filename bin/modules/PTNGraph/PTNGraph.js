@@ -171,7 +171,11 @@ PTNGraph.prototype = {
         return string + "\n";
     },
 
-    serialize: function() {
+    serialize: function(asString) {
+        if (typeof asString === 'undefined') {
+            asString = true;
+        }
+
         var serializedGraph = {
             priorities: this.priorities
         };
@@ -187,7 +191,7 @@ PTNGraph.prototype = {
 
         serializedGraph['vertices'] = v;
 
-        return JSON.stringify(serializedGraph);
+        return asString ? JSON.stringify(serializedGraph) : serializedGraph;
     },
 
     deserialize: function(json) {

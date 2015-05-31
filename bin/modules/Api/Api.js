@@ -7,6 +7,10 @@ var Api = function() {
     this.netProperties = new NetProperties();
     this.ptnGraph = null;
 
+    this.serializeGraph = function() {
+        return this.ptnGraph.serialize(false);
+    };
+
     this.exportGraph = function() {
         if (this.exporter.exportGraph(this.ptnGraph)) {
             return GraphExporter.TMP_FILE;

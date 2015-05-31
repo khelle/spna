@@ -54,7 +54,7 @@ t2.connect(p3,1);
 t2.connect(p4,1);
 */
 
-// Przykłąd z książki Szypyrki, strona 25
+// Przykłąd z książki Szypyrki, strona 25 - badanie ograniczoności i zachowawczości
 var p1 = g.createPlace('p1',1);
 var p2 = g.createPlace('p2',0);
 var p3 = g.createPlace('p3',4);
@@ -96,12 +96,37 @@ var graphVertices = testing.graph.GetVertices();
 var graphVerticesCount = testing.graph.GetVerticesCount();
 console.log("Size of coverability graph: " + graphVerticesCount);
 
-/*
-console.log("Limit: " + testing.KLimit());
-console.log("Is secure? " + testing.isSecure());
-console.log("Is unlimited? " + testing.isUnLimited());
-console.log("Is conservative? " + testing.isConservative());
-console.log("Is reversable? " + testing.isReversable());
-console.log("Is vital? " + testing.isVital());
-console.log(testing.Analyze());
- */
+// Badanie odwracalności sieci: graf z książki Szpyrki, strona 28
+var g = new PTNGraph('G2');
+var p1 = g.createPlace('p1',1);
+var p2 = g.createPlace('p2',0);
+var p3 = g.createPlace('p3',0);
+
+var t0 = g.createTransition('t0');
+var t1 = g.createTransition('t1');
+var t2 = g.createTransition('t2');
+var t3 = g.createTransition('t3');
+
+p1.connect(t0,1);
+p1.connect(t1,1);
+p1.connect(t3,1);
+p2.connect(t2,1);
+p3.connect(t0,1);
+p3.connect(t2,1);
+
+t1.connect(p3,1);
+t2.connect(p3,1);
+t3.connect(p1,1);
+t3.connect(p2,1);
+
+var testing = new NetProperties();
+console.log(testing.Analyze(g));
+
+//TODO: jak przekażemy analizie grafu wektor wag względem którego badamy zachowawczość sieci
+var graphVertices = testing.graph.GetVertices();
+//console.log(graphVertices);
+
+var graphVerticesCount = testing.graph.GetVerticesCount();
+console.log("Size of coverability graph: " + graphVerticesCount);
+
+testing.getVitalTransitions();

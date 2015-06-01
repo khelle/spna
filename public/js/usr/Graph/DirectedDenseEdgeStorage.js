@@ -10,7 +10,9 @@ var DirectedDenseEdgeStorage = function() {
             return false;
         }
 
-        E.id = this.lastID;
+        if (E.id === -1) {
+            E.id = this.lastID;
+        }
         this.edges[this.lastID] = { obj: E, id1: id1, id2: id2 };
 
         if (this.edgesIn[id1] === undefined) { this.edgesIn[id1] = {}; }
@@ -19,6 +21,9 @@ var DirectedDenseEdgeStorage = function() {
         this.edgesIn[id1][id2] = this.lastID;
         this.edgesOut[id2][id1] = this.lastID;
 
+        if (E.id >= this.lastID) {
+            this.lastID = E.id + 1;
+        }
         this.lastID++;
         this.edgesCount++;
         return true;

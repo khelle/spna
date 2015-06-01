@@ -2,24 +2,6 @@ Graph = function(VerticesStorage, EdgeStorage) {
     this.verticesStorage = VerticesStorage;
     this.edgesStorage    = EdgeStorage;
 
-    this.Build = function(graph) {
-        var vertex;
-        var i;
-
-        for (i in graph.vertices) {
-            if (graph.vertices.hasOwnProperty(i) !== false) {
-                vertex = graph.vertices[i];
-
-                if (vertex.type === 'Place') {
-
-                }
-                else if (vertex.type === 'Transition') {
-
-                }
-            }
-        }
-    };
-
     this.AddVertex = function(id, V) {
         return this.verticesStorage.AddVertex(id, V);
     };
@@ -45,7 +27,6 @@ Graph = function(VerticesStorage, EdgeStorage) {
     };
 
     this.AddEdge = function(id1, id2, E) {
-        E.id = this.GetEdgesCount() + 1;
         return this.edgesStorage.AddEdge(id1, id2, E);
     };
 

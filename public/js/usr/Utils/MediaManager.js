@@ -33,6 +33,8 @@ var MediaManager = function(app, ajax) {
         var proxy = this;
         this.ajax.HttpGet('/api/graph', null, function(data, status) {
             proxy.app.ClosePromptMessage();
+            proxy.app.Storage.Reset();
+            proxy.app.Renderer.Paint();
             proxy.app.Storage.Build(data.data.graph);
             proxy.app.Renderer.Paint();
         });

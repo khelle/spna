@@ -27,7 +27,6 @@ Graph = function(VerticesStorage, EdgeStorage) {
     };
 
     this.AddEdge = function(id1, id2, E) {
-        E.id = this.GetEdgesCount() + 1;
         return this.edgesStorage.AddEdge(id1, id2, E);
     };
 
@@ -65,6 +64,13 @@ Graph = function(VerticesStorage, EdgeStorage) {
 
     this.GetEdges = function() {
         return this.edgesStorage.GetEdges();
+    };
+
+    this.Reset = function() {
+        this.edgesStorage.Reset();
+        this.verticesStorage.Reset();
+
+        return this;
     };
 
     return this;

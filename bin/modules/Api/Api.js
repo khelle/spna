@@ -1,9 +1,9 @@
 var PTNGraph = require('../PTNGraph');
-var GraphExporter = require('../GraphExporter');
+var GraphIO = require('../GraphIO');
 var NetProperties = require('../NetAnalysis');
 
 var Api = function() {
-    this.exporter = new GraphExporter();
+    this.graphIO = new GraphIO();
     this.netProperties = new NetProperties();
     this.ptnGraph = null;
 
@@ -11,9 +11,18 @@ var Api = function() {
         return this.ptnGraph.serialize(false);
     };
 
+    this.importGraph = function(files) {
+        try {
+            this.ptnGraph = this.graphIO.importGraph(files.graph.path);
+            return this.ptnGraph.serialize(false);
+        } catch (e) {
+            return false;
+        }
+    };
+
     this.exportGraph = function() {
-        if (this.exporter.exportGraph(this.ptnGraph)) {
-            return GraphExporter.TMP_FILE;
+        if (this.graphIO.exportGraph(this.ptnGraph)) {
+            return GraphIO.TMP_FILE;
         }
 
         return false;

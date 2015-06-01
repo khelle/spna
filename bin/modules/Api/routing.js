@@ -19,9 +19,17 @@ router.get('/graph/file', function(request, response) {
     response.json(createResponse(true, {path: path}));
 });
 
-// TODO implement after the format has been settled
+
 router.post('/graph/file', function(request, response) {
-    response.json(createResponse(true, {}));
+    var files = request.files;
+    var graph = api.importGraph(files);
+
+    if (graph === false) {
+        response.json(createResponse(false, {}));
+        return;
+    }
+
+    response.json(createResponse(true, {graph: graph}));
 });
 
 router.get('/graph/analyze', function(request, response) {

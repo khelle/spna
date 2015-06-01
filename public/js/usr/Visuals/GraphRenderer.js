@@ -460,6 +460,14 @@ var GraphRenderer = function(app, renderingRoot) {
         var xMin, xMax, yMin, yMax, scale, ratio;
 
         canvasSize = this.GetCanvasSize();
+        if (canvasSize.xMin === Infinity && canvasSize.xMax === -Infinity && canvasSize.yMin === Infinity && canvasSize.yMax === -Infinity) {
+            this.sigma.camera.goTo({
+                x: 1000,
+                y: 1000,
+                ratio: 1
+            });
+            return;
+        }
 
         xMin = canvasSize.xMin;
         xMax = canvasSize.xMax;
@@ -665,7 +673,7 @@ var GraphRenderer = function(app, renderingRoot) {
         var saver = document.getElementById('canvas-download');
 
         var app = this.app;
-        var message = 'File is being downloaded. If you don\'t see downloading wind, please go to your browser default downloading directory.';
+        var message = 'File is being downloaded. If you don\'t see downloading window, please go to your browser default downloading directory.';
         app.PromptMessage(
             'Downloading File...',
             message,
@@ -690,7 +698,7 @@ var GraphRenderer = function(app, renderingRoot) {
         saver.href = curl;
         saver.click();
 
-        this.ClearTempCopy();
+        //this.ClearTempCopy();
         this.ResetCameraPosition();
         this.RestorePreviousSelectedNode();
     };
@@ -716,8 +724,22 @@ var GraphRenderer = function(app, renderingRoot) {
     };
 
     this.RenderTempCopy = function() {
+        var canvasContainer;
+        
+        canvasContainer = document.getElementById('temp-canvas-container');
+        canvasContainer.innerHTML = '<div id="temp-canvas"></div>';
+
         var tempRoot = document.querySelector('#temp-canvas');
         var tempSize = this.GetCanvasSize();
+        var emptyCanvas = false;
+
+        if (tempSize.xMin === Infinity && tempSize.xMax === -Infinity && tempSize.yMin === Infinity && tempSize.yMax === -Infinity) {
+            tempSize.xMin = 0;
+            tempSize.xMax = 0;
+            tempSize.yMin = 0;
+            tempSize.yMax = 0;
+            emptyCanvas = true;
+        }
 
         tempRoot.style.width  = (Math.abs(tempSize.xMax-tempSize.xMin) + 100) + 'px';
         tempRoot.style.height = (Math.abs(tempSize.yMax-tempSize.yMin) + 100) + 'px';
@@ -750,10 +772,21 @@ var GraphRenderer = function(app, renderingRoot) {
             tempSigma.graph.addEdge(edge);
         }
 
+        var cameraX;
+        var cameraY;
+
+        if (!emptyCanvas) {
+            cameraX = (tempSize.xMax - tempSize.xMin) / 2;
+            cameraY = (tempSize.yMax - tempSize.yMin) / 2;
+        }
+        else {
+            cameraX = 50;
+            cameraY = 50;
+        }
 
         tempSigma.camera.goTo({
-            x: (tempSize.xMax-tempSize.xMin)/2,
-            y: (tempSize.yMax-tempSize.yMin)/2
+            x: cameraX,
+            y: cameraY
         });
 
         tempSigma.refresh();

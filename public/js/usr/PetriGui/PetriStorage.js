@@ -15,6 +15,61 @@ var PetriStorage = function(app, ajax) {
         return this;
     };
 
+    this.Build = function(graph) {
+        var i, j;
+        var vertex;
+        var edges;
+        var neighbour;
+        var edge;
+        var gEdge;
+
+        this.Reset();
+
+        edges = [];
+        for (i in graph.vertices) {
+            if (graph.vertices.hasOwnProperty(i) !== false) {
+                vertex = graph.vertices[i];
+
+                if (vertex.type === 'Place') {
+                    this.Graph.AddVertex(
+                        vertex.id,
+                        new GraphVertex(new PetriNode(vertex.id, vertex.position.x, vertex.position.y, this.PLACE, vertex.label, vertex.markers))
+                    );
+                    this.placeCurrentID++;
+                }
+                else if (vertex.type === 'Transition') {
+                    this.Graph.AddVertex(
+                        vertex.id,
+                        new GraphVertex(new PetriNode(vertex.id, vertex.position.x, vertex.position.y, this.TRANSITION, vertex.label, 0))
+                    );
+                    this.transitionCurrentID++;
+                }
+
+                for (j in vertex.neighbours) {
+                    if (vertex.neighbours.hasOwnProperty(j) !== false) {
+                        neighbour = vertex.neighbours[j];
+
+                        edges.push([vertex.id, neighbour.id, neighbour.weight ]);
+                    }
+                }
+            }
+        }
+
+        for (i in edges) {
+            if (edges.hasOwnProperty(i) !== false) {
+                edge = edges[i];
+
+                gEdge = new GraphEdge(new PetriEdge(edge[2]));
+
+                this.Graph.AddEdge(
+                    edge[0],
+                    edge[1],
+                    gEdge
+                )
+            }
+        }
+    };
+
     this.GetCurrentVertexID = function() {
         return this.GetPlaceCurrentID() + this.GetTransitionCurrentID() - 1;
     };
@@ -311,6 +366,14 @@ var PetriStorage = function(app, ajax) {
 
     this.CompareConnections = function(C1, C2) {
         return C1.cost === C2.cost;
+    };
+
+    this.Reset = function() {
+        this.Graph.Reset();
+        this.placeCurrentID      = 1;
+        this.transitionCurrentID = 1;
+
+        return this;
     };
 
     return this;

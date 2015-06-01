@@ -122,5 +122,12 @@ var DenseEdgeStorage = function() {
         return this.edges[id].id2;
     };
 
+    this.Reset = function() {
+        this.edges      = {};
+        this.edgesCount = 0;
+        this.edgesRefs  = {};
+        this.lastID     = 0;
+    };
+
     return this;
 };

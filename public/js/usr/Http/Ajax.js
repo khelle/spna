@@ -64,11 +64,11 @@ var Ajax = function() {
         $.ajax({
             url: url,
             type: 'POST',
+            async: false,
             data: data,
             cache: false,
-            dataType: 'json',
             processData: false,
-            contentType: "multipart/form-data",
+            contentType: false,
             success: function(data, status) {
                 if (data.status === true) {
                     callback(data, status);

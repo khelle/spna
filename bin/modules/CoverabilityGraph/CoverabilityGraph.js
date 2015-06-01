@@ -115,7 +115,8 @@ function CoverabilityGraph(ptnGraph) {
                 var TMPtrans = this.ptnGraph.findTransitionsToExecute();
 
                 if(!TMPtrans.length) {
-                    current.setLabel(State.DEAD);
+                    //current.setLabel(State.DEAD);\
+                    current.setDead(true);
                     console.log("current set to DEAD");
                 }
                 else {
@@ -231,8 +232,8 @@ function CoverabilityGraph(ptnGraph) {
         for (var i in this.mergeQueue) {
             var tab = this.mergeQueue[i];
 
-            //var merger = tab.shift();
-            var merger = tab.pop();
+            var merger = tab.shift();
+            //var merger = tab.pop();
             while(tab.length) {
                 var popped = tab.pop();
                 this.graph.MergeVertices(popped.id, merger.id);

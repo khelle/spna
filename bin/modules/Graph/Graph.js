@@ -98,6 +98,11 @@ var Graph = function(VerticesStorage, EdgeStorage) {
         return this.edgesStorage.GetEdges();
     };
 
+    this.Reset = function() {
+        this.verticesStorage.Reset();
+        this.edgesStorage.Reset();
+    };
+
     return this;
 };
 

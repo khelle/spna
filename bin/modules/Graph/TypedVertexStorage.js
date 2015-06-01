@@ -5,12 +5,11 @@ var TypedVertexStorage = function(types) {
 
     this.verticesIndex  = {};
     this.vertices       = {};
-    this.verticesCount  = {};
+    this.verticesCount  = 0;
     this.vertexNextID   = 0;
 
     types.forEach(function(type) {
         this.vertices[type] = {};
-        this.verticesCount[type] = 0;
     }, this);
     
     this.AddVertex = function(V) {
@@ -18,12 +17,22 @@ var TypedVertexStorage = function(types) {
         type = V.constructor.name;
 
         try {
-            var id = this.vertexNextID++;
-            V.id = id;
+            var id = null;
+
+            if (V.id === undefined) {
+                id = this.vertexNextID++;
+                V.id = id;
+            } else {
+                id = V.id;
+
+                if (id >= this.vertexNextID) {
+                    this.vertexNextID = id + 1;
+                }
+            }
 
             this.vertices[type][id] = V;
             this.verticesIndex[id] = type;
-            this.verticesCount[type]++;
+            this.verticesCount++;
 
             return V;
         } catch (e) {

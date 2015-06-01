@@ -140,5 +140,15 @@ var DirectedDenseEdgeStorage = function() {
         return this.edges[id].id2;
     };
 
+    this.Reset = function() {
+        this.edges      = {};
+        this.edgesCount = 0;
+        this.edgesIn    = {};
+        this.edgesOut   = {};
+        this.lastID     = 0;
+
+        return this;
+    };
+
     return this;
 };

@@ -64,6 +64,7 @@ var Ajax = function() {
         $.ajax({
             url: url,
             type: 'POST',
+            async: false,
             data: data,
             cache: false,
             processData: false,

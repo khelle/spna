@@ -313,5 +313,13 @@ var PetriStorage = function(app, ajax) {
         return C1.cost === C2.cost;
     };
 
+    this.Reset = function() {
+        this.Graph.Reset();
+        this.placeCurrentID      = 1;
+        this.transitionCurrentID = 1;
+
+        return this;
+    };
+
     return this;
 };

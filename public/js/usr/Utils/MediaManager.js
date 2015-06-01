@@ -13,18 +13,29 @@ var MediaManager = function(app, ajax) {
         this.submit = document.getElementById('graph-upload-submit');
 
         proxy = this;
-        this.files.onchange = $.proxy(this.UploadGraph, this);
+        this.files.onchange = $.proxy(this.UploadMechanism, this);
 
         return this;
     };
 
     this.PrepareUpload = function() {
         this.UploadingMessage();
-        return this.files.click();
+        this.files.click();
     };
 
     this.PrepareDownload = function() {
         return this.DownloadGraph();
+    };
+
+    this.UploadMechanism = function() {
+        this.UploadGraph();
+
+        var proxy = this;
+        this.ajax.HttpGet('/api/graph', null, function(data, status) {
+            proxy.app.ClosePromptMessage();
+            proxy.app.Storage.Build(data.data.graph);
+            proxy.app.Renderer.Paint();
+        });
     };
 
     this.UploadGraph = function() {

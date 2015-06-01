@@ -61,5 +61,14 @@ var DefaultVertexStorage = function() {
         return this.verticesIndex[id];
     };
 
+    this.Reset = function() {
+        this.verticesIndex = {};
+        this.vertices = {};
+        this.verticesCount = 0;
+        this.vertexLastID = 0;
+
+        return this;
+    };
+
     return this;
 };

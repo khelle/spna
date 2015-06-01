@@ -203,7 +203,7 @@ var AppModel = function() {
                 icon = icons[i];
 
                 promptHeader.append(
-                    this.GenerateButton('', 'prompt-icon', icon.fn)
+                    this.GenerateButton('', 'prompt-icon glyphicon glyphicon-remove', icon.fn)
                 )
             }
         }

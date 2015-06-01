@@ -37,6 +37,7 @@ var MediaManager = function(app, ajax) {
             proxy.app.Renderer.Paint();
             proxy.app.Storage.Build(data.data.graph);
             proxy.app.Renderer.Paint();
+            proxy.app.Renderer.ResetCameraPosition();
         });
     };
 

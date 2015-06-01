@@ -6,7 +6,7 @@ var CoverabilityGraph = require('../bin/modules/CoverabilityGraph');  // load gr
 var g = new PTNGraph('G_TEST');     // create a new Graph
 
 
-/*
+
  var p1 = g.createPlace('p1',1);
  var p2 = g.createPlace('p2',0);
 
@@ -21,13 +21,13 @@ var g = new PTNGraph('G_TEST');     // create a new Graph
 
  p1.connect(t2,1);
  p2.connect(t2,1);
- */
+
 
 
 /*
- var p1 = g.createPlace('p1',6);
+ var p1 = g.createPlace('p1',4);
  var p2 = g.createPlace('p2',0);
- var p3 = g.createPlace('p3',2);
+ var p3 = g.createPlace('p3',0);
 
  var t1 = g.createTransition('t1');
  var t2 = g.createTransition('t2');
@@ -47,10 +47,10 @@ var g = new PTNGraph('G_TEST');     // create a new Graph
 
  p3.connect(t2,1);
  t2.connect(p2,4);//4
- */
+*/
 
 
-
+/*
 var p1 = g.createPlace('p1',1);
 var p2 = g.createPlace('p2',0);
 var p3 = g.createPlace('p3',1);
@@ -77,7 +77,7 @@ p4.connect(t4,1);
 t4.connect(p3,1);
 p3.connect(t3,1);
 
-
+*/
 
 /*
  var p1 = g.createPlace('p1',1);

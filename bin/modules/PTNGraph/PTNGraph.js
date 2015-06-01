@@ -78,29 +78,40 @@ PTNGraph.prototype = {
     },
 
 
-
-
+    /*
+     Gets executable transitions and returns only the ones that really can be executed
+     according to transitions's priorities
+     */
     findPrioritizedTransitionsToExecute: function(AllTransitions) {
         //var AllTransitions = this.findTransitoionsToExecute();
 
+        AllTransitions = AllTransitions.sort(function(a, b) { return a.priority - b.priority; });
+
+        console.log("=========================\nBEFORE LOOP:");
+        console.log(AllTransitions);
+
         for (var i in AllTransitions) {
             for (var j in AllTransitions){
-            // nazwa funkcji od małej litert - PTN GRAPH
+
                 if (AllTransitions[i] !== AllTransitions[j]){
-                    // czy para wierzchołków współdzieli chociaż jeden zasób?
                     iPrecedecesors = AllTransitions[i].getReferencing();
                     jPrecedecesors = AllTransitions[j].getReferencing();
                     var intersection = Array.intersect(iPrecedecesors,jPrecedecesors);
-                    if (!intersection.isEmpty) //
-                    {
+                    if ((intersection.length > 0) && (AllTransitions[i].priority < AllTransitions[j].priority)) {
 
+                        var idx = AllTransitions.indexOf(AllTransitions[j]);
+                        AllTransitions.splice(idx, 1);
                     }
-                    console.log(intersection);
+                    //console.log(intersection);
                 }
             }
 
         }
+        console.log("=========================\nOUTCOME:");
+        console.log(AllTransitions);
+        console.log("=========================\n=========================");
 
+        return AllTransitions;
     },
 
     /*

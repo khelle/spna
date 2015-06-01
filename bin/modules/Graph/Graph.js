@@ -1,6 +1,6 @@
 var Graph = function(VerticesStorage, EdgeStorage) {
     this.verticesStorage = VerticesStorage;
-    this.edgesStorage    = EdgeStorage;
+    this. edgesStorage    = EdgeStorage;
 
     this.AddVertex = function(id) {
         return this.verticesStorage.AddVertex(id);

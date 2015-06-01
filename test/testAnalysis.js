@@ -75,6 +75,10 @@ t3.connect(p2,1);
 t4.connect(p1,1); //sieć przestanie być zachowawacza, gdy zwiększymy wagę tego przejścia
 console.log( g.print() );
 
+for(var i in g.getPlaces()) {
+    console.log("Place  : " + g.getPlaces()[i]);
+}
+
 //console.log( g.findTransitionsToExecute() );
 //g.executeTransition(t1);
 //console.log( "+++++++++++++++++++++++++++++++++++++++" );

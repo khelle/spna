@@ -67,7 +67,7 @@ var Ajax = function() {
             data: data,
             cache: false,
             processData: false,
-            contentType: "multipart/form-data",
+            contentType: false,
             success: function(data, status) {
                 if (data.status === true) {
                     callback(data, status);

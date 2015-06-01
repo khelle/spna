@@ -38,7 +38,7 @@ var MediaManager = function(app, ajax) {
         for (var i = 0; i < files.length; i++) {
             var file = files[i];
 
-            formData.append(file, file.name);
+            formData.append('graph', file, file.name);
         }
 
         this.ajax.HttpMultipart('/api/graph/file', formData);

@@ -2,8 +2,8 @@ var ArrayUtils = require('../../utils/Array');
 var Edge = require('../Edge/Edge');
 var Utils = require('../../utils/Utils');
 
-function Vertex(ptnGraph, graph, label, position) {
-    this.id   = -1;
+function Vertex(ptnGraph, graph, label, position, id) {
+    this.id = id;
     this.ptnGraph = ptnGraph;
     this.graph = graph;
     this.position = Utils.position(position);

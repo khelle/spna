@@ -37,16 +37,20 @@ PTNGraph.prototype = {
         return this.graph.GetVertices()['Place'];
     },
 
-    createPlace: function(label, markers, position) {
-        return this.graph.AddVertex(new Place(this, this.graph, label, position, markers));
+    createPlace: function(label, markers, position, id) {
+        var place = new Place(this, this.graph, label, position, markers, id);
+
+        return this.graph.AddVertex(place);
     },
 
     getTransitions: function() {
         return this.graph.GetVertices()['Transition'];
     },
 
-    createTransition: function(label, priority, position) {
-        return this.graph.AddVertex(new Transition(this, this.graph, label, position, priority));
+    createTransition: function(label, priority, position, id) {
+        var transition = new Transition(this, this.graph, label, position, priority, id);
+
+        return this.graph.AddVertex(transition);
     },
 
     getVertex: function(id) {
@@ -214,9 +218,9 @@ PTNGraph.prototype = {
             var vertex = serializedGraph['vertices'][i];
 
             if (vertex.type === 'Place') {
-                this.createPlace(vertex.label, vertex.markers, vertex.position);
+                this.createPlace(vertex.label, vertex.markers, vertex.position, vertex.id);
             } else if (vertex.type === 'Transition') {
-                this.createTransition(vertex.label, vertex.priority, vertex.position)
+                this.createTransition(vertex.label, vertex.priority, vertex.position, vertex.id)
             }
 
             for (var n in vertex.neighbours) {

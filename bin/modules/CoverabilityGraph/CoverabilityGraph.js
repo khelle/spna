@@ -232,8 +232,8 @@ function CoverabilityGraph(ptnGraph) {
         for (var i in this.mergeQueue) {
             var tab = this.mergeQueue[i];
 
-            //var merger = tab.shift();
-            var merger = tab.pop();
+            var merger = tab.shift();
+            //var merger = tab.pop();
             while(tab.length) {
                 var popped = tab.pop();
                 this.graph.MergeVertices(popped.id, merger.id);

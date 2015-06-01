@@ -673,7 +673,7 @@ var GraphRenderer = function(app, renderingRoot) {
         var saver = document.getElementById('canvas-download');
 
         var app = this.app;
-        var message = 'File is being downloaded. If you don\'t see downloading wind, please go to your browser default downloading directory.';
+        var message = 'File is being downloaded. If you don\'t see downloading window, please go to your browser default downloading directory.';
         app.PromptMessage(
             'Downloading File...',
             message,

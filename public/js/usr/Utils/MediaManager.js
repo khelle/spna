@@ -19,6 +19,7 @@ var MediaManager = function(app, ajax) {
     };
 
     this.PrepareUpload = function() {
+        this.UploadingMessage();
         return this.files.click();
     };
 
@@ -54,11 +55,36 @@ var MediaManager = function(app, ajax) {
         })
     };
 
+    this.UploadingMessage = function() {
+        var app = this.app;
+        var message = 'File is being uploaded. If you don\'t see downloading window, please refer to your browser settings.';
+        app.PromptMessage(
+            'Uploading File...',
+            message,
+            [
+                {
+                    type: 'close',
+                    fn: function() {
+                        app.ClosePromptMessage();
+                    }
+                }
+            ],
+            [
+                {
+                    name: 'OK',
+                    fn: function() {
+                        app.ClosePromptMessage();
+                    }
+                }
+            ]
+        );
+    };
+
     this.StartDownloading = function(url) {
         var downloader = document.querySelector('#graph-download');
 
         var app = this.app;
-        var message = 'File is being downloaded. If you don\'t see downloading wind, please go to your browser default downloading directory.';
+        var message = 'File is being downloaded. If you don\'t see downloading window, please go to your browser default downloading directory.';
         app.PromptMessage(
             'Downloading File...',
             message,

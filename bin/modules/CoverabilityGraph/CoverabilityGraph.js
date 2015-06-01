@@ -115,7 +115,8 @@ function CoverabilityGraph(ptnGraph) {
                 var TMPtrans = this.ptnGraph.findTransitionsToExecute();
 
                 if(!TMPtrans.length) {
-                    current.setLabel(State.DEAD);
+                    //current.setLabel(State.DEAD);\
+                    current.setDead(true);
                     console.log("current set to DEAD");
                 }
                 else {

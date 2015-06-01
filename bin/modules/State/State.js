@@ -12,6 +12,7 @@ function State(places) {
 
     this.label = State.NEW;
     this.markers = {};
+    this.dead = false;
 
     for (var i in places) {
         this.markers[i] = places[i].getMarkers();
@@ -33,6 +34,11 @@ function State(places) {
     };
     this.setLabel = function(label) {
         this.label = label;
+        return this;
+    };
+
+    this.setDead = function(trueorfalse) {
+        this.dead = trueorfalse;
         return this;
     };
 
@@ -106,6 +112,6 @@ function State(places) {
 State.NEW = "new";
 State.CHECKED = "checked"
 State.OLD = "old";
-State.DEAD = "dead";
+//State.DEAD = "dead";
 
 module.exports=State;

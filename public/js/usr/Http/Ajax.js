@@ -66,7 +66,6 @@ var Ajax = function() {
             type: 'POST',
             data: data,
             cache: false,
-            dataType: 'json',
             processData: false,
             contentType: "multipart/form-data",
             success: function(data, status) {

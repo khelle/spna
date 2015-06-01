@@ -205,6 +205,8 @@ PTNGraph.prototype = {
         }
 
         serializedGraph['vertices'] = v;
+        serializedGraph['vertices_count'] = this.graph.GetVerticesCount();
+        serializedGraph['edges_count'] = this.graph.GetEdgesCount();
 
         return asString ? JSON.stringify(serializedGraph) : serializedGraph;
     },

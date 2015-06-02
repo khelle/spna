@@ -17,17 +17,21 @@ var Analyzer = function(app, ajax) {
         var app;
         var i;
         var row;
+        var props;
 
         app = this.app;
 
         message = '<label>Below are given characterstics of current graph:</label>';
+        props = [
+            'NetLimit', 'Conservative', 'Reversable', 'Vital'
+        ];
 
         message += '<table cellpadding=0 cellspacing=0>';
-        for (i in data) {
-            if (data.hasOwnProperty(i) !== false) {
-                row = data[i];
+        for (i in props) {
+            if (data.hasOwnProperty(props[i]) !== false) {
+                row = data[props[i]];
 
-                message += '<tr><td width="120"><b>' + i + '</b></td><td>' + row + '</td></tr>';
+                message += '<tr><td width="120"><b>' + props[i] + '</b></td><td>' + row + '</td></tr>';
             }
         }
         message += '</table>';

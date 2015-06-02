@@ -65,6 +65,16 @@ PTNGraph.prototype = {
         return this.graph.GetEdge(id);
     },
 
+    findActiveTransitions: function() {
+        var allActive = this.findTransitionsToExecute();
+
+        if (this.priorities) {
+            return this.findPrioritizedTransitionsToExecute(allActive);
+        }
+
+        return allActive;
+    },
+
     /*
      Finds and returns array of all transitions that can be executed at this stance of network
      */
@@ -91,8 +101,8 @@ PTNGraph.prototype = {
 
         AllTransitions = AllTransitions.sort(function(a, b) { return a.priority - b.priority; });
 
-        console.log("=========================\nBEFORE LOOP:");
-        console.log(AllTransitions);
+        //console.log("=========================\nBEFORE LOOP:");
+        //console.log(AllTransitions);
 
         for (var i in AllTransitions) {
             for (var j in AllTransitions){
@@ -111,9 +121,9 @@ PTNGraph.prototype = {
             }
 
         }
-        console.log("=========================\nOUTCOME:");
-        console.log(AllTransitions);
-        console.log("=========================\n=========================");
+        //console.log("=========================\nOUTCOME:");
+        //console.log(AllTransitions);
+        //console.log("=========================\n=========================");
 
         return AllTransitions;
     },
@@ -122,22 +132,7 @@ PTNGraph.prototype = {
      Executes target transition
      */
     executeTransition: function (transition) {
-
-        if (!transition.canBeExecuted()) {
-            throw new Error('This transition (' + transition.getLabel() + ') cannot be executed at this time.');
-        }
-        else {
-            var TakingMarkers = transition.getReferencing();
-            for (var i in TakingMarkers) {
-                TakingMarkers[i].removeMarkers(TakingMarkers[i].getCostTo(transition));
-            }
-
-            var AddingMarkers = transition.getNeighbours();
-            for (var i in AddingMarkers) {
-                var mark = AddingMarkers[i];
-                mark.addMarkers(transition.getCostTo(mark));
-            }
-        }
+        return transition.execute();
     },
 
     /*

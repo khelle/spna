@@ -22,6 +22,11 @@ markers	- int
 posx	- int
 posy	- int
 
+GET /api/transition/active : transitions - tablica obiektów: {id: <active_id>} zawierających id aktywnych przejść
+
+POST /api/transition/execute : graph - json z aktualnym (nowym) stanem grafu
+id  - int
+
 POST /api/transition/create : int id
 label	- string
 posx	- int

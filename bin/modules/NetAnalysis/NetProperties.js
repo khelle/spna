@@ -24,8 +24,17 @@ function NetProperties() {
    this.CoverabilityGraph = null;
    this.graph = null;
 
+    this.KPlacesLimits = function()
+    {
+        /* TODO: funkcja ma zwracać k-ograniczoność każdego wierzchołka
+
+         */
+        var kPlaceLimits = [];
+    };
+
     this.KLimit = function ()
     {
+
         // sieć jest k-ograniczona, jeśli istnieje liczba naturalna k,
         // taka że w każdym miejscu nigdy nie będzie więcej niż (k) kropek.
 
@@ -33,6 +42,8 @@ function NetProperties() {
             //wybierz maksymalną wartość z tablicy stanów i ją zwróć (w szczególności inf)
             //
         // jeśli któryś z węzłów ma więcej niż k znaczników zwróć fałsz
+
+
         var vertices = this.graph.GetVertices();
         var maxK = 0;
         for (var v in vertices) // v to indeks a nie obiekt!!!
@@ -216,11 +227,11 @@ function NetProperties() {
         {
             if(counts[transitionsPTN[p]] === undefined)
             {
-                transitionsVitality.push({transitionName: transitionsPTN[p].label, vitality: 'L0'});
+                transitionsVitality.push({transition: transitionsPTN[p].id, vitality: 'L0'});
             }
             else  (counts[transitionsPTN[p]] )
             {
-                transitionsVitality.push({transitionName: transitionsPTN[p].label, vitality: 'L1'});
+                transitionsVitality.push({transition: transitionsPTN[p].id, vitality: 'L1'});
             }
             /*
             TODO: sprawdzenie innych stopni żywotności
@@ -251,7 +262,8 @@ function NetProperties() {
             "NetLimit": this.KLimit(),
             "Conservative": this.isConservative(),
             "Reversable" : this.isReversable(),
-            "Vital" : this.isVital()
+            "Vital" : this.isVital(),
+            "Transitions vitality" : this.getTransitionsVitality()
         };
     };
 

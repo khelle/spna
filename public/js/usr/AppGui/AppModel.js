@@ -278,7 +278,7 @@ var AppModel = function() {
 
     this.ShowInstructions = function() {
         var app = this;
-        var message = 'Shortcuts: <br>[hold] CTRL build mode ON/OFF <br>[hold] LSHIFT destruction mode ON/OFF <br>[click] Z select/unselect last selected node <br>[click] X reset camera position <br>[click] C save current camera position<br>[click] V load saved camera position';
+        var message = "<b>Shortcuts:</b><br>[hold] CTRL build mode ON/OFF <br>[hold] LSHIFT destruction mode ON/OFF <br>[click] LPM selects node <br>[click] CTRL+LPM creates node <br>[click] CTRL+RPM creates transition <br>[click] LSHIFT+LPM destroys node/transition <br>[click] Z select/unselect last selected node <br>[click] X reset camera position <br>[click] C save current camera position <br>[click] V load saved camera position <br><br><b>Meantime one of the nodes is selected:</b><br>[click] CTRL+LPM creates connection to the node/transition <br>[click] CTRL+RPM selects node <br>[click] LSHIFT+LPM deletes connection to the node/transition <br>[click] LSHIFT+RPM deletes node/transition";
 
         app.PromptMessage(
             'Instructions',

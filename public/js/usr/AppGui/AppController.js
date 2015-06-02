@@ -8,6 +8,10 @@ var AppController = function() {
             .AttachEvents()
         ;
 
+        this.app
+            .ShowInstructions()
+        ;
+
         return this;
     };
 
@@ -34,6 +38,7 @@ var AppController = function() {
         evenement.Register($('#btn-8')[0], 'click', $.proxy(media.PrepareDownload, media));
         evenement.Register($('#btn-9')[0], 'click', $.proxy(media.PrepareUpload, media));
         evenement.Register($('#btn-10')[0], 'click', $.proxy(analyzer.DownloadAnalysis, analyzer));
+        evenement.Register($('#btn-11')[0], 'click', $.proxy(app.ShowInstructions, app));
 
         keyboard.BindKeyIn(
             keyboard.KEY.LCTRL, 'BuildModeActivator', $.proxy(app.BuildModeOn, app)

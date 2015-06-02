@@ -276,5 +276,31 @@ var AppModel = function() {
         });
     };
 
+    this.ShowInstructions = function() {
+        var app = this;
+        var message = 'Shortcuts: <br>[hold] CTRL build mode ON/OFF <br>[hole] LSHIFT destruction mode ON/OFF <br>[click] Z select/unselect last selected node <br>[click] X reset camera position <br>[click] C save current camera position<br>[click] V load saved camera position';
+
+        app.PromptMessage(
+            'Instructions',
+            message,
+            [
+                {
+                    type: 'close',
+                    fn: function() {
+                        app.ClosePromptMessage();
+                    }
+                }
+            ],
+            [
+                {
+                    name: 'OK',
+                    fn: function() {
+                        app.ClosePromptMessage();
+                    }
+                }
+            ]
+        );
+    };
+
     return this;
 };

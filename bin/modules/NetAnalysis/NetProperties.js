@@ -173,10 +173,10 @@ function NetProperties() {
         for(var v in vertices)
         {
             var vv = vertices[v];
-            console.log(vv);
-            console.log(vv.id);
-            console.log(vv.getLabel());
-            if(vv.getLabel() === State.DEAD ) return false; // jeśli którykolwiek stan grafu pokrycia jest martwy
+            //console.log(vv);
+            //console.log(vv.id);
+            //console.log("LABEL? : " + vv.); // ta etykieta tego nie oznacza!!
+            if(vv.getDead()) return false; // jeśli którykolwiek stan grafu pokrycia jest martwy
             // to znaczy że sieć może utknąć w martwym punkcie (zakleszczyć się) -> nie jest żywotna
         }
         return true;

@@ -42,6 +42,11 @@ function State(places) {
         return this;
     };
 
+    this.getDead = function() {
+
+        return  this.dead;
+    };
+
     this.getState = function() {
         return this.markers;
     };

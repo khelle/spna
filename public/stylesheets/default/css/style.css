@@ -338,3 +338,7 @@ input[type=range] {
     top: 0;
     position: relative;
 }
+
+b {
+  font-weight: bold;
+}

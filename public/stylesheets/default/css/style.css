@@ -322,11 +322,9 @@ input[type=range] {
   display: none;
 }
 
-.transparent {
+.header-icon {
     display:inline-block;
-    font-weight:bold;
     padding: 0;
-    width: 36px;
     height: 26px;
     padding-top: 10px;
     margin-left: 5px;
@@ -334,10 +332,8 @@ input[type=range] {
     text-shadow:0 1px 0 #ffffff;
     text-align: center;
     color: #444444;
-    font-size: 24px;
+    font-size: 16px;
     float: left;
     top: 0;
     position: relative;
 }
-
-.transparent

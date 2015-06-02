@@ -227,11 +227,11 @@ function NetProperties() {
         {
             if(counts[transitionsPTN[p]] === undefined)
             {
-                transitionsVitality.push({transition: transitionsPTN[p].id, vitality: 'L0'});
+                transitionsVitality.push({transition: transitionsPTN[p].getId(), vitality: 'L0'});
             }
-            else  (counts[transitionsPTN[p]] )
+            else if  (counts[transitionsPTN[p]])
             {
-                transitionsVitality.push({transition: transitionsPTN[p].id, vitality: 'L1'});
+                transitionsVitality.push({transition: transitionsPTN[p].getId(), vitality: 'L1'});
             }
             /*
             TODO: sprawdzenie innych stopni żywotności

@@ -262,8 +262,8 @@ function NetProperties() {
             "NetLimit": this.KLimit(),
             "Conservative": this.isConservative(),
             "Reversable" : this.isReversable(),
-            "Vital" : this.isVital(),
-            "Transitions vitality" : this.getTransitionsVitality()
+            "Vital" : this.isVital()
+            //"Transitions vitality" : this.getTransitionsVitality()
         };
     };
 

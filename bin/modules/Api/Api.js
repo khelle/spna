@@ -30,7 +30,7 @@ var Api = function() {
 
     this.analyzeGraph = function() {
         try {
-            return this.netProperties.Analyze(this.ptnGraph);
+            return this.netProperties.Analyze(this.ptnGraph.clone());
         } catch (e) {
             return false;
         }

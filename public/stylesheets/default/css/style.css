@@ -321,3 +321,23 @@ input[type=range] {
 #graph-upload {
   display: none;
 }
+
+.transparent {
+    display:inline-block;
+    font-weight:bold;
+    padding: 0;
+    width: 36px;
+    height: 26px;
+    padding-top: 10px;
+    margin-left: 5px;
+    text-decoration:none;
+    text-shadow:0 1px 0 #ffffff;
+    text-align: center;
+    color: #444444;
+    font-size: 24px;
+    float: left;
+    top: 0;
+    position: relative;
+}
+
+.transparent

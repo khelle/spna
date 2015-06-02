@@ -950,5 +950,13 @@ var GraphRenderer = function(app, renderingRoot) {
         tooltipOEdges.style.display = "none";
     };
 
+    this.ShowTransitionsVitality = function(data) {
+        console.log(data);
+    };
+
+    this.HideTransitionsVitality = function() {
+        console.log('Hide');
+    };
+
     return this;
 };

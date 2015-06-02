@@ -39,6 +39,7 @@ var AppController = function() {
         evenement.Register($('#btn-9')[0], 'click', $.proxy(media.PrepareUpload, media));
         evenement.Register($('#btn-10')[0], 'click', $.proxy(analyzer.DownloadAnalysis, analyzer));
         evenement.Register($('#btn-11')[0], 'click', $.proxy(app.ShowInstructions, app));
+        evenement.Register($('#prompt-bg')[0], 'click', $.proxy(app.ClosePromptMessage, app));
 
         keyboard.BindKeyIn(
             keyboard.KEY.LCTRL, 'BuildModeActivator', $.proxy(app.BuildModeOn, app)

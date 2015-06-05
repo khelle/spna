@@ -1112,11 +1112,11 @@ var GraphRenderer = function(app, renderingRoot) {
 
     this.Freeze = function() {
         this.ClearTooltip();
-        this.ClearSimButtons();
         this.UnregisterDraggableNodes();
     };
 
     this.Unfreeze = function() {
+        this.activeTrans = {};
         this.ResetColoring();
         this.ClearNotes();
         this.ClearSimMainButtons();

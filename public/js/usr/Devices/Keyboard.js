@@ -21,14 +21,17 @@ var Keyboard = function() {
     };
 
     this.OnKeyPress = function(e) {
+        if (e.target.nodeName === 'INPUT' || e.target.nodeName === 'TEXTAREA') { return; }
         return this.ExecuteKey(e.which, 'press');
     };
 
     this.OnKeyIn = function(e) {
+        if (e.target.nodeName === 'INPUT' || e.target.nodeName === 'TEXTAREA') { return; }
         return this.ExecuteKey(e.which, 'down');
     };
 
     this.OnKeyOut = function(e) {
+        if (e.target.nodeName === 'INPUT' || e.target.nodeName === 'TEXTAREA') { return; }
         return this.ExecuteKey(e.which, 'up');
     };
 

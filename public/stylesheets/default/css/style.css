@@ -179,7 +179,6 @@ html, body {
   padding: 10px 30px 0px 30px;
   float: none;
   margin: 0;
-  margin-top: 20px;
   font-size: 14px;
 }
 
@@ -243,7 +242,7 @@ input[type=range] {
   z-index: -10;
 }
 
-#tooltip-box {
+#tooltip-div {
   position: absolute;
   top: 60px;
   right: 15px;
@@ -257,6 +256,12 @@ input[type=range] {
   background: #eeeeee;
   margin-bottom: 10px;
   border-radius: 6px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .tooltip header {
@@ -265,10 +270,15 @@ input[type=range] {
   margin-bottom: 10px;
 }
 
+.tooltip > div {
+  text-align: center;
+}
+
 .tooltip-div {
   border-bottom: 1px dashed #999999;
   padding-bottom: 5px;
   margin-bottom: 5px;
+  text-align: left;
 }
 
 .tooltip-input {

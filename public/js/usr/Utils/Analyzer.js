@@ -9,7 +9,7 @@ var Analyzer = function(app, ajax) {
             if (data.status === true) {
                 proxy.PromptAnalysisData(data.data.analysis);
             }
-        })
+        });
     };
 
     this.PromptAnalysisData = function(data) {
@@ -59,6 +59,35 @@ var Analyzer = function(app, ajax) {
                 }
             ]
         );
+    };
+
+    this.GetActiveTransitions = function() {
+        var proxy = this;
+
+        this.ajax.HttpGet('/api/transition/active', null, function(data, status) {
+            if (data.status === true) {
+                proxy.app.SimulationModeOn();
+                proxy.app.Renderer.ShowNotesOfActiveTransitions(data.data.transitions);
+            }
+        });
+    };
+
+    this.ExecuteTransition = function(id) {
+        var proxy = this;
+
+        this.ajax.HttpPost('/api/transition/execute', { id: id }, function(data, status) {
+            if (data.status === true) {
+                proxy.app.Storage.Reset();
+                proxy.app.Renderer.Paint();
+                proxy.app.Storage.Build(data.data.graph);
+                proxy.app.Renderer.Paint();
+
+                /*proxy.GetActiveTransitions();*/
+
+                proxy.app.SimulationModeOn();
+                proxy.app.Renderer.ShowNotesOfActiveTransitions(data.data.graph.active_transitions);
+            }
+        });
     };
 
     return this;

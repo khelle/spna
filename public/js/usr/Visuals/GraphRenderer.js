@@ -9,7 +9,7 @@ var GraphRenderer = function(app, renderingRoot) {
     this.selectedNode        = null;
     this.lastSelectedNode    = null;
     this.paintable           = true;
-
+    this.activeTrans         = {};
     this.blockclick          = false;
 
     this.sigmaSettings = {
@@ -236,7 +236,10 @@ var GraphRenderer = function(app, renderingRoot) {
             type:               record.type,
             defaultColor:       defaultColor,
             defaultTextColor:   '#ffffff',
-            defaultShadowColor: defaultShadow
+            defaultShadowColor: defaultShadow,
+            lastColor:          defaultColor,
+            lastTextColor:      '#ffffff',
+            lastShadowColor:    defaultShadow
         });
     };
 
@@ -508,7 +511,7 @@ var GraphRenderer = function(app, renderingRoot) {
         if (this.app.ModeManager.IsOn(this.app.MODES.BUILD) && !this.blockclick && this.selectedNode === null) {
             var pos = this.GetMouseXY(e);
 
-            this.app.Storage.AddPlace(pos.x, pos.y, 'P' + this.app.Storage.GetPlaceCurrentID().toString(), 0);
+            this.app.Storage.AddPlace(pos.x, pos.y, 'P' + this.app.Storage.GetPlaceCurrentNumo().toString(), 0);
             this.Paint();
         }
         else if (!this.blockclick) {
@@ -527,7 +530,7 @@ var GraphRenderer = function(app, renderingRoot) {
         if (this.app.ModeManager.IsOn(this.app.MODES.BUILD) && !this.blockclick && this.selectedNode === null) {
             var pos = this.GetMouseXY(e);
 
-            this.app.Storage.AddTransition(pos.x, pos.y, 'T' + this.app.Storage.GetTransitionCurrentID().toString());
+            this.app.Storage.AddTransition(pos.x, pos.y, 'T' + this.app.Storage.GetTransitionCurrentNumo().toString());
             this.Paint();
         }
         else {
@@ -620,32 +623,70 @@ var GraphRenderer = function(app, renderingRoot) {
         }
     };
 
+    this.ResetColoring = function() {
+        var nodes;
+        var node;
+        var key;
+
+        nodes = this.sigma.graph.nodes();
+
+        for (key in nodes) {
+            if (nodes.hasOwnProperty(key) !== false) {
+                node = nodes[key];
+
+                node.color = node.defaultColor;
+                node.textColor = '#ffffff';
+                node.shadowColor = node.defaultShadowColor;
+
+                node.lastColor = node.color;
+                node.lastTextColor = node.textColor;
+                node.lastShadowColor = node.shadowColor;
+            }
+        }
+    };
+
+    this.ColorNode = function(id, color, textColor) {
+        var node = this.sigma.graph.nodes('n' + id);
+        var tmpColor;
+        var tmpTextColor;
+        var tmpShadowColor;
+
+        if (node !== undefined) {
+            tmpColor = node.color;
+            tmpTextColor = node.textColor;
+            tmpShadowColor = node.shadowColor;
+
+            node.color = color || node.lastColor;
+            node.textColor = textColor || node.lastTextColor;
+            node.shadowColor = color || node.lastShadowColor;
+
+            node.lastColor = tmpColor;
+            node.lastTextColor = tmpTextColor;
+            node.lastShadowColor = tmpShadowColor;
+
+            this.selectedNode = id;
+        }
+    };
+
     this.SelectNode = function(id) {
         this.DeselectCurrentNode();
 
-        var node = this.sigma.graph.nodes('n' + id);
-
-        if (node !== undefined) {
-            node.color = '#ffff00';
-            node.textColor = '#000000';
-            node.shadowColor = node.color;
-            this.selectedNode = id;
-        }
+        this.ColorNode(id, '#ffff00', '#000000');
 
         this.RenderTooltip(id);
+        this.RenderSimButtons(id);
         this.Paint();
     };
 
     this.DeselectNode = function(id) {
         var node = this.sigma.graph.nodes('n' + id);
 
-        if (node !== undefined) {
-            node.color = node.defaultColor;
-            node.textColor = node.defaultTextColor;
-            node.shadowColor = node.defaultShadowColor;
+        if (node !== undefined && node.color === '#ffff00') {
+            this.ColorNode(id);
         }
 
         this.ClearTooltip();
+        this.ClearSimButtons();
         this.Paint();
 
         this.lastSelectedNode = this.selectedNode;
@@ -807,6 +848,112 @@ var GraphRenderer = function(app, renderingRoot) {
         canvas.style = '';
     };
 
+    this.RenderSimMainButtons = function() {
+        var tooltipBox;
+        var tooltipButtons;
+        var tooltipButtonsDiv;
+        var node;
+        var el;
+
+        if (this.app.ModeManager.IsOff(this.app.MODES.SIMULATE)) {
+            return;
+        }
+
+        tooltipBox     = document.querySelector('#tooltip-box-sim');
+        tooltipButtons = document.querySelector('#tooltip-place-glob-buttons');
+
+        tooltipButtonsDiv = tooltipButtons.querySelector('div');
+
+        el = document.createElement('div');
+        el.className = 'prompt-button';
+        el.innerHTML = 'execute random';
+
+        $(el).on('click', (function(proxy) {
+            return function() {
+                var id;
+                var keys;
+
+                keys = Object.keys(proxy.activeTrans);
+                id = keys[ keys.length * Math.random() << 0];
+
+                proxy.app.Analyzer.ExecuteTransition(id);
+                return false;
+            };
+        })(this));
+
+        tooltipButtonsDiv.innerHTML = '';
+        tooltipButtonsDiv.appendChild(el);
+
+        tooltipButtons.style.display = "block";
+        tooltipBox.style.display = "block";
+    };
+
+    this.ClearSimMainButtons = function() {
+        var tooltipBox;
+        var tooltipButtons;
+
+        tooltipBox     = document.querySelector('#tooltip-box-sim');
+        tooltipButtons = document.querySelector('#tooltip-place-glob-buttons');
+
+        tooltipBox.style.display = "none";
+        tooltipButtons.style.display = "none";
+    };
+
+    this.RenderSimButtons = function(id) {
+        var tooltipBox;
+        var tooltipButtons;
+        var tooltipButtonsDiv;
+        var node;
+        var el;
+
+        if (this.app.ModeManager.IsOff(this.app.MODES.SIMULATE)) {
+            return;
+        }
+
+        if (id === false) {
+            return;
+        }
+
+        node = this.sigma.graph.nodes('n' + id);
+
+        if (node === undefined || this.activeTrans[id] === undefined) {
+            return;
+        }
+
+        tooltipBox         = document.querySelector('#tooltip-box');
+        tooltipButtons     = document.querySelector('#tooltip-place-buttons');
+
+        tooltipButtonsDiv = tooltipButtons.querySelector('div');
+
+        el = document.createElement('div');
+        el.className = 'prompt-button';
+        el.innerHTML = 'execute transition';
+
+        $(el).on('click', (function(proxy, id) {
+            return function() {
+                proxy.app.Analyzer.ExecuteTransition(id);
+                return false;
+            };
+        })(this, id));
+
+        tooltipButtonsDiv.innerHTML = '';
+        tooltipButtonsDiv.appendChild(el);
+
+        tooltipButtons.style.display = "block";
+        tooltipBox.style.display = "block";
+    };
+
+    this.ClearSimButtons = function() {
+        var tooltipBox;
+        var tooltipButtons;
+
+        tooltipBox     = document.querySelector('#tooltip-box');
+        tooltipButtons = document.querySelector('#tooltip-place-buttons');
+
+        tooltipBox.style.display = "none";
+        tooltipButtons.style.display = "none";
+    };
+
     this.RenderTooltip = function(id) {
         var node;
         var attrs;
@@ -848,7 +995,7 @@ var GraphRenderer = function(app, renderingRoot) {
         tooltipIEdges = document.querySelector('#tooltip-place-iedges');
         tooltipOEdges = document.querySelector('#tooltip-place-oedges');
 
-        tooltipDataDiv    = tooltipData.querySelector('div');
+        tooltipDataDiv   = tooltipData.querySelector('div');
         tooltipIEdgesDiv = tooltipIEdges.querySelector('div');
         tooltipOEdgesDiv = tooltipOEdges.querySelector('div');
 
@@ -965,11 +1112,15 @@ var GraphRenderer = function(app, renderingRoot) {
 
     this.Freeze = function() {
         this.ClearTooltip();
+        this.ClearSimButtons();
         this.UnregisterDraggableNodes();
     };
 
     this.Unfreeze = function() {
+        this.ResetColoring();
         this.ClearNotes();
+        this.ClearSimMainButtons();
+        this.ClearSimButtons();
         this.RegisterDraggableNodes();
     };
 
@@ -988,6 +1139,29 @@ var GraphRenderer = function(app, renderingRoot) {
             }
         }
 
+        this.Paint();
+    };
+
+    this.ShowNotesOfActiveTransitions = function(data) {
+        var key;
+        var row;
+        var cnt;
+
+        cnt = 0;
+        this.activeTrans = {};
+        for (key in data) {
+            if (data.hasOwnProperty(key) !== false) {
+                row = data[key];
+
+                this.activeTrans[row.id] = true;
+                this.ColorNode(row.id, '#ffa500', '#000000');
+                cnt++;
+            }
+        }
+
+        if (cnt > 0) {
+            this.RenderSimMainButtons();
+        }
         this.Paint();
     };
 

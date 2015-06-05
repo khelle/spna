@@ -111,20 +111,29 @@ var GraphRenderer = function(app, renderingRoot) {
         return this;
     };
 
+    this.UnregisterDraggableNodes = function() {
+        sigma.plugins.killDragNodes(this.sigma);
+
+        return this;
+    };
+
     this.FixBug423 = function() {
-        this.sigma.graph.addNode({
-            id:     'ghost',
-            size:   0,
-            x:      0,
-            y:      0,
-            dX:     0,
-            dY:     0,
-            type:   'ghost'
-        });
-        this.sigma.camera.goTo({
-            x: 1000,
-            y: 1000
-        });
+        try {
+            this.sigma.graph.addNode({
+                id: 'ghost',
+                size: 0,
+                x: 0,
+                y: 0,
+                dX: 0,
+                dY: 0,
+                type: 'ghost'
+            });
+            this.sigma.camera.goTo({
+                x: 1000,
+                y: 1000
+            });
+        }
+        catch (ex) {}
     };
 
     this.PlaceRenderer = function(node, ctx, settings) {
@@ -813,6 +822,10 @@ var GraphRenderer = function(app, renderingRoot) {
         var i;
         var val;
 
+        if (this.app.ModeManager.IsOn(this.app.MODES.SIMULATE)) {
+            return;
+        }
+
         node = this.sigma.graph.nodes('n' + id);
 
         if (node === undefined) {
@@ -948,6 +961,15 @@ var GraphRenderer = function(app, renderingRoot) {
         tooltipData.style.display = "none";
         tooltipIEdges.style.display = "none";
         tooltipOEdges.style.display = "none";
+    };
+
+    this.Freeze = function() {
+        this.ClearTooltip();
+        this.UnregisterDraggableNodes();
+    };
+
+    this.Unfreeze = function() {
+        this.RegisterDraggableNodes();
     };
 
     this.ShowTransitionsVitality = function(data) {

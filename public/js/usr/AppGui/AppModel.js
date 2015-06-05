@@ -11,7 +11,8 @@ var AppModel = function() {
 
     this.MODES = {
         BUILD:      'build',
-        DEMOLISH:   'demolish'
+        DEMOLISH:   'demolish',
+        SIMULATE:   'simulate'
     };
 
     this.Init = function() {
@@ -40,23 +41,40 @@ var AppModel = function() {
     };
 
     this.SetModes = function() {
-        var man = this.ModeManager;
-        var buildMode, demolishMode;
-        var On = 'On', Off = 'Off';
+        var man;
+        var buildMode;
+        var demolishMode;
+        var simulationMode;
+        var On;
+        var Off;
 
-        buildMode    = new Mode(this.MODES.BUILD);
-        demolishMode = new Mode(this.MODES.DEMOLISH);
+        man = this.ModeManager;
+
+        On = 'On';
+        Off = 'Off';
+
+        buildMode      = new Mode(this.MODES.BUILD);
+        demolishMode   = new Mode(this.MODES.DEMOLISH);
+        simulationMode = new Mode(this.MODES.SIMULATE);
 
         buildMode.SetCallback(On, $.proxy(this.OnBuildModeOn, this));
         buildMode.SetCallback(Off, $.proxy(this.OnBuildModeOff, this));
         buildMode.AddDependency(On, demolishMode.GetName(), Off);
+        buildMode.AddRequirement(On, simulationMode.GetName(), Off);
 
         demolishMode.SetCallback(On, $.proxy(this.OnDemolishModeOn, this));
         demolishMode.SetCallback(Off, $.proxy(this.OnDemolishModeOff, this));
         demolishMode.AddDependency(On, buildMode.GetName(), Off);
+        demolishMode.AddRequirement(On, simulationMode.GetName(), Off);
+
+        simulationMode.SetCallback(On, $.proxy(this.OnSimulationModeOn, this));
+        simulationMode.SetCallback(Off, $.proxy(this.OnSimulationModeOff, this));
+        simulationMode.AddDependency(On, buildMode.GetName(), Off);
+        simulationMode.AddDependency(On, demolishMode.GetName(), Off);
 
         man.SetMode(buildMode.GetName(), buildMode);
         man.SetMode(demolishMode.GetName(), demolishMode);
+        man.SetMode(simulationMode.GetName(), simulationMode);
 
         return this;
     };
@@ -65,15 +83,17 @@ var AppModel = function() {
         return this.ModeManager.TurnOnMode(this.MODES.BUILD);
     };
 
-    this.OnBuildModeOn = function() {
-        this.PopMessage('Build mode ON...');
-    };
-
     this.BuildModeOff = function() {
         return this.ModeManager.TurnOffMode(this.MODES.BUILD);
     };
 
+    this.OnBuildModeOn = function() {
+        $('#btn-1').addClass('app-button-active');
+        this.PopMessage('Build mode ON...');
+    };
+
     this.OnBuildModeOff = function() {
+        $('#btn-1').removeClass('app-button-active');
         this.PopMessage('Build mode OFF...');
     };
 
@@ -90,15 +110,18 @@ var AppModel = function() {
         return this.ModeManager.TurnOnMode(this.MODES.DEMOLISH);
     };
 
-    this.OnDemolishModeOn = function() {
-        this.PopMessage('Demolish mode ON...');
-    };
 
     this.DemolishModeOff = function() {
         return this.ModeManager.TurnOffMode(this.MODES.DEMOLISH);
     };
 
+    this.OnDemolishModeOn = function() {
+        $('#btn-2').addClass('app-button-active');
+        this.PopMessage('Demolish mode ON...');
+    };
+
     this.OnDemolishModeOff = function() {
+        $('#btn-2').removeClass('app-button-active');
         this.PopMessage('Demolish mode OFF...');
     };
 
@@ -108,6 +131,35 @@ var AppModel = function() {
         }
         else {
             this.ModeManager.TurnOnMode(this.MODES.DEMOLISH);
+        }
+    };
+
+    this.SimulationModeOn = function() {
+        return this.ModeManager.TurnOnMode(this.MODES.SIMULATE);
+    };
+
+    this.SimulationModeOff = function() {
+        return this.ModeManager.TurnOffMode(this.MODES.SIMULATE);
+    };
+
+    this.OnSimulationModeOn = function() {
+        this.Renderer.Freeze();
+        $('#btn-12').addClass('app-button-active');
+        this.PopMessage('Simulation mode ON...');
+    };
+
+    this.OnSimulationModeOff = function() {
+        this.Renderer.Unfreeze();
+        $('#btn-12').removeClass('app-button-active');
+        this.PopMessage('Simulation mode OFF...');
+    };
+
+    this.SimulationModeSwitch = function() {
+        if (this.ModeManager.IsOn(this.MODES.SIMULATE)) {
+            this.ModeManager.TurnOffMode(this.MODES.SIMULATE);
+        }
+        else {
+            this.ModeManager.TurnOnMode(this.MODES.SIMULATE);
         }
     };
 
@@ -278,7 +330,7 @@ var AppModel = function() {
 
     this.ShowInstructions = function() {
         var app = this;
-        var message = "<b>Shortcuts:</b><br>[hold] CTRL build mode ON/OFF <br>[hold] LSHIFT destruction mode ON/OFF <br>[click] LPM selects node <br>[click] CTRL+LPM creates node <br>[click] CTRL+RPM creates transition <br>[click] LSHIFT+LPM destroys node/transition <br>[click] Z select/unselect last selected node <br>[click] X reset camera position <br>[click] C save current camera position <br>[click] V load saved camera position <br><br><b>Meantime one of the nodes is selected:</b><br>[click] CTRL+LPM creates connection to the node/transition <br>[click] CTRL+RPM selects node <br>[click] LSHIFT+LPM deletes connection to the node/transition <br>[click] LSHIFT+RPM deletes node/transition";
+        var message = "<b>Shortcuts:</b><br>[hold] CTRL build mode ON/OFF <br>[hold] LSHIFT destruction mode ON/OFF <br>[click] CAPSLOCK simulation mode ON/OFF<br>[click] LPM selects node <br>[click] CTRL+LPM creates node <br>[click] CTRL+RPM creates transition <br>[click] LSHIFT+LPM destroys node/transition <br>[click] Z select/unselect last selected node <br>[click] X reset camera position <br>[click] C save current camera position <br>[click] V load saved camera position <br><br><b>Meantime one of the nodes is selected:</b><br>[click] CTRL+LPM creates connection to the node/transition <br>[click] CTRL+RPM selects node <br>[click] LSHIFT+LPM deletes connection to the node/transition <br>[click] LSHIFT+RPM deletes node/transition";
 
         app.PromptMessage(
             'Instructions',

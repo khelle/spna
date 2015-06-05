@@ -115,6 +115,7 @@ html, body {
   user-select: none;
   position: relative;
 }
+
 .app-button:hover, .prompt-button:hover, .prompt-icon:hover {
   background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
   background:-moz-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
@@ -126,9 +127,14 @@ html, body {
   background-color:#e9e9e9;
   color: #cc0000;
 }
+
 .app-button:active, .prompt-button:active, .prompt-icon:active {
   position:relative;
   top:2px;
+}
+
+.app-button-active, .prompt-button-active, .prompt-icon-active {
+  color: #ac0000;
 }
 
 .app-button > div {
@@ -143,6 +149,7 @@ html, body {
 .app-button > span {
   position: relative;
   z-index: 1;
+  top: -1px;
 }
 
 .app-button-delimiter {
@@ -224,6 +231,8 @@ html, body {
 input[type=range] {
   cursor: pointer;
   width: 160px;
+  position: relative;
+  top: 2px;
 }
 
 #temp-canvas-container {

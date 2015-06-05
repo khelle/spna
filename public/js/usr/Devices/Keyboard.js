@@ -8,7 +8,8 @@ var Keyboard = function() {
     this.KEY = {
         ENTER:  13,
         LSHIFT: 16,
-        LCTRL:  17
+        LCTRL:  17,
+        CAPS:   20
     };
 
     this.Init = function() {

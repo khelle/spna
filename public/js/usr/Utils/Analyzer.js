@@ -36,7 +36,8 @@ var Analyzer = function(app, ajax) {
         }
         message += '</table>';
 
-        app.Renderer.ShowTransitionsVitality(data["Transitions vitality"]);
+        app.SimulationModeOn();
+        app.Renderer.ShowNotesOfTransitionsVitality(data["Transitions vitality"]);
 
         app.PromptMessage(
             'Analysis results',

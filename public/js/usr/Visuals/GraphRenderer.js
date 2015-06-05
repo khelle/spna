@@ -969,15 +969,53 @@ var GraphRenderer = function(app, renderingRoot) {
     };
 
     this.Unfreeze = function() {
+        this.ClearNotes();
         this.RegisterDraggableNodes();
     };
 
-    this.ShowTransitionsVitality = function(data) {
-        console.log(data);
+    this.ShowNotesOfTransitionsVitality = function(data) {
+        var key;
+        var row;
+        var node;
+
+        for (key in data) {
+            if (data.hasOwnProperty(key) !== false) {
+                row = data[key];
+
+                node = this.app.Storage.GetTransition(row.transition);
+
+                node.label = node.label += '::' + row.vitality;
+            }
+        }
+
+        this.Paint();
     };
 
-    this.HideTransitionsVitality = function() {
-        console.log('Hide');
+    this.ClearNotes = function() {
+        var key;
+        var data;
+        var places;
+        var trans;
+        var node;
+        var nameParts;
+
+        data = this.app.Storage.GetAll();
+
+        places = data[0];
+        trans  = data[1];
+
+        for (key in trans) {
+            if (trans.hasOwnProperty(key) !== false) {
+                node = trans[key];
+
+                nameParts = node.label.split('::');
+                if (node.label !== nameParts[0]) {
+                    node.label = nameParts[0];
+                }
+            }
+        }
+
+        this.Paint();
     };
 
     return this;

@@ -101,6 +101,10 @@ PTNGraph.prototype = {
 
         AllTransitions = AllTransitions.sort(function(a, b) { return a.priority - b.priority; });
 
+        //Reversing:
+        AllTransitions = AllTransitions.reverse();
+
+
         //console.log("=========================\nBEFORE LOOP:");
         //console.log(AllTransitions);
 

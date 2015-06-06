@@ -9,6 +9,25 @@ function CoverabilityGraph(ptnGraph) {
     this.ptnGraph = ptnGraph;
     this.graph = new Graph(new VertexStorage());
 
+    //this.reachability = new Graph(new VertexStorage());
+    this.reachability = null;
+
+    this.rootState = ptnGraph.getState();
+
+    /*
+    New field, gets root-state when first building CoverabilityTree
+    (used in building Reach-tree and Cover-graph)
+     */
+    this.rootState = this.ptnGraph.getState();
+
+    /*
+    ! Problem
+    Taka konstrukcja budowanie grafu coverability podczas konstrukcji
+    daje podwojone wyniki przy kolejnym odpalaniu budowania drzewa
+    (nie wiem czy zmiana jest konieczna dla reachability...)
+     */
+
+
     this.treeRoot = null;
 
     this.mergeQueue = {};
@@ -33,6 +52,110 @@ function CoverabilityGraph(ptnGraph) {
         this.buildCoverabilityGraph();
     };
 
+
+
+    //ReachabilityTree
+    this.buildReachabilityTree = function() {
+
+        console.log("buildReachabilityTree...");
+        this.reachability = new Graph(new VertexStorage())
+
+        var list = [];
+        var MAXCOUNTER = 10;    // 30 or 50
+
+        //var root = this.ptnGraph.getState();
+        var root = this.rootState;
+        this.reachability.AddVertex( root );
+
+        this.ptnGraph.setState(root);
+
+        var count = 0;
+        list.push([root,count]);
+
+        var current, newState;
+        var currTuple;
+
+        while(!(list.length==0)) {
+            currTuple = list.pop();
+            count = currTuple[1];
+            count++;
+
+            current = currTuple[0];
+
+            var vertices = this.reachability.GetVertices();
+            var GotOLD = false;
+            var OLDWasCheckedAlready = false;
+
+            for(var v in vertices) {
+
+                if(vertices[v] === current) {
+                    //continue;
+                    //console.log("The same vertex");
+                } else {
+                    if(current.isEqual(vertices[v])) {
+
+                        console.log("current set to OLD");
+                        current.setLabel(State.OLD);
+
+                        //IMPORTANT!
+                        GotOLD = true;
+                        if( this.graph.GetNeighbours(vertices[v].id).length > 0 ) {
+                            OLDWasCheckedAlready = true;
+                        }
+
+                        //break;
+                    }
+                }
+            }
+
+            //IMPORTANT!
+            if(GotOLD && !OLDWasCheckedAlready) {
+                console.log("DAYUM! current set BACK to NEW");
+                current.setLabel(State.NEW);
+            }
+
+
+            if((current.getLabel()==State.NEW) && (count < MAXCOUNTER)) {
+
+                this.ptnGraph.setState(current);
+                var TMPtrans = this.ptnGraph.findTransitionsToExecute();
+
+                if(!TMPtrans.length) {
+
+                    current.setDead(true);
+                    console.log("current set to DEAD");
+                }
+                else {
+                    console.log("current in checking executable transitions");
+
+                    TMPtrans.forEach(function(transition) {
+
+                        console.log("(one) + transition name: " + transition.getLabel());
+
+                        this.ptnGraph.setState(current);
+                        this.ptnGraph.executeTransition(transition);
+                        newState = this.ptnGraph.getState();
+
+                        this.reachability.AddVertex( newState );
+                        this.reachability.AddEdge(current.id,newState.id,{transition:transition});
+                        //list.push( [newState,currTuple[1]++] );
+                        list.push( [newState,count] );
+                        console.log("counter: " + count);
+
+
+                    }, this);
+                }
+            }
+
+        }
+
+        console.log("build Reachability Tree finished!");
+
+        // Go back to current state
+        this.ptnGraph.setState( this.rootState );
+    };
+    //!Reach
+
     //BUILD
     this.buildCoverabilityTree = function() {
 
@@ -40,7 +163,8 @@ function CoverabilityGraph(ptnGraph) {
 
         var list = [];
 
-        var root = this.ptnGraph.getState();
+        //var root = this.ptnGraph.getState();
+        var root = this.rootState;
         this.graph.AddVertex( root );
         list.push(root);
 
@@ -205,6 +329,9 @@ function CoverabilityGraph(ptnGraph) {
 
 
         console.log("build Tree finished!");
+
+        // Go back to current state
+        this.ptnGraph.setState( this.rootState );
     };
     //!BUILD
 

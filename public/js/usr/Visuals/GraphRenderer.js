@@ -889,6 +889,7 @@ var GraphRenderer = function(app, renderingRoot) {
 
                 node = proxy.sigma.graph.nodes('n' + id);
                 proxy.MoveCameraTo(node.x, node.y);
+                proxy.SelectNode(id);
 
                 return false;
             };

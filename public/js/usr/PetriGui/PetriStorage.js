@@ -51,7 +51,7 @@ var PetriStorage = function(app, ajax) {
                     if (vertex.neighbours.hasOwnProperty(j) !== false) {
                         neighbour = vertex.neighbours[j];
 
-                        edges.push([ null, vertex.id, neighbour.id, neighbour.weight ]);
+                        edges.push([ neighbour.edge_id, vertex.id, neighbour.id, neighbour.weight ]);
                     }
                 }
             }
@@ -62,6 +62,7 @@ var PetriStorage = function(app, ajax) {
                 edge = edges[i];
 
                 gEdge = new GraphEdge(new PetriEdge(edge[3]));
+                gEdge.id = edge[0];
 
                 this.Graph.AddEdge(
                     edge[1],

@@ -61,7 +61,7 @@ function CoverabilityGraph(ptnGraph) {
         this.reachability = new Graph(new VertexStorage())
 
         var list = [];
-        var MAXCOUNTER = 10;    // 30 or 50
+        var MAXCOUNTER = 4;    // 30 or 50
 
         //var root = this.ptnGraph.getState();
         var root = this.rootState;

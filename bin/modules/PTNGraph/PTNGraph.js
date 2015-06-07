@@ -96,6 +96,7 @@ PTNGraph.prototype = {
      Gets executable transitions and returns only the ones that really can be executed
      according to transitions's priorities
      */
+
     findPrioritizedTransitionsToExecute: function(AllTransitions) {
         //var AllTransitions = this.findTransitoionsToExecute();
 
@@ -103,6 +104,18 @@ PTNGraph.prototype = {
 
         //Reversing:
         AllTransitions = AllTransitions.reverse();
+
+        //console.log(AllTransitions);
+        var string = "";
+        string = "Alltransitions:\n";
+        for (var kkk in AllTransitions) {
+            string += "   ";
+            string += AllTransitions[kkk].label;
+        }
+        console.log( string );
+
+
+        var toDelete = [];
 
 
         //console.log("=========================\nBEFORE LOOP:");
@@ -112,25 +125,51 @@ PTNGraph.prototype = {
             for (var j in AllTransitions){
 
                 if (AllTransitions[i] !== AllTransitions[j]){
+
                     iPrecedecesors = AllTransitions[i].getReferencing();
                     jPrecedecesors = AllTransitions[j].getReferencing();
                     var intersection = Array.intersect(iPrecedecesors,jPrecedecesors);
-                    if ((intersection.length > 0) && (AllTransitions[i].priority < AllTransitions[j].priority)) {
-
-                        var idx = AllTransitions.indexOf(AllTransitions[j]);
-                        AllTransitions.splice(idx, 1);
-                    }
                     //console.log(intersection);
+
+                    if ((intersection.length > 0) && (AllTransitions[j].priority < AllTransitions[i].priority)) {
+
+                        //var idx = AllTransitions.indexOf(AllTransitions[j]);
+                        //AllTransitions.splice(idx, 1);
+                        toDelete.push(i);
+                        break;
+                    }
+
                 }
             }
 
         }
+
+        //console.log("=========================\nBefore to delete loop:");
+        //console.log(AllTransitions);
+        //console.log("=========================\n=========================");
+
+        var cnt = 0;
+        for (var i in toDelete) {
+            AllTransitions.splice((toDelete[i]-cnt),1);
+            cnt++;
+        }
+
+        console.log("=========================\nOUTCOME:");
+        string = "";
+        string = "Alltransitions:\n";
+        for (var kkk in AllTransitions) {
+            string += "   ";
+            string += AllTransitions[kkk].label;
+        }
+        console.log( string );
+
         //console.log("=========================\nOUTCOME:");
         //console.log(AllTransitions);
         //console.log("=========================\n=========================");
 
         return AllTransitions;
     },
+
 
     /*
      Executes target transition

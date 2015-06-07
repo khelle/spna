@@ -1142,6 +1142,7 @@ var GraphRenderer = function(app, renderingRoot) {
         var key;
         var row;
         var node;
+        var nameParts;
 
         for (key in data) {
             if (data.hasOwnProperty(key) !== false) {
@@ -1149,7 +1150,9 @@ var GraphRenderer = function(app, renderingRoot) {
 
                 node = this.app.Storage.GetTransition(row.transition);
 
-                node.label = node.label += '::' + row.vitality;
+                nameParts = node.label.split('::');
+
+                node.label = nameParts[0] += '::' + row.vitality;
             }
         }
 

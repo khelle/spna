@@ -264,6 +264,17 @@ input[type=range] {
   user-select: none;
 }
 
+#preloader-box {
+  width: 62px;
+  height: 64px;
+  background: url("./images/477.png") center top no-repeat;
+  left: 0;
+  top: 0;
+  position: fixed;
+  margin: auto;
+  z-index: 1002;
+}
+
 .tooltip header {
   font-weight: bold;
   text-align: center;

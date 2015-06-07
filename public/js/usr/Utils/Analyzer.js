@@ -69,7 +69,7 @@ var Analyzer = function(app, ajax) {
                 proxy.app.SimulationModeOn();
                 proxy.app.Renderer.ShowNotesOfActiveTransitions(data.data.transitions);
             }
-        });
+        }, true);
     };
 
     this.ExecuteTransition = function(id) {
@@ -87,7 +87,7 @@ var Analyzer = function(app, ajax) {
                 proxy.app.SimulationModeOn();
                 proxy.app.Renderer.ShowNotesOfActiveTransitions(data.data.graph.active_transitions);
             }
-        });
+        }, true);
     };
 
     return this;

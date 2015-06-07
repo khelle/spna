@@ -22,8 +22,8 @@ var AppModel = function() {
         this.Renderer    = new GraphRenderer(this, document.querySelector('#graph-canvas'));
         this.Evenement   = new Evenement(this);
         this.ModeManager = new ModeManager(this);
-        this.Media       = new MediaManager(this, new Ajax());
-        this.Analyzer    = new Analyzer(this, new Ajax());
+        this.Media       = new MediaManager(this, new Ajax(this));
+        this.Analyzer    = new Analyzer(this, new Ajax(this));
 
         this
             .AdjustAppSize()
@@ -203,6 +203,16 @@ var AppModel = function() {
           'height': h
         });
 
+        var $preloader = $('#preloader-box');
+
+        w = w-$preloader.width();
+        h = h-$preloader.height();
+
+        $preloader.css({
+            left: w/2,
+            top: h/2
+        });
+
         return this;
     };
 
@@ -352,6 +362,14 @@ var AppModel = function() {
                 }
             ]
         );
+    };
+
+    this.ShowPreloader = function() {
+        $('#preloader').css('display', 'block');
+    };
+
+    this.ClosePreloader = function() {
+        $('#preloader').css('display', 'none');
     };
 
     return this;

@@ -467,6 +467,14 @@ var GraphRenderer = function(app, renderingRoot) {
         }
     };
 
+    this.MoveCameraTo = function(x, y) {
+        this.sigma.camera.goTo({
+            x: x,
+            y: y,
+            ratio: 1
+        });
+    };
+
     this.ResetCameraPosition = function() {
         var canvasSize;
         var xMin, xMax, yMin, yMax, scale, ratio;
@@ -872,11 +880,16 @@ var GraphRenderer = function(app, renderingRoot) {
             return function() {
                 var id;
                 var keys;
+                var node
 
                 keys = Object.keys(proxy.activeTrans);
                 id = keys[ keys.length * Math.random() << 0];
 
                 proxy.app.Analyzer.ExecuteTransition(id);
+
+                node = proxy.sigma.graph.nodes('n' + id);
+                proxy.MoveCameraTo(node.x, node.y);
+
                 return false;
             };
         })(this));

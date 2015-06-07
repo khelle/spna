@@ -14,13 +14,13 @@ var DirectedDenseEdgeStorage = function() {
             E.id = this.lastID;
         }
 
-        this.edges[this.lastID] = { obj: E, id1: id1, id2: id2 };
+        this.edges[E.id] = { obj: E, id1: id1, id2: id2 };
 
         if (this.edgesIn[id1] === undefined) { this.edgesIn[id1] = {}; }
         if (this.edgesOut[id2] === undefined) { this.edgesOut[id2] = {}; }
 
-        this.edgesIn[id1][id2] = this.lastID;
-        this.edgesOut[id2][id1] = this.lastID;
+        this.edgesIn[id1][id2] = E.id;
+        this.edgesOut[id2][id1] = E.id;
 
         if (E.id >= this.lastID) {
             this.lastID = E.id + 1;

@@ -122,7 +122,8 @@ PTNGraph.prototype = {
         //console.log(AllTransitions);
 
         for (var i in AllTransitions) {
-            for (var j in AllTransitions){
+            //for (var j in AllTransitions){
+            for (var j=i;j<AllTransitions.length;j++) {
 
                 if (AllTransitions[i] !== AllTransitions[j]){
 

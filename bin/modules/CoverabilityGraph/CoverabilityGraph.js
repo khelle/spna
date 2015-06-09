@@ -118,7 +118,13 @@ function CoverabilityGraph(ptnGraph) {
             if((current.getLabel()==State.NEW) && (count < MAXCOUNTER)) {
 
                 this.ptnGraph.setState(current);
-                var TMPtrans = this.ptnGraph.findTransitionsToExecute();
+
+                var TMPtrans;
+                if(this.ptnGraph.priorities) {
+                    TMPtrans = this.ptnGraph.findPrioritizedTransitionsToExecute();
+                } else {
+                    TMPtrans = this.ptnGraph.findTransitionsToExecute();
+                }
 
                 if(!TMPtrans.length) {
 
@@ -236,7 +242,13 @@ function CoverabilityGraph(ptnGraph) {
             if(current.getLabel()==State.NEW) {
 
                 this.ptnGraph.setState(current);
-                var TMPtrans = this.ptnGraph.findTransitionsToExecute();
+
+                var TMPtrans;
+                if(this.ptnGraph.priorities) {
+                    TMPtrans = this.ptnGraph.findPrioritizedTransitionsToExecute();
+                } else {
+                    TMPtrans = this.ptnGraph.findTransitionsToExecute();
+                }
 
                 if(!TMPtrans.length) {
                     //current.setLabel(State.DEAD);\

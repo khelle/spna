@@ -96,6 +96,7 @@ var Analyzer = function(app, ajax) {
         this.ajax.HttpPost('/api/graph/priorities', { priorities: true }, function(data, status) {
             if (data.status === true) {
                 proxy.app.Renderer.EnableDrawingPriorities();
+                proxy.app.Renderer.SelectNode(proxy.app.Renderer.selectedNode);
                 proxy.app.Renderer.Paint();
             }
         }, true);
@@ -107,6 +108,7 @@ var Analyzer = function(app, ajax) {
         this.ajax.HttpPost('/api/graph/priorities', { priorities: false }, function(data, status) {
             if (data.status === true) {
                 proxy.app.Renderer.DisableDrawingPriorities();
+                proxy.app.Renderer.SelectNode(proxy.app.Renderer.selectedNode);
                 proxy.app.Renderer.Paint();
             }
         }, true);

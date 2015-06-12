@@ -36,6 +36,7 @@ html, body {
   font-size: 12px;
   font-family: Verdana, Tahoma, Arial;
   line-height: 18px;
+  overflow: hidden;
 }
 
 #box {
@@ -219,7 +220,7 @@ html, body {
 }
 
 .header-opt {
-  height: 32px;
+  height: 34px;
   float: left;
   -webkit-touch-callout: none;
   -webkit-user-select: none;

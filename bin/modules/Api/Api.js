@@ -101,6 +101,15 @@ var Api = function() {
         }
     };
 
+    this.setTransitionPriority = function(data) {
+        try {
+            this.ptnGraph.getVertex(data.id).setPriority(parseInt(data.priority));
+            return true;
+        } catch (e) {
+            return false;
+        }
+    };
+
     this.createTransition = function(data) {
         try {
             return this.ptnGraph.createTransition(data.label, 1, createPosition(data)).id;

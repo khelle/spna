@@ -111,6 +111,13 @@ router.post('/transition/create', function(request, response) {
     response.json(createResponse(true, {id: id}));
 });
 
+router.post('/transition/priority', function(request, response) {
+    var data = request.body;
+    var status = api.setTransitionPriority(data);
+
+    response.json(createResponse(status, {}));
+});
+
 router.post('/vertex/label', function(request, response) {
     var data = request.body;
     var status = api.setVertexLabel(data);

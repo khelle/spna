@@ -35,6 +35,10 @@ POST /api/place/markers : void
 id	- int
 markers	- int
 
+POST /api/transition/priority : void
+id	- int
+priority    - int
+
 POST /api/vertex/label : void
 id	- int
 label	- string

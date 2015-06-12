@@ -35,6 +35,7 @@ var MediaManager = function(app, ajax) {
             proxy.app.ClosePromptMessage();
             proxy.app.Storage.Reset();
             proxy.app.Renderer.Paint();
+            proxy.app.SetPriorityMode(data.data.graph.priorities);
             proxy.app.Storage.Build(data.data.graph);
             proxy.app.Renderer.Paint();
             proxy.app.Renderer.ResetCameraPosition();

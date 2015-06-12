@@ -199,6 +199,15 @@ var AppModel = function() {
         }
     };
 
+    this.SetPriorityMode = function(on) {
+        if (on) {
+            this.ModeManager.TurnOnMode(this.MODES.PRIORITY);
+        }
+        else {
+            this.ModeManager.TurnOffMode(this.MODES.PRIORITY);
+        }
+    };
+
     this.AdjustCameraZoom = function(input) {
         this.PopMessage('Zoom set to x' + ~~(10/(1-input.target.value/64))/10);
         this.Renderer.SetCameraZoom(input.target.value/64);

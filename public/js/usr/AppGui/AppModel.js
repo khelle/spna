@@ -180,11 +180,13 @@ var AppModel = function() {
 
     this.OnPriorityModeOn = function() {
         $('#btn-14').addClass('app-button-active');
+        this.Analyzer.TurnPrioritiesOn();
         this.PopMessage('Priority mode ON...');
     };
 
     this.OnPriorityModeOff = function() {
         $('#btn-14').removeClass('app-button-active');
+        this.Analyzer.TurnPrioritiesOff();
         this.PopMessage('Priority mode OFF...');
     };
 

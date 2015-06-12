@@ -90,5 +90,27 @@ var Analyzer = function(app, ajax) {
         }, true);
     };
 
+    this.TurnPrioritiesOn = function() {
+        var proxy = this;
+
+        this.ajax.HttpPost('/api/graph/priorities', { priorities: true }, function(data, status) {
+            if (data.status === true) {
+                proxy.app.Renderer.EnableDrawingPriorities();
+                proxy.app.Renderer.Paint();
+            }
+        }, true);
+    };
+
+    this.TurnPrioritiesOff = function() {
+        var proxy = this;
+
+        this.ajax.HttpPost('/api/graph/priorities', { priorities: false }, function(data, status) {
+            if (data.status === true) {
+                proxy.app.Renderer.DisableDrawingPriorities();
+                proxy.app.Renderer.Paint();
+            }
+        }, true);
+    };
+
     return this;
 };

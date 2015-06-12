@@ -89,6 +89,7 @@ var PetriStorage = function(app, ajax) {
         switch (type) {
             case 'label': return this.SetPlaceLabel(id, val);
             case 'markers': return this.SetPlaceMarkers(id, val);
+            case 'priority': return this.SetPlacePriority(id, val);
             default: return;
         }
     };
@@ -117,6 +118,19 @@ var PetriStorage = function(app, ajax) {
 
         vertex = this.Graph.GetVertex(id).GetData();
         vertex.markers = markers;
+    };
+
+    this.SetPlacePriority = function(id, priority) {
+        var vertex;
+        var response;
+
+        response = this.Remote.SetVertexPriority(id, priority);
+        if (!response.status) {
+            return;
+        }
+
+        vertex = this.Graph.GetVertex(id).GetData();
+        vertex.priority = priority;
     };
 
     this.SetPlacePos = function(id, x, y) {
@@ -179,7 +193,7 @@ var PetriStorage = function(app, ajax) {
         return this;
     };
 
-    this.AddTransition = function(posx, posy, label) {
+    this.AddTransition = function(posx, posy, label, priority) {
         var id;
         var response;
 
@@ -193,7 +207,7 @@ var PetriStorage = function(app, ajax) {
 
         this.Graph.AddVertex(
             id,
-            new GraphVertex(new PetriNode(id, posx, posy, this.TRANSITION, label, 0))
+            new GraphVertex(new PetriNode(id, posx, posy, this.TRANSITION, label, 0, priority))
         );
         this.transitionNumo++;
 
@@ -370,7 +384,7 @@ var PetriStorage = function(app, ajax) {
     };
 
     this.CompareTransitions = function(T1, T2) {
-        return T1.label === T2.label;
+        return T1.label === T2.label && T1.priority === T2.priority;
     };
 
     this.CompareConnections = function(C1, C2) {

@@ -22,6 +22,7 @@ var GraphRenderer = function(app, renderingRoot) {
         enableHovering: false,
         drawLabels: true,
         drawEdgeLabels: true,
+        drawPriorities: false,
         edgeLabelSize: 'fixed',
         nodeTextSize: 'fixed',
         nodesPowRatio: 0.5,
@@ -136,6 +137,14 @@ var GraphRenderer = function(app, renderingRoot) {
         catch (ex) {}
     };
 
+    this.EnableDrawingPriorities = function() {
+        this.sigmaRenderer.settings({drawPriorities: true});
+    };
+
+    this.DisableDrawingPriorities = function() {
+        this.sigmaRenderer.settings({drawPriorities: false});
+    };
+
     this.PlaceRenderer = function(node, ctx, settings) {
         var prefix = settings('prefix') || '';
         var fontSize = (settings('nodeTextSize') === 'fixed') ? settings('defaultNodeTextSize') : settings('defaultNodeTextSize') * size * Math.pow(size, -1 / settings('nodeTextSizePowRatio'));
@@ -196,6 +205,7 @@ var GraphRenderer = function(app, renderingRoot) {
         var nx = node[prefix + 'x'];
         var ny = node[prefix + 'y'];
         var nsize = node[prefix + 'size'];
+        var fontSize = (settings('nodeTextSize') === 'fixed') ? settings('defaultNodeTextSize') : settings('defaultNodeTextSize') * size * Math.pow(size, -1 / settings('nodeTextSizePowRatio'));
 
         ctx.shadowBlur = 0;
 
@@ -215,8 +225,36 @@ var GraphRenderer = function(app, renderingRoot) {
             nsize*2,
             nsize*2
         );
+        ctx.save();
 
         ctx.shadowBlur = 0;
+
+        if (!settings('drawPriorities')) {
+            return;
+        }
+
+        ctx.font = [
+            settings('fontStyle'),
+            fontSize + 'px',
+            settings('font')
+        ].join(' ');
+
+        var fillStyle = (settings('nodeTextColor') === 'node') ? (node.color || settings('defaultNodeColor')) : settings('defaultNodeTextColor');
+        ctx.fillStyle = (node.textColor !== undefined) ? node.textColor : fillStyle ;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'alphabetic';
+
+        var cx = node[prefix + 'x'];
+        var cy = node[prefix + 'y'];
+
+        ctx.translate(cx, cy);
+        ctx.fillText(
+            (node.priority > 1 ? node.priority : ''),
+            0,
+            (node[prefix + 'size'] / 2)
+        );
+
+        ctx.restore();
     };
 
     this.RenderNode = function(record, defaultColor, defaultShadow) {
@@ -227,6 +265,7 @@ var GraphRenderer = function(app, renderingRoot) {
             id:                 'n' + record.id,
             storageID:          record.id,
             markers:            record.markers,
+            priority:           record.priority,
             label:              record.label,
             size:               8,
             x:                  record.x,
@@ -538,7 +577,7 @@ var GraphRenderer = function(app, renderingRoot) {
         if (this.app.ModeManager.IsOn(this.app.MODES.BUILD) && !this.blockclick && this.selectedNode === null) {
             var pos = this.GetMouseXY(e);
 
-            this.app.Storage.AddTransition(pos.x, pos.y, 'T' + this.app.Storage.GetTransitionCurrentNumo().toString());
+            this.app.Storage.AddTransition(pos.x, pos.y, 'T' + this.app.Storage.GetTransitionCurrentNumo().toString(), 1);
             this.Paint();
         }
         else {
@@ -999,6 +1038,10 @@ var GraphRenderer = function(app, renderingRoot) {
         }
         else if (node.type === this.app.Storage.TRANSITION) {
             attrs = [ 'label' ];
+
+            if (this.app.ModeManager.IsOn(this.app.MODES.PRIORITY)) {
+                attrs.push('priority');
+            }
         }
         else {
             return;

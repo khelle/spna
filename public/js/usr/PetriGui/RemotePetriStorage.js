@@ -79,6 +79,27 @@ var RemotePetriStorage = function(ajax) {
         return { data: response.data, status: response.status };
     };
 
+    this.SetVertexPriority = function(id, markers) {
+        var response;
+        var status;
+
+        //this.ajax.HttpPost(
+        //    "/api/place/markers",
+        //    {
+        //        id: id,
+        //        markers: markers
+        //    },
+        //    function(r, s) {
+        //        response = r;
+        //        status = s;
+        //    }
+        //);
+        //
+        //return { data: response.data, status: response.status };
+
+        return { data: {}, status: true };
+    };
+
     this.SetVertexLabel = function(id, label) {
         var response;
         var status;

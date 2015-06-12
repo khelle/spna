@@ -41,6 +41,7 @@ var AppController = function() {
         evenement.Register($('#btn-11')[0], 'click', $.proxy(app.ShowInstructions, app));
         evenement.Register($('#btn-12')[0], 'click', $.proxy(app.SimulationModeSwitch, app));
         evenement.Register($('#btn-13')[0], 'click', $.proxy(analyzer.GetActiveTransitions, analyzer));
+        evenement.Register($('#btn-14')[0], 'click', $.proxy(app.PriorityModeSwitch, app));
         evenement.Register($('#prompt-bg')[0], 'click', $.proxy(app.ClosePromptMessage, app));
 
         keyboard.BindKeyIn(

@@ -12,7 +12,8 @@ var AppModel = function() {
     this.MODES = {
         BUILD:      'build',
         DEMOLISH:   'demolish',
-        SIMULATE:   'simulate'
+        SIMULATE:   'simulate',
+        PRIORITY:   'priority'
     };
 
     this.Init = function() {
@@ -45,6 +46,7 @@ var AppModel = function() {
         var buildMode;
         var demolishMode;
         var simulationMode;
+        var priorityMode;
         var On;
         var Off;
 
@@ -56,6 +58,7 @@ var AppModel = function() {
         buildMode      = new Mode(this.MODES.BUILD);
         demolishMode   = new Mode(this.MODES.DEMOLISH);
         simulationMode = new Mode(this.MODES.SIMULATE);
+        priorityMode   = new Mode(this.MODES.PRIORITY);
 
         buildMode.SetCallback(On, $.proxy(this.OnBuildModeOn, this));
         buildMode.SetCallback(Off, $.proxy(this.OnBuildModeOff, this));
@@ -72,9 +75,13 @@ var AppModel = function() {
         simulationMode.AddDependency(On, buildMode.GetName(), Off);
         simulationMode.AddDependency(On, demolishMode.GetName(), Off);
 
+        priorityMode.SetCallback(On, $.proxy(this.OnPriorityModeOn, this));
+        priorityMode.SetCallback(Off, $.proxy(this.OnPriorityModeOff, this));
+
         man.SetMode(buildMode.GetName(), buildMode);
         man.SetMode(demolishMode.GetName(), demolishMode);
         man.SetMode(simulationMode.GetName(), simulationMode);
+        man.SetMode(priorityMode.GetName(), priorityMode);
 
         return this;
     };
@@ -160,6 +167,33 @@ var AppModel = function() {
         }
         else {
             this.ModeManager.TurnOnMode(this.MODES.SIMULATE);
+        }
+    };
+
+    this.PriorityModeOn = function() {
+        return this.ModeManager.TurnOnMode(this.MODES.PRIORITY);
+    };
+
+    this.PriorityModeOff = function() {
+        return this.ModeManager.TurnOffMode(this.MODES.PRIORITY);
+    };
+
+    this.OnPriorityModeOn = function() {
+        $('#btn-14').addClass('app-button-active');
+        this.PopMessage('Priority mode ON...');
+    };
+
+    this.OnPriorityModeOff = function() {
+        $('#btn-14').removeClass('app-button-active');
+        this.PopMessage('Priority mode OFF...');
+    };
+
+    this.PriorityModeSwitch = function() {
+        if (this.ModeManager.IsOn(this.MODES.PRIORITY)) {
+            this.ModeManager.TurnOffMode(this.MODES.PRIORITY);
+        }
+        else {
+            this.ModeManager.TurnOnMode(this.MODES.PRIORITY);
         }
     };
 

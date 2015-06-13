@@ -34,9 +34,10 @@ function NetProperties() {
 
          */
         var vertices = this.graph.GetVertices();
-        var limits = []
+        var limits = [];
+
         for(var i in vertices[0].getState()) {
-            limits.push(0);
+            limits[i] = 0;
         }
 
         console.log("!!!!");
@@ -336,6 +337,7 @@ function NetProperties() {
             return this.AnalysisResults;
         }
         this.SetGraph(PTNGraph);
+        this.PTNgraph.calculateMatrixRepresentation();
 
         var Limits  =  this.KPlacesLimits();
         var K = this.KLimit(Limits);

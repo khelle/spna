@@ -174,7 +174,34 @@ PTNGraph.prototype = {
 
     calculateMatrixRepresentation : function()
     {
-        // 
+        var PlacesCounter = 0;
+        var TransitionsCounter = 0;
+
+        for (var p in this.getPlaces())
+        {
+            PlacesCounter++;
+        }
+        for (var t in this.getTransitions())
+        {
+            TransitionsCounter++;
+        }
+
+        console.log("Transitions in graph : " + TransitionsCounter);
+        console.log("Places in graph : " + PlacesCounter);
+
+        // macierz wejść
+        // kolumny - przejścia
+        // wiersze - miejsca
+        var Nplus = new Array(PlacesCounter)
+
+        for (var i = 0; i < PlacesCounter; i++);
+        {
+            Nplus[i][j] = 0;
+
+        }
+        console.log("Nplus = " + Nplus);
+
+        //  macierzy wyjść
 
     },
 

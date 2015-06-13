@@ -1204,6 +1204,29 @@ var GraphRenderer = function(app, renderingRoot) {
         this.Paint();
     };
 
+    this.ShowNotesOfPlaceLimits = function(data) {
+        var key;
+        var row;
+        var node;
+        var nameParts;
+
+        console.log(data);
+
+        for (key in data) {
+            if (data.hasOwnProperty(key) !== false) {
+                row = data[key];
+
+                node = this.app.Storage.GetPlace(key);
+
+                nameParts = node.label.split('::');
+
+                node.label = nameParts[0] += '::K' + row;
+            }
+        }
+
+        this.Paint();
+    };
+
     this.ShowNotesOfActiveTransitions = function(data) {
         var key;
         var row;
@@ -1239,6 +1262,17 @@ var GraphRenderer = function(app, renderingRoot) {
 
         places = data[0];
         trans  = data[1];
+
+        for (key in places) {
+            if (places.hasOwnProperty(key) !== false) {
+                node = places[key];
+
+                nameParts = node.label.split('::');
+                if (node.label !== nameParts[0]) {
+                    node.label = nameParts[0];
+                }
+            }
+        }
 
         for (key in trans) {
             if (trans.hasOwnProperty(key) !== false) {

@@ -32,6 +32,7 @@ function NetProperties() {
         var kPlaceLimits = [];
     };
 
+
     this.KLimit = function ()
     {
 
@@ -50,21 +51,21 @@ function NetProperties() {
         {
             var state = vertices[v].getState();
             var tmp = 0;
-            //console.log("State : " + state);
+            ////("State : " + state);
 
             for(var m in state)
             {
                 tmp = Math.max(state[m]);
-                //console.log("m =" + m + ", tmp = " + tmp + ", maxK = " + maxK);
+                ////("m =" + m + ", tmp = " + tmp + ", maxK = " + maxK);
                 if (tmp > maxK) maxK = tmp;
             }
 
          }
-        //console.log("Finallly, maxK = " + maxK);
+        ////("Finallly, maxK = " + maxK);
         return maxK; // funkcja może zwrócić nieskończoność!!!
         // TODO: sprawdzić obliczanie max
     };
-
+    // TODO: dodać do GUI!
     this.isSecure = function () {
         // sieć jest bezpieczna, jeśli jest 1-ograniczona
         if (this.KLimit()==1) return true;
@@ -101,7 +102,7 @@ function NetProperties() {
             {
                 weightsVector.push(1);
             }
-            //console.log("weightsVector: " + weightsVector);
+            ////("weightsVector: " + weightsVector);
         }
 
         // sieć jest zachowawcza, jeśli  łączna liczba znaczników
@@ -129,10 +130,10 @@ function NetProperties() {
                 sum  +=  state[m] * weightsVector[m];
             }
             if(sum === Infinity) return false;
-            //console.log("Sum in state " + i + " = " + sum);
+            ////("Sum in state " + i + " = " + sum);
             sums.push(sum);
         }
-        console.log("Sums of markers in each state: " + sums);
+        //("Sums of markers in each state: " + sums);
         for (var s = 0; s < sums.length - 1; s++)
         {
             if( (sums[s+1]-sums[s]) !== 0) return false;
@@ -154,13 +155,13 @@ function NetProperties() {
         */
         var vertices = this.graph.GetVertices();
         var root = this.CoverabilityGraph.treeRoot;
-        console.log("Root: " + root.id);
+        //("Root: " + root.id);
         for(v in vertices)
         {
             vv = vertices[v];
             if(vv.id !== root.id)
             {
-                console.log("Vertex: " + vv.id);
+                //("Vertex: " + vv.id);
                 if(!this.CoverabilityGraph.Dijkstra(vertices[v], root)) return false;
             }
         }
@@ -199,6 +200,10 @@ function NetProperties() {
      żadnym ciągu przejsć należących  do  zbioru  L(M0)
       */
 
+    //var function {}
+    // jeśli z jakiegoś stanu istnieje ścieżka w grafie pokrycia, która prowadzi do stanu martwego - sieć nie jest ani żywa ani martwa
+    // jeśli nie ma drogi do stanu martwego, to sieć jest żywa
+    // funkcja zwracająaca
     this.getTransitionsVitality = function () {
 
         /*
@@ -211,9 +216,9 @@ function NetProperties() {
         for(var j in edges){
             var e = edges[j];
             transitionsCover.push(e.data.transition);
-            console.log("Edge = " + e.data.transition);
+            //("Edge = " + e.data.transition);
         }
-        console.log("TransitionsCover : " + transitionsCover);
+        //("TransitionsCover : " + transitionsCover);
         var counts = {};
 
         // mapa - nazwa przejścia : ilość wystąpienia przejścia w grafie pokrycia
@@ -228,6 +233,8 @@ function NetProperties() {
             if(counts[transitionsPTN[p]] === undefined)
             {
                 transitionsVitality.push({transition: transitionsPTN[p].getId(), vitality: 'L0'});
+                // TODO: sprawdzić, czy można wrócić do przejścia z dowolnego miejsca
+                // Dijkstra ze sprawdzaniem krawędzi
             }
             else if  (counts[transitionsPTN[p]])
             {

@@ -38,11 +38,7 @@ var Api = function() {
 
     this.getCoverabilityGraph = function() {
         try {
-            if (null === this.netProperties.CoverabilityGraph) {
-                this.netProperties.Analyze(this.ptnGraph.clone());
-            }
-
-            return this.netProperties.CoverabilityGraph.serializeCoverabilityGraph();
+            return this.netProperties.serializeCoverabilityGraph(this.ptnGraph.clone());
         } catch (e) {
             return false;
         }
@@ -50,11 +46,7 @@ var Api = function() {
 
     this.getReachabilityGraph = function() {
         try {
-            if (null === this.netProperties.CoverabilityGraph) {
-                this.netProperties.Analyze(this.ptnGraph.clone());
-            }
-
-            return this.netProperties.CoverabilityGraph.serializeReachabilityGraph();
+            return this.netProperties.serializeReachabilityGraph(this.ptnGraph.clone());
         } catch (e) {
             return false;
         }

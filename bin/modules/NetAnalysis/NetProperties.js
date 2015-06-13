@@ -125,7 +125,7 @@ function NetProperties() {
     };
 
 
-    this.isConservative = function (weightsVector) { // TODO: Potrzebuję do testu sieci, w której nie pojawiają się nieskończoności w grafie pokrycia
+    this.isConservative = function (givenVector) { // TODO: Potrzebuję do testu sieci, w której nie pojawiają się nieskończoności w grafie pokrycia
         // JEŚLI CoverabilityGraph.isConservative = true - sprawdź:
         // Jeśli false- zwróc false
         // TODO: czy takie rozwiazanie z argumentem domyślnym dla funkcji jest ok?
@@ -141,22 +141,29 @@ function NetProperties() {
 
         var sums = [];
         var sampleState = undefined;
+        var weightsVector = [];
 
+        if (typeof(givenVector)==='undefined'){
 
-        if (typeof(weightsVector)==='undefined'){
-            weightsVector = [];
             // TODO: jak mogę pobrać pierwszy stan (pierwszy element tablicy)?
-            for (var s in vertices)
-            {
-                sampleState = vertices[s].getState();
-                break;
-            }
+            sampleState = vertices[0].getState();
             for(var i in sampleState)
                 // TODO: dlaczego nie mogę pobrać rozmiaru stanu metodą size/length?
             {
-                weightsVector.push(1);
+                weightsVector[i] = 1;
             }
 
+        }
+        else
+        {
+            sampleState = vertices[0].getState();
+            var index = 0;
+            for(var i in sampleState)
+                // TODO: dlaczego nie mogę pobrać rozmiaru stanu metodą size/length?
+            {
+                weightsVector[i] = givenVector[index];
+                index++;
+            }
         }
         console.log("weightsVector: " + weightsVector);
 
@@ -182,13 +189,14 @@ function NetProperties() {
             var sum = 0;
             for(var m in state)
             {
+                console.log("m = "  + m + " State[m] = " + state[m] + ", waga[m] = " + weightsVector[m] )
                 sum  +=  state[m] * weightsVector[m];
             }
             if(sum === Infinity) return false;
-            ////("Sum in state " + i + " = " + sum);
+           console.log("Sum in state " + m + " = " + sum);
             sums.push(sum);
         }
-        //("Sums of markers in each state: " + sums);
+        console.log("Sums of markers in each state: " + sums);
         for (var s = 0; s < sums.length - 1; s++)
         {
             if( (sums[s+1]-sums[s]) !== 0) return false;

@@ -56,7 +56,8 @@ router.post('/transition/execute', function(request, response) {
 });
 
 router.get('/graph/analyze', function(request, response) {
-    var analysis = api.analyzeGraph();
+    var data = request.body;
+    var analysis = api.analyzeGraph(data);
 
     if (analysis === false) {
         response.json(createResponse(false, {}));

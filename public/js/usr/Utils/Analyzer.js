@@ -23,7 +23,7 @@ var Analyzer = function(app, ajax) {
 
         message = '<label>Below are given characterstics of current graph:</label>';
         props = [
-            'NetLimit', 'Conservative', 'Reversable', 'Vital'
+            'NetLimit', 'Securability', 'Unlimited', 'Conservative', 'Reversable', 'Vital'
         ];
 
         message += '<table cellpadding=0 cellspacing=0>';
@@ -38,6 +38,7 @@ var Analyzer = function(app, ajax) {
 
         app.SimulationModeOn();
         app.Renderer.ShowNotesOfTransitionsVitality(data["Transitions vitality"]);
+        app.Renderer.ShowNotesOfPlaceLimits(data["PlacesLimits"]);
 
         app.PromptMessage(
             'Analysis results',

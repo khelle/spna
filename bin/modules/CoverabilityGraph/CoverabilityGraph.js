@@ -504,7 +504,24 @@ function CoverabilityGraph(ptnGraph) {
         console.log(d);
         if (d[endVertex.id] !== Infinity) return true; // istnieje ścieżka pomiędzy wierzchołkami
         else return false;
-    }
+    };
+
+    this.serialize = function() {
+        return {
+            'vertices': [
+                {'id': 1, 'label': '1101', 'neighbours': [
+                    {'id': 2, 'edge_id': 1},
+                    {'id': 3, 'edge_id': 2}
+                ]},
+                {'id': 2, 'label': '1001', 'neighbours': [
+                    {'id': 1, 'edge_id': 3}
+                ]},
+                {'id': 3, 'label': '0011', 'neighbours': [
+                    {'id': 2, 'edge_id': 4}
+                ]}
+            ]
+        };
+    };
 
     this.build();
 

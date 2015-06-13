@@ -14,7 +14,7 @@ Place.prototype = {
     },
 
     setMarkers: function(markers) {
-        this.markers = Utils.number(markers);
+        this.markers = Utils.number(parseInt(markers));
         return this;
     },
 
@@ -27,7 +27,7 @@ Place.prototype = {
     },
 
     addMarkers: function(markers) {
-        this.markers += Utils.number(markers);
+        this.markers += Utils.number(parseInt(markers));
         return this;
     },
 
@@ -38,7 +38,7 @@ Place.prototype = {
         }
 
         this.markers -= Utils.number(parseInt(markers));
-      
+
         return this;
     },
 

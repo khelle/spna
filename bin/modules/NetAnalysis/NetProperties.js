@@ -33,12 +33,12 @@ function NetProperties() {
         /* TODO: funkcja ma zwracać k-ograniczoność każdego wierzchołka
 
          */
-
-
-
-
         var vertices = this.graph.GetVertices();
-        var limits = vertices[0].getState();
+        var limits = []
+        for(var i in vertices[0].getState()) {
+            limits.push(0);
+        }
+
         console.log("!!!!");
         console.log(vertices);
         console.log(limits);//
@@ -54,18 +54,18 @@ function NetProperties() {
             {
                if (state[m] > limits[m])
                {
+
                    limits[m] = state[m];
                }
             }
 
         }
-        /*
+
         for(var t in limits)
         {
-            console.log("Lims: " + limits[t]);
-
+            console.log("Lims: " + limits[t] + ", t = " + t );
         }
-        */
+
         return limits;
     };
 
@@ -146,7 +146,7 @@ function NetProperties() {
 
             // TODO: jak mogę pobrać pierwszy stan (pierwszy element tablicy)?
             sampleState = vertices[0].getState();
-            for(var i in sampleState)
+            for(var i in sampleState) // DANGER!!!!
                 // TODO: dlaczego nie mogę pobrać rozmiaru stanu metodą size/length?
             {
                 weightsVector[i] = 1;
@@ -340,10 +340,10 @@ function NetProperties() {
 
         var Limits  =  this.KPlacesLimits();
         var K = this.KLimit(Limits);
-        //if (K === null) K =
+
         this.AnalysisResults = {
             "PlacesLimits" : Limits,
-            "NetLimit": (null === K ? K : 'Unlimited'),
+            "NetLimit": (null !== K ? K : 'Unlimited'),
             "Securability" : this.isSecure(K),
             "Unlimited" : this.isUnlimited(K),
             "Conservative": this.isConservative(),

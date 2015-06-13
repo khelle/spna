@@ -24,15 +24,14 @@ var DefaultVertexStorage = function() {
     this.GetVertex = function(id) {
         var index;
 
+        console.log(id);
+        console.log(this.verticesIndex);
+
         if ((index = this.verticesIndex[id]) === undefined) {
             return null;
         }
 
         return this.vertices[index];
-
-        vertex.GetIncidetEdges = graph.GetIncidentEdges(vertex.id);
-
-        return vertex;
     };
 
     this.RemoveVertex = function(id) {

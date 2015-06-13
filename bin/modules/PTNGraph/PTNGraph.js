@@ -172,6 +172,12 @@ PTNGraph.prototype = {
     },
 
 
+    calculateMatrixRepresentation : function()
+    {
+        // 
+
+    },
+
     /*
      Executes target transition
      */

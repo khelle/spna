@@ -109,11 +109,10 @@ function CoverabilityGraph(ptnGraph) {
 
                 this.ptnGraph.setState(current);
 
-                var TMPtrans;
+                var TMPtrans = this.ptnGraph.findTransitionsToExecute();
+
                 if(this.ptnGraph.priorities) {
-                    TMPtrans = this.ptnGraph.findPrioritizedTransitionsToExecute();
-                } else {
-                    TMPtrans = this.ptnGraph.findTransitionsToExecute();
+                    TMPtrans = this.ptnGraph.findPrioritizedTransitionsToExecute(TMPtrans);
                 }
 
                 if(!TMPtrans.length) {
@@ -520,21 +519,37 @@ function CoverabilityGraph(ptnGraph) {
         else return false;
     };
 
-    this.serialize = function() {
-        return {
-            'vertices': [
-                {'id': 1, 'label': '1101', 'neighbours': [
-                    {'id': 2, 'edge_id': 1},
-                    {'id': 3, 'edge_id': 2}
-                ]},
-                {'id': 2, 'label': '1001', 'neighbours': [
-                    {'id': 1, 'edge_id': 3}
-                ]},
-                {'id': 3, 'label': '0011', 'neighbours': [
-                    {'id': 2, 'edge_id': 4}
-                ]}
-            ]
-        };
+    this.serializeCoverabilityGraph = function() {
+        return this.serialize(this.graph);
+    };
+
+    this.serializeReachabilityGraph = function() {
+        if (null === this.reachability) {
+            this.buildReachabilityTree();
+        }
+
+        return this.serialize(this.reachability);
+    };
+
+    this.serialize = function(graph) {
+        var vertices = [];
+        var graphVertices = graph.GetVertices();
+
+        for (var i in graphVertices) {
+            var vertex = graphVertices[i];
+            var vertexNeighbours = graph.GetNeighbours(vertex.id);
+            var neighbours = [];
+
+            for (var j in vertexNeighbours) {
+                var neighbour = vertexNeighbours[j];
+
+                neighbours.push({'id': neighbour.id, 'edges': graph.edgesStorage.GetEdgesBetween(vertex.id, neighbour.id)});
+            }
+
+            vertices.push({'id': vertex.id, 'label': vertex.getHash(), 'neighbours': neighbours});
+        }
+
+        return {'vertices': vertices};
     };
 
     this.build();

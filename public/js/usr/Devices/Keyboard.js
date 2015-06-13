@@ -9,7 +9,8 @@ var Keyboard = function() {
         ENTER:  13,
         LSHIFT: 16,
         LCTRL:  17,
-        CAPS:   20
+        CAPS:   20,
+        ESC:    27
     };
 
     this.Init = function() {

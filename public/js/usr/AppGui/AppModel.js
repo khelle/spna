@@ -1,13 +1,14 @@
 var AppModel = function() {
-    this.box         = null;
-    this.popBox      = null;
-    this.Keyboard    = null;
-    this.Storage     = null;
-    this.Renderer    = null;
-    this.Evenement   = null;
-    this.ModeManager = null;
-    this.Media       = null;
-    this.Analyzer    = null;
+    this.box            = null;
+    this.popBox         = null;
+    this.Keyboard       = null;
+    this.Storage        = null;
+    this.Renderer       = null;
+    this.Evenement      = null;
+    this.ModeManager    = null;
+    this.Media          = null;
+    this.Analyzer       = null;
+    this.CoverRenderer  = null;
 
     this.MODES = {
         BUILD:      'build',
@@ -17,14 +18,15 @@ var AppModel = function() {
     };
 
     this.Init = function() {
-        this.box         = $('#box');
-        this.Keyboard    = new Keyboard();
-        this.Storage     = new PetriStorage(this, new Ajax());
-        this.Renderer    = new GraphRenderer(this, document.querySelector('#graph-canvas'));
-        this.Evenement   = new Evenement(this);
-        this.ModeManager = new ModeManager(this);
-        this.Media       = new MediaManager(this, new Ajax(this));
-        this.Analyzer    = new Analyzer(this, new Ajax(this));
+        this.box            = $('#box');
+        this.Keyboard       = new Keyboard();
+        this.Storage        = new PetriStorage(this, new Ajax());
+        this.Renderer       = new GraphRenderer(this, document.querySelector('#graph-canvas'));
+        this.Evenement      = new Evenement(this);
+        this.ModeManager    = new ModeManager(this);
+        this.Media          = new MediaManager(this, new Ajax(this));
+        this.Analyzer       = new Analyzer(this, new Ajax(this));
+        this.CoverRenderer  = new CoverabilityRenderer(this, document.querySelector('#window-layer .canvas-div'));
 
         this
             .AdjustAppSize()
@@ -228,7 +230,7 @@ var AppModel = function() {
     };
 
     this.AdjustAppSize = function() {
-        var w, h, m,pw, ph;
+        var w, h, m,pw, ph, winX, winY;
 
         if (this.box == null) {
             return this;
@@ -244,8 +246,8 @@ var AppModel = function() {
         h = h - m*2 - ph*2 - 45;
 
         this.box.find('#canvas, #graph-canvas').css({
-          'width': w,
-          'height': h
+          width: w,
+          height: h
         });
 
         var $preloader = $('#preloader-box');
@@ -256,6 +258,16 @@ var AppModel = function() {
         $preloader.css({
             left: w/2,
             top: h/2
+        });
+
+        var $canvas = $('#window-layer .canvas-div:first');
+
+        winX = $(window).width();
+        winY = $(window).height();
+
+        $canvas.css({
+            width: winX * 0.8,
+            height: winY * 0.8
         });
 
         return this;
@@ -283,6 +295,22 @@ var AppModel = function() {
     };
 
     this.PromptMessage = function(title, message, icons, buttons) {
+        return this.CustomPromptMessage('#prompt-layer', title, message, icons, buttons);
+    };
+
+    this.ClosePromptMessage = function() {
+        return this.CloseCustomPromptMessage('#prompt-layer');
+    };
+
+    this.WindowMessage = function(title, message, icons, buttons) {
+        return this.CustomPromptMessage('#window-layer', title, message, icons, buttons);
+    };
+
+    this.CloseWindowMessage = function() {
+        return this.CloseCustomPromptMessage('#window-layer');
+    };
+
+    this.CustomPromptMessage = function(selector, title, message, icons, buttons) {
         icons = icons || [];
         buttons = buttons || [];
 
@@ -294,10 +322,10 @@ var AppModel = function() {
         var icon;
         var button;
 
-        promptLayer = this.box.find('#prompt-layer');
-        promptHeader  = promptLayer.find('#prompt-header');
-        promptMessage = promptLayer.find('#prompt-message');
-        promptButtons = promptLayer.find('#prompt-buttons');
+        promptLayer = this.box.find(selector);
+        promptHeader  = promptLayer.find('.prompt-header:first');
+        promptMessage = promptLayer.find('.prompt-message:first');
+        promptButtons = promptLayer.find('.prompt-buttons:first');
 
         promptLayer.stop().css({
             display: 'block',
@@ -311,14 +339,16 @@ var AppModel = function() {
 
                 promptHeader.append(
                     this.GenerateButton('', 'prompt-icon glyphicon glyphicon-remove', icon.fn)
-                )
+                );
             }
         }
         promptHeader.append(
             '<label class="prompt-title">' + title + '</label>'
         );
 
-        promptMessage.html(message);
+        if (message !== false) {
+            promptMessage.html(message);
+        }
 
         promptButtons.html('');
         for (i in buttons) {
@@ -331,15 +361,15 @@ var AppModel = function() {
             }
         }
 
-        this.AdjustPromptSize();
+        this.AdjustPromptSize(selector, 0.4);
 
         return this;
     };
 
-    this.ClosePromptMessage = function() {
+    this.CloseCustomPromptMessage = function(selector) {
         var promptLayer;
 
-        promptLayer = this.box.find('#prompt-layer');
+        promptLayer = this.box.find(selector);
 
         promptLayer.stop().animate({
             opacity: 0
@@ -363,14 +393,14 @@ var AppModel = function() {
         return button;
     };
 
-    this.AdjustPromptSize = function() {
+    this.AdjustPromptSize = function(selector, offsetYScale) {
         var promptBox;
         var w;
         var h;
         var layerWidth;
         var layerHeight;
 
-        promptBox = this.box.find('#prompt-box');
+        promptBox = this.box.find(selector).find('.prompt-box:first');
 
         w = $(window).width();
         h = $(window).height();
@@ -379,7 +409,7 @@ var AppModel = function() {
 
         promptBox.css({
             left: ~~((w-layerWidth)*0.5),
-            top: ~~((h-layerHeight)*0.4)
+            top: ~~((h-layerHeight)*offsetYScale)
         });
     };
 

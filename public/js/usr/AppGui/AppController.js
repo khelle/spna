@@ -42,7 +42,22 @@ var AppController = function() {
         evenement.Register($('#btn-12')[0], 'click', $.proxy(app.SimulationModeSwitch, app));
         evenement.Register($('#btn-13')[0], 'click', $.proxy(analyzer.GetActiveTransitions, analyzer));
         evenement.Register($('#btn-14')[0], 'click', $.proxy(app.PriorityModeSwitch, app));
-        evenement.Register($('#prompt-bg')[0], 'click', $.proxy(app.ClosePromptMessage, app));
+        //evenement.Register($('#btn-15')[0], 'click', $.proxy(analyzer.DownloadCoverabilityGraph, analyzer));
+        evenement.Register($('#btn-15')[0], 'click', $.proxy(function() {
+            var app;
+
+            app = this;
+            return this.WindowMessage("Canvas", false, [
+                {
+                    type: 'close',
+                    fn: function() {
+                        app.CloseWindowMessage();
+                    }
+                }
+            ]);
+        }, app));
+        evenement.Register($('#prompt-layer .prompt-bg:first')[0], 'click', $.proxy(app.ClosePromptMessage, app));
+        evenement.Register($('#window-layer .prompt-bg:first')[0], 'click', $.proxy(app.CloseWindowMessage, app));
 
         keyboard.BindKeyIn(
             keyboard.KEY.LCTRL, 'BuildModeActivator', $.proxy(app.BuildModeOn, app)
@@ -57,8 +72,17 @@ var AppController = function() {
         keyboard.BindKeyOut(
             keyboard.KEY.LSHIFT, 'DemolishModeActivator', $.proxy(app.DemolishModeOff, app)
         );
+
         keyboard.BindKeyOut(
             keyboard.KEY.CAPS, 'SimulationModeActivator', $.proxy(app.SimulationModeSwitch, app)
+        );
+
+        keyboard.BindKeyOut(
+            keyboard.KEY.ESC, 'ClosePrompts', $.proxy(function() {
+                var app = this;
+                app.ClosePromptMessage();
+                app.CloseWindowMessage();
+            }, app)
         );
 
         keyboard.BindKeyOut(

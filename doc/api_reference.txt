@@ -9,6 +9,8 @@ POST /api/graph/file : void - import grafu z pliku
 
 GET /api/graph/analyze : json analyzis - obiekt zawierający właściwości grafu
 
+GET /api/graph/analyze/coverability-graph : json graph - zserializowany graf pokrycia
+
 POST /api/graph/priorities : void - ustawia, czy graf ma uwzględniać priorytety
 priorities  - bool
 

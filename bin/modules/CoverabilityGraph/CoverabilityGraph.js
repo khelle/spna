@@ -491,6 +491,7 @@ function CoverabilityGraph(ptnGraph) {
                 //w(u,w) - waga krawędzi pomiędzy u i w
                 // sprawdź, czy v jest elementem Q
 
+                /*
                 if (d[neighID] === Infinity) {
                     d[neighID] = d[u.id] + 1;
                     var structure = {distance:  d[neighID], vert: neighbours[v]};
@@ -498,6 +499,7 @@ function CoverabilityGraph(ptnGraph) {
                     Q.enq(structure);
                 }
                 else {
+                */
                     if (d[neighID] > d[u.id] + 1) {
                         d[neighID] = d[u.id] + 1;
                         var structure = {distance:  d[neighID], vert: neighbours[v]};
@@ -505,7 +507,7 @@ function CoverabilityGraph(ptnGraph) {
                         Q.enq(structure);
 
                     }
-                }
+                //}
             }
 
 

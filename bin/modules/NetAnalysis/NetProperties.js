@@ -339,18 +339,18 @@ function NetProperties() {
         this.SetGraph(PTNGraph);
         this.PTNgraph.calculateMatrixRepresentation();
 
-        //var Limits  =  this.KPlacesLimits();
-        //var K = this.KLimit(Limits);
+        var Limits  =  this.KPlacesLimits();
+        var K = this.KLimit(Limits);
         //console.log("K  = "  + K);
         this.AnalysisResults = {
-            //"PlacesLimits" : Limits,
-            //"NetLimit": (null !== K ? K : 'Unlimited'),
-            //"Securability" : this.isSecure(K),
-            //"Unlimited" : this.isUnlimited(K),
-            //"Conservative": this.isConservative(weightVector),
-            //"Reversable" : this.isReversable(),
-            //"Vital" : this.isVital(),
-            //"Transitions vitality" : this.getTransitionsVitality()
+            "PlacesLimits" : Limits,
+            "NetLimit": (null !== K ? K : 'Unlimited'),
+            "Securability" : this.isSecure(K),
+            "Unlimited" : this.isUnlimited(K),
+            "Conservative": this.isConservative(weightVector),
+            "Reversable" : this.isReversable(),
+            "Vital" : this.isVital(),
+            "Transitions vitality" : this.getTransitionsVitality()
         };
 
         this.lastAnalyzedState = PTNGraph.getState();

@@ -137,7 +137,7 @@ function NetProperties() {
     };
 
 
-    this.isConservative = function (givenVector) { // TODO: Potrzebuję do testu sieci, w której nie pojawiają się nieskończoności w grafie pokrycia
+        this.isConservative = function (givenVector) { // TODO: Potrzebuję do testu sieci, w której nie pojawiają się nieskończoności w grafie pokrycia
         // JEŚLI CoverabilityGraph.isConservative = true - sprawdź:
         // Jeśli false- zwróc false
         // TODO: czy takie rozwiazanie z argumentem domyślnym dla funkcji jest ok?
@@ -155,8 +155,8 @@ function NetProperties() {
         var sampleState = vertices[0].getState();
         var weightsVector = [];
         console.log("GIVEN VECTOR = " + givenVector);
-        if ( (givenVector instanceof Array) && (givenVector.length === 0)) {
-
+        //if ( (givenVector instanceof Array) && (givenVector.length === 0)) {
+        if(givenVector === undefined){
 
             for(var i in sampleState) // DANGER!!!!
 
@@ -204,7 +204,7 @@ function NetProperties() {
                 sum  +=  state[m] * weightsVector[m];
             }
             if(sum === Infinity) return false;
-           console.log("Sum in state " + m + " = " + sum);
+            console.log("Sum in state " + m + " = " + sum);
             sums.push(sum);
         }
         console.log("Sums of markers in each state: " + sums);
@@ -214,6 +214,8 @@ function NetProperties() {
         }
         return true;
     };
+
+
 
 
     this.isReversable = function () {
@@ -349,7 +351,7 @@ function NetProperties() {
             return this.AnalysisResults;
         }
         this.SetGraph(PTNGraph);
-        //this.PTNgraph.calculateMatrixRepresentation();
+
 
         var Limits  =  this.KPlacesLimits();
         var K = this.KLimit(Limits);
@@ -364,7 +366,7 @@ function NetProperties() {
             "Vital" : this.isVital(),
             "Transitions vitality" : this.getTransitionsVitality()
         };
-
+        //this.PTNgraph.calculateMatrixRepresentation();
         this.lastAnalyzedState = PTNGraph.getState();
 
         return this.AnalysisResults;

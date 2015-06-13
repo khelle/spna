@@ -8,6 +8,21 @@ var g = new PTNGraph('G_TEST');     // create a new Graph
 
 
 
+var p1 = g.createPlace('p1',2);
+var p2 = g.createPlace('p2',0);
+
+
+var t1 = g.createTransition('t1');
+var t2 = g.createTransition('t2');
+
+
+p1.connect(t1,1);
+p1.connect(t2,1);
+
+t1.connect(p2,1);
+t2.connect(p2,1);
+
+/*
 var p1 = g.createPlace('p1',1);
 var p2 = g.createPlace('p2',0);
 
@@ -18,7 +33,7 @@ var t1 = g.createTransition('t1');
 p1.connect(t1,1);
 t1.connect(p1,1);
 t1.connect(p2,1);
-
+*/
 
 
 /*
@@ -118,12 +133,12 @@ console.log( g.print() );
 
 var testing = new CoverabilityGraph(g);
 
-testing.buildReachabilityTree();
+//testing.buildReachabilityTree();
 
-testing.buildCoverabilityTree();
-testing.buildCoverabilityGraph();
+//testing.buildCoverabilityTree();
+//testing.buildCoverabilityGraph();
 
-testing.buildReachabilityTree();
+//testing.buildReachabilityTree();
 
 
 console.log( "ENDING." );

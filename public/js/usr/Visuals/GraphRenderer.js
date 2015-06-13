@@ -173,9 +173,9 @@ var GraphRenderer = function(app, renderingRoot) {
         }
         ctx.fill();
 
-        ctx.save();
-
         ctx.shadowBlur = 0;
+
+        ctx.save();
         ctx.font = [
             settings('fontStyle'),
             fontSize + 'px',
@@ -225,13 +225,14 @@ var GraphRenderer = function(app, renderingRoot) {
             nsize*2,
             nsize*2
         );
-        ctx.save();
 
         ctx.shadowBlur = 0;
 
         if (!settings('drawPriorities')) {
             return;
         }
+
+        ctx.save();
 
         ctx.font = [
             settings('fontStyle'),
@@ -795,7 +796,7 @@ var GraphRenderer = function(app, renderingRoot) {
         saver.href = curl;
         saver.click();
 
-        //this.ClearTempCopy();
+        this.ClearTempCopy();
         this.ResetCameraPosition();
         this.RestorePreviousSelectedNode();
     };
@@ -860,6 +861,7 @@ var GraphRenderer = function(app, renderingRoot) {
 
             node.x = node.x - tempSize.xMin;
             node.y = node.y - tempSize.yMin;
+            node.size = 8;
 
             tempSigma.graph.addNode(node);
         }

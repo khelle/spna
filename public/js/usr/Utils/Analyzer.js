@@ -117,16 +117,41 @@ var Analyzer = function(app, ajax) {
     this.DownloadCoverabilityGraph = function() {
         var proxy = this;
 
-        //this.ajax.HttpPost('/api/graph/priorities', { priorities: false }, function(data, status) {
-        //    if (data.status === true) {
-        //        proxy.app.Renderer.DisableDrawingPriorities();
-        //        proxy.app.Renderer.SelectNode(proxy.app.Renderer.selectedNode);
-        //        proxy.app.Renderer.Paint();
-        //    }
-        //}, true);
+        this.ajax.HttpGet('/api/graph/analyze/coverability-graph', null, function(data, status) {
+            if (data.status === true) {
+                proxy.app.WindowMessage("CoverabilityGraph", false, [
+                    {
+                        type: 'close',
+                        fn: function() {
+                            proxy.app.CloseWindowMessage();
+                        }
+                    }
+                ]);
+                proxy.app.CoverRenderer.Build(data.data.graph);
+                proxy.app.CoverRenderer.Paint();
+                proxy.app.CoverRenderer.ResetCameraPosition();
+            }
+        });
+    };
 
-        //proxy.app.cRenderer.Build();
-        //proxy.app.cRenderer.Paint();
+    this.DownloadReachabilityGraph = function() {
+        var proxy = this;
+
+        this.ajax.HttpGet('/api/graph/analyze/reachability-graph', null, function(data, status) {
+            if (data.status === true) {
+                proxy.app.WindowMessage("ReachabilityGraph", false, [
+                    {
+                        type: 'close',
+                        fn: function() {
+                            proxy.app.CloseWindowMessage();
+                        }
+                    }
+                ]);
+                proxy.app.CoverRenderer.Build(data.data.graph);
+                proxy.app.CoverRenderer.Paint();
+                proxy.app.CoverRenderer.ResetCameraPosition();
+            }
+        });
     };
 
     return this;

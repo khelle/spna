@@ -26,22 +26,14 @@ function CoverabilityGraph(ptnGraph) {
     daje podwojone wyniki przy kolejnym odpalaniu budowania drzewa
     (nie wiem czy zmiana jest konieczna dla reachability...)
      */
-
-
     this.treeRoot = null;
 
     this.mergeQueue = {};
     this.mergeIndexes = {};
 
-    this.IsConservative = true; // czy sieć jest zachowawcza
-
-
-
     this.getParent = function(vertex) {
         try {
-            //return this.graph.GetReferencing(vertex)[0];\\
-            var out = this.graph.GetReferencing(vertex.id)[0];
-            return out;
+            return this.graph.GetReferencing(vertex.id)[0];
         } catch(e) {
             return null;
         }
@@ -51,8 +43,6 @@ function CoverabilityGraph(ptnGraph) {
         this.buildCoverabilityTree();
         this.buildCoverabilityGraph();
     };
-
-
 
     //ReachabilityTree
     this.buildReachabilityTree = function() {
@@ -243,11 +233,10 @@ function CoverabilityGraph(ptnGraph) {
 
                 this.ptnGraph.setState(current);
 
-                var TMPtrans;
+                var TMPtrans = this.ptnGraph.findTransitionsToExecute();
+
                 if(this.ptnGraph.priorities) {
-                    TMPtrans = this.ptnGraph.findPrioritizedTransitionsToExecute();
-                } else {
-                    TMPtrans = this.ptnGraph.findTransitionsToExecute();
+                    TMPtrans = this.ptnGraph.findPrioritizedTransitionsToExecute(TMPtrans);
                 }
 
                 if(!TMPtrans.length) {

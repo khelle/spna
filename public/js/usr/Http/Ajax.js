@@ -55,7 +55,7 @@ var Ajax = function(preloader) {
         if (proxy.preloader !== null && cancelPreloader === false) {
             proxy.preloader.ShowPreloader();
         }
-
+        
         $.ajax({
             url: url,
             type: 'GET',

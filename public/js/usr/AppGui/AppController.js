@@ -42,20 +42,8 @@ var AppController = function() {
         evenement.Register($('#btn-12')[0], 'click', $.proxy(app.SimulationModeSwitch, app));
         evenement.Register($('#btn-13')[0], 'click', $.proxy(analyzer.GetActiveTransitions, analyzer));
         evenement.Register($('#btn-14')[0], 'click', $.proxy(app.PriorityModeSwitch, app));
-        //evenement.Register($('#btn-15')[0], 'click', $.proxy(analyzer.DownloadCoverabilityGraph, analyzer));
-        evenement.Register($('#btn-15')[0], 'click', $.proxy(function() {
-            var app;
-
-            app = this;
-            return this.WindowMessage("Canvas", false, [
-                {
-                    type: 'close',
-                    fn: function() {
-                        app.CloseWindowMessage();
-                    }
-                }
-            ]);
-        }, app));
+        evenement.Register($('#btn-15')[0], 'click', $.proxy(analyzer.DownloadCoverabilityGraph, analyzer));
+        evenement.Register($('#btn-16')[0], 'click', $.proxy(analyzer.DownloadReachabilityGraph, analyzer));
         evenement.Register($('#prompt-layer .prompt-bg:first')[0], 'click', $.proxy(app.ClosePromptMessage, app));
         evenement.Register($('#window-layer .prompt-bg:first')[0], 'click', $.proxy(app.CloseWindowMessage, app));
 

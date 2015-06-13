@@ -35,6 +35,7 @@ var AppModel = function() {
         this.Keyboard.Init();
         this.Storage. Init();
         this.Renderer.Init();
+        this.CoverRenderer.Init();
 
         this
             .SetModes()

@@ -33,7 +33,7 @@ var PetriStorage = function(app, ajax) {
                 if (vertex.type === 'Place') {
                     this.Graph.AddVertex(
                         vertex.id,
-                        new GraphVertex(new PetriNode(vertex.id, vertex.position.x, vertex.position.y, this.PLACE, vertex.label, vertex.markers))
+                        new GraphVertex(new PetriNode(vertex.id, vertex.position.x, vertex.position.y, this.PLACE, vertex.label, vertex.markers, 1))
                     );
 
                     this.placeNumo++;
@@ -41,7 +41,7 @@ var PetriStorage = function(app, ajax) {
                 else if (vertex.type === 'Transition') {
                     this.Graph.AddVertex(
                         vertex.id,
-                        new GraphVertex(new PetriNode(vertex.id, vertex.position.x, vertex.position.y, this.TRANSITION, vertex.label, 0))
+                        new GraphVertex(new PetriNode(vertex.id, vertex.position.x, vertex.position.y, this.TRANSITION, vertex.label, 0, vertex.priority))
                     );
 
                     this.transitionNumo++;

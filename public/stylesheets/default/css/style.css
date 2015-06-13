@@ -37,6 +37,13 @@ html, body {
   font-family: Verdana, Tahoma, Arial;
   line-height: 18px;
   overflow: hidden;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 #box {
@@ -69,7 +76,7 @@ html, body {
   z-index: 3;
 }
 
-#graph-canvas {
+.canvas-div {
   background: #000000;
   color: #ffffff;
   width: 100%;
@@ -315,7 +322,7 @@ input[type=range] {
   top: 0;
 }
 
-#prompt-layer {
+.prompt-layer {
   z-index: 1000;
   position: fixed;
   left: 0;
@@ -325,7 +332,6 @@ input[type=range] {
 .prompt {
   position: fixed;
   margin: auto;
-  width: 640px;
   padding: 5px;
   background: #eeeeee;
   border: 1px #696969 solid;
@@ -334,12 +340,20 @@ input[type=range] {
   box-shadow: 3px 3px 10px #000000;
 }
 
+#prompt-layer .prompt {
+  width: 640px;
+}
+
+#window-layer .prompt {
+
+}
+
 .buttons {
   text-align: center;
 }
 
-#prompt-message {
-  padding: 7px;
+.prompt-message {
+  padding: 0 2px;
   color: #333333;
   line-height: 22px;
   margin: 10px 0px;

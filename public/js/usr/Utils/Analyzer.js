@@ -114,5 +114,20 @@ var Analyzer = function(app, ajax) {
         }, true);
     };
 
+    this.DownloadCoverabilityGraph = function() {
+        var proxy = this;
+
+        //this.ajax.HttpPost('/api/graph/priorities', { priorities: false }, function(data, status) {
+        //    if (data.status === true) {
+        //        proxy.app.Renderer.DisableDrawingPriorities();
+        //        proxy.app.Renderer.SelectNode(proxy.app.Renderer.selectedNode);
+        //        proxy.app.Renderer.Paint();
+        //    }
+        //}, true);
+
+        //proxy.app.cRenderer.Build();
+        //proxy.app.cRenderer.Paint();
+    };
+
     return this;
 };

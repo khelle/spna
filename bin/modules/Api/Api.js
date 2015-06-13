@@ -29,9 +29,9 @@ var Api = function() {
         return false;
     };
 
-    this.analyzeGraph = function(data) {
+    this.analyzeGraph = function() {
         try {
-            return this.netProperties.Analyze(this.ptnGraph.clone(), Utils.array(data.weight_vector));
+            return this.netProperties.Analyze(this.ptnGraph.clone());
         } catch (e) {
             return false;
         }
@@ -82,6 +82,15 @@ var Api = function() {
     this.setPlaceMarkers = function(data) {
         try {
             this.ptnGraph.getVertex(data.id).setMarkers(parseInt(data.markers));
+            return true;
+        } catch (e) {
+            return false;
+        }
+    };
+
+    this.setPlaceWeight = function(data) {
+        try {
+            this.ptnGraph.getVertex(data.id).setWeight(parseInt(data.weight));
             return true;
         } catch (e) {
             return false;

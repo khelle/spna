@@ -3,12 +3,22 @@ var Class = require('../../utils/Class');
 var Utils = require('../../utils/Utils');
 
 /** Place class*/
-function Place(ptnGraph, graph, label, position, markers, id) {
+function Place(ptnGraph, graph, label, position, markers, id, weight) {
     Vertex.call(this, ptnGraph, graph, Utils.getValue(label, 'Place'), position, id);
     this.setMarkers(Utils.getValue(markers, 0));
+    this.setWeight(Utils.getValue(markers, 1));
 }
 
 Place.prototype = {
+    getWeight: function() {
+        return this.weight;
+    },
+
+    setWeight: function(weight) {
+        this.weight = weight;
+        return this;
+    },
+
     getMarkers: function() {
         return this.markers;
     },
@@ -32,12 +42,14 @@ Place.prototype = {
     },
 
     removeMarkers: function(markers) {
+        markers = parseInt(markers);
+
         if (markers > this.markers) {
             this.markers = 0;
             return this;
         }
 
-        this.markers -= Utils.number(parseInt(markers));
+        this.markers -= Utils.number(markers);
 
         return this;
     },
@@ -59,6 +71,7 @@ Place.prototype = {
 
         obj.type = 'Place';
         obj.markers = this.getMarkers();
+        obj.weight = this.getWeight();
 
         return obj;
     }
@@ -82,7 +95,7 @@ Transition.prototype = {
     },
 
     setPriority: function(priority) {
-        this.priority = Utils.number(priority);
+        this.priority = Utils.number(parseInt(priority));
         return this;
     },
 

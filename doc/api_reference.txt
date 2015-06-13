@@ -8,7 +8,6 @@ GET /api/graph/file : string url - względna ścieżka do grafu
 POST /api/graph/file : void - import grafu z pliku
 
 GET /api/graph/analyze : json analyzis - obiekt zawierający właściwości grafu
-weight_vector   - array - tablica liczb całkowitych
 
 GET /api/graph/analyze/coverability-graph : json graph - zserializowany graf pokrycia
 
@@ -39,6 +38,10 @@ posy	- int
 POST /api/place/markers : void
 id	- int
 markers	- int
+
+POST /api/place/weight : void
+id	- int
+weight  - int
 
 POST /api/transition/priority : void
 id	- int

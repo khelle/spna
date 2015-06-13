@@ -293,7 +293,7 @@ PTNGraph.prototype = {
             var vertex = serializedGraph['vertices'][i];
 
             if (vertex.type === 'Place') {
-                this.createPlace(vertex.label, vertex.markers, vertex.position, vertex.id);
+                this.createPlace(vertex.label, vertex.markers, vertex.position, vertex.id, vertex.weight);
             } else if (vertex.type === 'Transition') {
                 this.createTransition(vertex.label, vertex.priority, vertex.position, vertex.id)
             }

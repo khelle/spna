@@ -56,8 +56,7 @@ router.post('/transition/execute', function(request, response) {
 });
 
 router.get('/graph/analyze', function(request, response) {
-    var data = request.body;
-    var analysis = api.analyzeGraph(data);
+    var analysis = api.analyzeGraph();
 
     if (analysis === false) {
         response.json(createResponse(false, {}));
@@ -119,6 +118,13 @@ router.post('/place/create', function(request, response) {
 router.post('/place/markers', function(request, response) {
     var data = request.body;
     var status = api.setPlaceMarkers(data);
+
+    response.json(createResponse(status, {}));
+});
+
+router.post('/place/weight', function(request, response) {
+    var data = request.body;
+    var status = api.setPlaceWeight(data);
 
     response.json(createResponse(status, {}));
 });

@@ -354,7 +354,7 @@ function NetProperties() {
 
     };
 
-    this.Analyze = function(PTNGraph, weightVector)
+    this.Analyze = function(PTNGraph)
     {
         if (!this.hasStateChanged(PTNGraph.getState())) {
             return this.AnalysisResults;
@@ -370,7 +370,7 @@ function NetProperties() {
             "NetLimit": (null !== K ? K : 'Unlimited'),
             "Securability" : this.isSecure(K),
             "Unlimited" : this.isUnlimited(K),
-            "Conservative": this.isConservative(weightVector),
+            "Conservative": this.isConservative(),
             "Reversable" : this.isReversable(),
             "Vital" : this.isVital(),
             "Transitions vitality" : this.getTransitionsVitality()
@@ -383,7 +383,7 @@ function NetProperties() {
 
     this.serializeCoverabilityGraph = function(PTNGraph) {
         if (this.hasStateChanged(PTNGraph.getState())) {
-            this.Analyze(PTNGraph, []);
+            this.Analyze(PTNGraph);
         }
 
         return this.CoverabilityGraph.serializeCoverabilityGraph();
@@ -391,7 +391,7 @@ function NetProperties() {
 
     this.serializeReachabilityGraph = function(PTNGraph) {
         if (this.hasStateChanged(PTNGraph.getState())) {
-            this.Analyze(PTNGraph, []);
+            this.Analyze(PTNGraph);
         }
 
         return this.CoverabilityGraph.serializeReachabilityGraph();

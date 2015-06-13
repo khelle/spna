@@ -337,18 +337,18 @@ function NetProperties() {
         }
         this.SetGraph(PTNGraph);
 
-        var Limits  =  this.KPlacesLimits();
-        var K = this.KLimit(Limits);
-        console.log("K  = "  + K);
+        //var Limits  =  this.KPlacesLimits();
+        //var K = this.KLimit(Limits);
+        //console.log("K  = "  + K);
         this.AnalysisResults = {
-            "PlacesLimits" : Limits,
-            "NetLimit": (null !== K ? K : 'Unlimited'),
-            "Securability" : this.isSecure(K),
-            "Unlimited" : this.isUnlimited(K),
-            "Conservative": this.isConservative(weightVector),
-            "Reversable" : this.isReversable(),
-            "Vital" : this.isVital(),
-            "Transitions vitality" : this.getTransitionsVitality()
+            //"PlacesLimits" : Limits,
+            //"NetLimit": (null !== K ? K : 'Unlimited'),
+            //"Securability" : this.isSecure(K),
+            //"Unlimited" : this.isUnlimited(K),
+            //"Conservative": this.isConservative(weightVector),
+            //"Reversable" : this.isReversable(),
+            //"Vital" : this.isVital(),
+            //"Transitions vitality" : this.getTransitionsVitality()
         };
 
         this.lastAnalyzedState = PTNGraph.getState();
@@ -358,7 +358,7 @@ function NetProperties() {
 
     this.serializeCoverabilityGraph = function(PTNGraph) {
         if (this.hasStateChanged(PTNGraph.getState())) {
-            this.Analyze(PTNGraph);
+            this.Analyze(PTNGraph, []);
         }
 
         return this.CoverabilityGraph.serializeCoverabilityGraph();
@@ -366,7 +366,7 @@ function NetProperties() {
 
     this.serializeReachabilityGraph = function(PTNGraph) {
         if (this.hasStateChanged(PTNGraph.getState())) {
-            this.Analyze(PTNGraph);
+            this.Analyze(PTNGraph, []);
         }
 
         return this.CoverabilityGraph.serializeReachabilityGraph();

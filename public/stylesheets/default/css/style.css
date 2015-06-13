@@ -389,3 +389,17 @@ input[type=range] {
 b {
   font-weight: bold;
 }
+
+i.fa {
+    position: relative;
+    top: -4px;
+}
+
+.graph-identifier {
+    font-size: 12px;
+    font-weight: bold;
+    vertical-align: top;
+    position: absolute;
+    right: -1px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}

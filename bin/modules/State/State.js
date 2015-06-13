@@ -53,6 +53,10 @@ function State(places) {
     true if both have same markings
      */
     this.isEqual = function(state) {
+        if (null === state) {
+            return false;
+        }
+
         for (var i in this.getState()) {
             if (this.getState()[i] != state.getState()[i])
                 return false;

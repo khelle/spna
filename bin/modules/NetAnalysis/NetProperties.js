@@ -15,7 +15,8 @@ function NetProperties() {
 // jak dostajemy graf pokrycia do analizy?
 
 
-
+    // Ostatni analizowany stan grafu
+    this.lastAnalyzedState = null;
 
     // graf pokrycia - scalamy węzły, które zwiększają tylko  1 miejsce do nieskończoności?
     // graf osiągalności - bez symbolu nieskończoności, sklejone duplikaty
@@ -326,9 +327,15 @@ function NetProperties() {
 
     this.Analyze = function(PTNGraph)
     {
+        if (!this.hasStateChanged(PTNGraph.getState())) {
+            return this.AnalysisResults;
+        }
+
         this.SetGraph(PTNGraph);
+
         var Limits  =  this.KPlacesLimits();
         var K = this.KLimit(Limits);
+
         this.AnalysisResults = {
             "PlacesLimits" : Limits,
             "NetLimit": K,
@@ -338,10 +345,27 @@ function NetProperties() {
             "Reversable" : this.isReversable(),
             "Vital" : this.isVital(),
             "Transitions vitality" : this.getTransitionsVitality()
-
-
         };
+
+        this.lastAnalyzedState = PTNGraph.getState();
+
         return this.AnalysisResults;
+    };
+
+    this.serializeCoverabilityGraph = function(PTNGraph) {
+        if (this.hasStateChanged(PTNGraph.getState())) {
+            this.Analyze(PTNGraph);
+        }
+
+        return this.CoverabilityGraph.serializeCoverabilityGraph();
+    };
+
+    this.serializeReachabilityGraph = function(PTNGraph) {
+        if (this.hasStateChanged(PTNGraph.getState())) {
+            this.Analyze(PTNGraph);
+        }
+
+        return this.CoverabilityGraph.serializeReachabilityGraph();
     };
 
     this.SetGraph = function(PTNGraph)
@@ -349,6 +373,10 @@ function NetProperties() {
         this.PTNgraph = PTNGraph;
         this.CoverabilityGraph = new CoverabilityGraph(PTNGraph);
         this.graph = this.CoverabilityGraph.graph;
+    };
+
+    this.hasStateChanged = function(state) {
+        return !state.isEqual(this.lastAnalyzedState);
     };
 
     return this;

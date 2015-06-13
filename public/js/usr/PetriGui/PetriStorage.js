@@ -37,7 +37,7 @@ var PetriStorage = function(app, ajax) {
                 if (vertex.type === 'Place') {
                     this.Graph.AddVertex(
                         vertex.id,
-                        new GraphVertex(new PetriNode(vertex.id, vertex.position.x, vertex.position.y, this.PLACE, vertex.label, vertex.markers, 1))
+                        new GraphVertex(new PetriNode(vertex.id, vertex.position.x, vertex.position.y, this.PLACE, vertex.label, vertex.markers, 1, vertex.weight))
                     );
 
                     this.placeNumo++;
@@ -94,6 +94,7 @@ var PetriStorage = function(app, ajax) {
             case 'label': return this.SetPlaceLabel(id, val);
             case 'markers': return this.SetPlaceMarkers(id, val);
             case 'priority': return this.SetPlacePriority(id, val);
+            case 'weight': return this.SetPlaceWeight(id, val);
             default: return;
         }
     };
@@ -136,6 +137,20 @@ var PetriStorage = function(app, ajax) {
         vertex = this.Graph.GetVertex(id).GetData();
         vertex.priority = priority;
     };
+
+    this.SetPlaceWeight = function(id, weight) {
+        var vertex;
+        var response;
+
+        response = this.Remote.SetVertexWeight(id, weight);
+        if (!response.status) {
+            return;
+        }
+
+        vertex = this.Graph.GetVertex(id).GetData();
+        vertex.weight = weight;
+    };
+
 
     this.SetPlacePos = function(id, x, y) {
         var vertex;
@@ -190,7 +205,7 @@ var PetriStorage = function(app, ajax) {
 
         this.Graph.AddVertex(
             id,
-            new GraphVertex(new PetriNode(id, posx, posy, this.PLACE, label, markers))
+            new GraphVertex(new PetriNode(id, posx, posy, this.PLACE, label, markers, 1, 1))
         );
         this.placeNumo++;
 
@@ -384,7 +399,7 @@ var PetriStorage = function(app, ajax) {
     };
 
     this.ComparePlaces = function(P1, P2) {
-        return P1.label === P2.label && P1.markers === P2.markers;
+        return P1.label === P2.label && P1.markers === P2.markers && P1.weight === P2.weight;
     };
 
     this.CompareTransitions = function(T1, T2) {

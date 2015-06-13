@@ -267,6 +267,7 @@ var GraphRenderer = function(app, renderingRoot) {
             storageID:          record.id,
             markers:            record.markers,
             priority:           record.priority,
+            weight:             record.weight,
             label:              record.label,
             size:               8,
             x:                  record.x,
@@ -1036,7 +1037,7 @@ var GraphRenderer = function(app, renderingRoot) {
 
         attrs = [];
         if (node.type === this.app.Storage.PLACE) {
-            attrs = [ 'label', 'markers' ];
+            attrs = [ 'label', 'markers', 'weight' ];
         }
         else if (node.type === this.app.Storage.TRANSITION) {
             attrs = [ 'label' ];
@@ -1209,8 +1210,6 @@ var GraphRenderer = function(app, renderingRoot) {
         var row;
         var node;
         var nameParts;
-
-        console.log(data);
 
         for (key in data) {
             if (data.hasOwnProperty(key) !== false) {

@@ -24,9 +24,6 @@ var DefaultVertexStorage = function() {
     this.GetVertex = function(id) {
         var index;
 
-        console.log(id);
-        console.log(this.verticesIndex);
-
         if ((index = this.verticesIndex[id]) === undefined) {
             return null;
         }

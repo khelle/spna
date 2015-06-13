@@ -69,26 +69,15 @@ function NetProperties() {
             {
                if (state[m] > limits[m])
                {
-
                    limits[m] = state[m];
                }
             }
 
         }
-        /*
-        var newLimits = [];
-        for (var i  in limits)
-        {
-            console.log(i);
-            if(limits[i] !== null)
-            {
-                newLimits[i] = limits[i];
-            }
-        }*/
 
         for (var i in limits)
         {
-            if(limits[i] === null ) limits[i].splice(i,1);
+            if(limits[i] === Infinity) limits[i] = 'Inf';
         }
         return limits;
     };

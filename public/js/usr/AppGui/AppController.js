@@ -44,6 +44,7 @@ var AppController = function() {
         evenement.Register($('#btn-14')[0], 'click', $.proxy(app.PriorityModeSwitch, app));
         evenement.Register($('#btn-15')[0], 'click', $.proxy(analyzer.DownloadCoverabilityGraph, analyzer));
         evenement.Register($('#btn-16')[0], 'click', $.proxy(analyzer.DownloadReachabilityGraph, analyzer));
+        evenement.Register($('#btn-17')[0], 'click', $.proxy(app.Reset, app));
         evenement.Register($('#prompt-layer .prompt-bg:first')[0], 'click', $.proxy(app.ClosePromptMessage, app));
         evenement.Register($('#window-layer .prompt-bg:first')[0], 'click', $.proxy(app.CloseWindowMessage, app));
 

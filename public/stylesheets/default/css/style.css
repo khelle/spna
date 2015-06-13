@@ -183,6 +183,13 @@ html, body {
   user-select: none;
 }
 
+.app-txt {
+  width: auto;
+  font-size: 14px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
 .prompt-button {
   height: 26px;
   width: auto;

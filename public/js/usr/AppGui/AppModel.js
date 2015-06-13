@@ -448,5 +448,19 @@ var AppModel = function() {
         $('#preloader').css('display', 'none');
     };
 
+    this.Reset = function() {
+        var result;
+
+        result = window.confirm('Are you sure you want reset working directory?');
+        if (result) {
+            this.SimulationModeOff();
+            this.PriorityModeOff();
+            this.Storage.Reset();
+            this.Storage.UseGraph("petri");
+            this.Renderer.Paint();
+            this.Renderer.ResetCameraPosition();
+        }
+    };
+
     return this;
 };

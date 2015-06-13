@@ -30,16 +30,30 @@ function NetProperties() {
 
     this.KPlacesLimits = function()
     {
+
+
         /* TODO: funkcja ma zwracać k-ograniczoność każdego wierzchołka
+
 
          */
         var vertices = this.graph.GetVertices();
-        var limits = [];
-
-        for(var i in vertices[0].getState()) {
-            limits[i] = 0;
+        var limits = {};
+        var tmp = vertices[0].getState();
+        var vert = vertices[0];
+        console.log("First state = " + tmp);
+        for(var i in  tmp)
+        {
+            console.log("i = "  + i);
+            if (i !== null) limits[i] = 0;
         }
+        /*
+        for (var i = 0; i < limits.length; i++) {
+            if (limits[i] == null) {
+                limits.splice(i, 1);
+                i--;
+            }}
 
+    */
         console.log("!!!!");
         console.log(vertices);
         console.log(limits);//
@@ -61,12 +75,21 @@ function NetProperties() {
             }
 
         }
-
-        for(var t in limits)
+        /*
+        var newLimits = [];
+        for (var i  in limits)
         {
-            console.log("Lims: " + limits[t] + ", t = " + t );
-        }
+            console.log(i);
+            if(limits[i] !== null)
+            {
+                newLimits[i] = limits[i];
+            }
+        }*/
 
+        for (var i in limits)
+        {
+            if(limits[i] === null ) limits[i].splice(i,1);
+        }
         return limits;
     };
 
@@ -341,7 +364,7 @@ function NetProperties() {
 
         var Limits  =  this.KPlacesLimits();
         var K = this.KLimit(Limits);
-        //console.log("K  = "  + K);
+
         this.AnalysisResults = {
             "PlacesLimits" : Limits,
             "NetLimit": (null !== K ? K : 'Unlimited'),

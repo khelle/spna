@@ -171,7 +171,7 @@ PTNGraph.prototype = {
         return AllTransitions;
     },
 
-
+    /*
     calculateMatrixRepresentation : function()
     {
         var PlacesCounter = 0;
@@ -192,17 +192,19 @@ PTNGraph.prototype = {
         // macierz wejść
         // kolumny - przejścia
         // wiersze - miejsca
+
+
         var Nplus = new Array(PlacesCounter)
 
-        for (var i = 0; i < PlacesCounter; i++);
+        for (var i = 0; i < PlacesCounter[i]; i++);
         {
             Nplus[i] = new Array(TransitionsCounter);
         }
         console.log("Nplus = " + Nplus);
 
         //  macierzy wyjść
-
-    },
+        },
+         */
 
     /*
      Executes target transition

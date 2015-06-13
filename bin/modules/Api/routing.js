@@ -78,6 +78,17 @@ router.get('/graph/analyze/coverability-graph', function(request, response) {
     response.json(createResponse(true, {graph: graph}));
 });
 
+router.get('/graph/analyze/reachability-graph', function(request, response) {
+    var graph = api.getReachabilityGraph();
+
+    if (graph === false) {
+        response.json(createResponse(false, {}));
+        return;
+    }
+
+    response.json(createResponse(true, {graph: graph}));
+});
+
 router.post('/graph/priorities', function(request, response) {
     var data = request.body;
     var status = api.setGraphPriorities(data);

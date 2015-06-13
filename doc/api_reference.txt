@@ -11,6 +11,8 @@ GET /api/graph/analyze : json analyzis - obiekt zawierający właściwości graf
 
 GET /api/graph/analyze/coverability-graph : json graph - zserializowany graf pokrycia
 
+GET /api/graph/analyze/reachability-graph : json graph - zserializowany graf osiągalności
+
 POST /api/graph/priorities : void - ustawia, czy graf ma uwzględniać priorytety
 priorities  - bool
 

@@ -42,7 +42,19 @@ var Api = function() {
                 this.netProperties.Analyze(this.ptnGraph.clone());
             }
 
-            return this.netProperties.CoverabilityGraph.serialize();
+            return this.netProperties.CoverabilityGraph.serializeCoverabilityGraph();
+        } catch (e) {
+            return false;
+        }
+    };
+
+    this.getReachabilityGraph = function() {
+        try {
+            if (null === this.netProperties.CoverabilityGraph) {
+                this.netProperties.Analyze(this.ptnGraph.clone());
+            }
+
+            return this.netProperties.CoverabilityGraph.serializeReachabilityGraph();
         } catch (e) {
             return false;
         }

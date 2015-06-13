@@ -81,7 +81,7 @@ Transition.prototype = {
     },
 
     setPriority: function(priority) {
-        this.priority = priority;
+        this.priority = Utils.number(priority);
         return this;
     },
 

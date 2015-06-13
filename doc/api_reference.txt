@@ -6,7 +6,6 @@ GET /api/graph : string graph - graf zserializowany do JSON
 GET /api/graph/file : string url - względna ścieżka do grafu
 
 POST /api/graph/file : void - import grafu z pliku
-<format danych do ustalenia - może być plik lub string zawierający zserializowany graf>
 
 GET /api/graph/analyze : json analyzis - obiekt zawierający właściwości grafu
 
@@ -22,6 +21,11 @@ markers	- int
 posx	- int
 posy	- int
 
+GET /api/transition/active : transitions - tablica obiektów: {id: <active_id>} zawierających id aktywnych przejść
+
+POST /api/transition/execute : graph - json z aktualnym (nowym) stanem grafu
+id  - int
+
 POST /api/transition/create : int id
 label	- string
 posx	- int
@@ -30,6 +34,10 @@ posy	- int
 POST /api/place/markers : void
 id	- int
 markers	- int
+
+POST /api/transition/priority : void
+id	- int
+priority    - int
 
 POST /api/vertex/label : void
 id	- int

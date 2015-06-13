@@ -11,7 +11,9 @@ var AppModel = function() {
 
     this.MODES = {
         BUILD:      'build',
-        DEMOLISH:   'demolish'
+        DEMOLISH:   'demolish',
+        SIMULATE:   'simulate',
+        PRIORITY:   'priority'
     };
 
     this.Init = function() {
@@ -21,8 +23,8 @@ var AppModel = function() {
         this.Renderer    = new GraphRenderer(this, document.querySelector('#graph-canvas'));
         this.Evenement   = new Evenement(this);
         this.ModeManager = new ModeManager(this);
-        this.Media       = new MediaManager(this, new Ajax());
-        this.Analyzer    = new Analyzer(this, new Ajax());
+        this.Media       = new MediaManager(this, new Ajax(this));
+        this.Analyzer    = new Analyzer(this, new Ajax(this));
 
         this
             .AdjustAppSize()
@@ -40,23 +42,46 @@ var AppModel = function() {
     };
 
     this.SetModes = function() {
-        var man = this.ModeManager;
-        var buildMode, demolishMode;
-        var On = 'On', Off = 'Off';
+        var man;
+        var buildMode;
+        var demolishMode;
+        var simulationMode;
+        var priorityMode;
+        var On;
+        var Off;
 
-        buildMode    = new Mode(this.MODES.BUILD);
-        demolishMode = new Mode(this.MODES.DEMOLISH);
+        man = this.ModeManager;
+
+        On = 'On';
+        Off = 'Off';
+
+        buildMode      = new Mode(this.MODES.BUILD);
+        demolishMode   = new Mode(this.MODES.DEMOLISH);
+        simulationMode = new Mode(this.MODES.SIMULATE);
+        priorityMode   = new Mode(this.MODES.PRIORITY);
 
         buildMode.SetCallback(On, $.proxy(this.OnBuildModeOn, this));
         buildMode.SetCallback(Off, $.proxy(this.OnBuildModeOff, this));
         buildMode.AddDependency(On, demolishMode.GetName(), Off);
+        buildMode.AddRequirement(On, simulationMode.GetName(), Off);
 
         demolishMode.SetCallback(On, $.proxy(this.OnDemolishModeOn, this));
         demolishMode.SetCallback(Off, $.proxy(this.OnDemolishModeOff, this));
         demolishMode.AddDependency(On, buildMode.GetName(), Off);
+        demolishMode.AddRequirement(On, simulationMode.GetName(), Off);
+
+        simulationMode.SetCallback(On, $.proxy(this.OnSimulationModeOn, this));
+        simulationMode.SetCallback(Off, $.proxy(this.OnSimulationModeOff, this));
+        simulationMode.AddDependency(On, buildMode.GetName(), Off);
+        simulationMode.AddDependency(On, demolishMode.GetName(), Off);
+
+        priorityMode.SetCallback(On, $.proxy(this.OnPriorityModeOn, this));
+        priorityMode.SetCallback(Off, $.proxy(this.OnPriorityModeOff, this));
 
         man.SetMode(buildMode.GetName(), buildMode);
         man.SetMode(demolishMode.GetName(), demolishMode);
+        man.SetMode(simulationMode.GetName(), simulationMode);
+        man.SetMode(priorityMode.GetName(), priorityMode);
 
         return this;
     };
@@ -65,15 +90,17 @@ var AppModel = function() {
         return this.ModeManager.TurnOnMode(this.MODES.BUILD);
     };
 
-    this.OnBuildModeOn = function() {
-        this.PopMessage('Build mode ON...');
-    };
-
     this.BuildModeOff = function() {
         return this.ModeManager.TurnOffMode(this.MODES.BUILD);
     };
 
+    this.OnBuildModeOn = function() {
+        $('#btn-1').addClass('app-button-active');
+        this.PopMessage('Build mode ON...');
+    };
+
     this.OnBuildModeOff = function() {
+        $('#btn-1').removeClass('app-button-active');
         this.PopMessage('Build mode OFF...');
     };
 
@@ -90,15 +117,18 @@ var AppModel = function() {
         return this.ModeManager.TurnOnMode(this.MODES.DEMOLISH);
     };
 
-    this.OnDemolishModeOn = function() {
-        this.PopMessage('Demolish mode ON...');
-    };
 
     this.DemolishModeOff = function() {
         return this.ModeManager.TurnOffMode(this.MODES.DEMOLISH);
     };
 
+    this.OnDemolishModeOn = function() {
+        $('#btn-2').addClass('app-button-active');
+        this.PopMessage('Demolish mode ON...');
+    };
+
     this.OnDemolishModeOff = function() {
+        $('#btn-2').removeClass('app-button-active');
         this.PopMessage('Demolish mode OFF...');
     };
 
@@ -108,6 +138,73 @@ var AppModel = function() {
         }
         else {
             this.ModeManager.TurnOnMode(this.MODES.DEMOLISH);
+        }
+    };
+
+    this.SimulationModeOn = function() {
+        return this.ModeManager.TurnOnMode(this.MODES.SIMULATE);
+    };
+
+    this.SimulationModeOff = function() {
+        return this.ModeManager.TurnOffMode(this.MODES.SIMULATE);
+    };
+
+    this.OnSimulationModeOn = function() {
+        this.Renderer.Freeze();
+        $('#btn-12').addClass('app-button-active');
+        this.PopMessage('Simulation mode ON...');
+    };
+
+    this.OnSimulationModeOff = function() {
+        this.Renderer.Unfreeze();
+        $('#btn-12').removeClass('app-button-active');
+        this.PopMessage('Simulation mode OFF...');
+    };
+
+    this.SimulationModeSwitch = function() {
+        if (this.ModeManager.IsOn(this.MODES.SIMULATE)) {
+            this.ModeManager.TurnOffMode(this.MODES.SIMULATE);
+        }
+        else {
+            this.ModeManager.TurnOnMode(this.MODES.SIMULATE);
+        }
+    };
+
+    this.PriorityModeOn = function() {
+        return this.ModeManager.TurnOnMode(this.MODES.PRIORITY);
+    };
+
+    this.PriorityModeOff = function() {
+        return this.ModeManager.TurnOffMode(this.MODES.PRIORITY);
+    };
+
+    this.OnPriorityModeOn = function() {
+        $('#btn-14').addClass('app-button-active');
+        this.Analyzer.TurnPrioritiesOn();
+        this.PopMessage('Priority mode ON...');
+    };
+
+    this.OnPriorityModeOff = function() {
+        $('#btn-14').removeClass('app-button-active');
+        this.Analyzer.TurnPrioritiesOff();
+        this.PopMessage('Priority mode OFF...');
+    };
+
+    this.PriorityModeSwitch = function() {
+        if (this.ModeManager.IsOn(this.MODES.PRIORITY)) {
+            this.ModeManager.TurnOffMode(this.MODES.PRIORITY);
+        }
+        else {
+            this.ModeManager.TurnOnMode(this.MODES.PRIORITY);
+        }
+    };
+
+    this.SetPriorityMode = function(on) {
+        if (on) {
+            this.ModeManager.TurnOnMode(this.MODES.PRIORITY);
+        }
+        else {
+            this.ModeManager.TurnOffMode(this.MODES.PRIORITY);
         }
     };
 
@@ -149,6 +246,16 @@ var AppModel = function() {
         this.box.find('#canvas, #graph-canvas').css({
           'width': w,
           'height': h
+        });
+
+        var $preloader = $('#preloader-box');
+
+        w = w-$preloader.width();
+        h = h-$preloader.height();
+
+        $preloader.css({
+            left: w/2,
+            top: h/2
         });
 
         return this;
@@ -278,7 +385,7 @@ var AppModel = function() {
 
     this.ShowInstructions = function() {
         var app = this;
-        var message = "<b>Shortcuts:</b><br>[hold] CTRL build mode ON/OFF <br>[hold] LSHIFT destruction mode ON/OFF <br>[click] LPM selects node <br>[click] CTRL+LPM creates node <br>[click] CTRL+RPM creates transition <br>[click] LSHIFT+LPM destroys node/transition <br>[click] Z select/unselect last selected node <br>[click] X reset camera position <br>[click] C save current camera position <br>[click] V load saved camera position <br><br><b>Meantime one of the nodes is selected:</b><br>[click] CTRL+LPM creates connection to the node/transition <br>[click] CTRL+RPM selects node <br>[click] LSHIFT+LPM deletes connection to the node/transition <br>[click] LSHIFT+RPM deletes node/transition";
+        var message = "<b>Shortcuts:</b><br>[hold] CTRL build mode ON/OFF <br>[hold] LSHIFT destruction mode ON/OFF <br>[click] CAPSLOCK simulation mode ON/OFF<br>[click] LPM selects node <br>[click] CTRL+LPM creates node <br>[click] CTRL+RPM creates transition <br>[click] LSHIFT+LPM destroys node/transition <br>[click] Z select/unselect last selected node <br>[click] X reset camera position <br>[click] C save current camera position <br>[click] V load saved camera position <br><br><b>Meantime one of the nodes is selected:</b><br>[click] CTRL+LPM creates connection to the node/transition <br>[click] CTRL+RPM selects node <br>[click] LSHIFT+LPM deletes connection to the node/transition <br>[click] LSHIFT+RPM deletes node/transition";
 
         app.PromptMessage(
             'Instructions',
@@ -300,6 +407,14 @@ var AppModel = function() {
                 }
             ]
         );
+    };
+
+    this.ShowPreloader = function() {
+        $('#preloader').css('display', 'block');
+    };
+
+    this.ClosePreloader = function() {
+        $('#preloader').css('display', 'none');
     };
 
     return this;

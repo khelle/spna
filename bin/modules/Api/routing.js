@@ -32,6 +32,29 @@ router.post('/graph/file', function(request, response) {
     response.json(createResponse(true, {graph: graph}));
 });
 
+router.get('/transition/active', function(request, response) {
+    var activeIds = api.getActiveTransitions();
+
+    if (activeIds === false) {
+        response.json(createResponse(false, {}));
+        return;
+    }
+
+    response.json(createResponse(true, {transitions: activeIds}));
+});
+
+router.post('/transition/execute', function(request, response) {
+    var data = request.body;
+    var graph = api.executeTransition(data);
+
+    if (graph === false) {
+        response.json(createResponse(false, {}));
+        return;
+    }
+
+    response.json(createResponse(true, {graph: graph}));
+});
+
 router.get('/graph/analyze', function(request, response) {
     var analysis = api.analyzeGraph();
 
@@ -86,6 +109,13 @@ router.post('/transition/create', function(request, response) {
     }
 
     response.json(createResponse(true, {id: id}));
+});
+
+router.post('/transition/priority', function(request, response) {
+    var data = request.body;
+    var status = api.setTransitionPriority(data);
+
+    response.json(createResponse(status, {}));
 });
 
 router.post('/vertex/label', function(request, response) {

@@ -71,6 +71,45 @@ var Api = function() {
         }
     };
 
+    this.getActiveTransitions = function() {
+        try {
+            var active = this.ptnGraph.findActiveTransitions();
+            var ids = [];
+
+            for (var i in active) {
+                ids.push({id: active[i].id});
+            }
+
+            return ids;
+        } catch (e) {
+            return false;
+        }
+    };
+
+    this.executeTransition = function(data) {
+        try {
+            if (this.ptnGraph.getVertex(data.id).execute()) {
+                var graph = this.ptnGraph.serialize(false);
+                graph['active_transitions'] = this.getActiveTransitions();
+
+                return graph;
+            }
+
+            return false;
+        } catch (e) {
+            return false;
+        }
+    };
+
+    this.setTransitionPriority = function(data) {
+        try {
+            this.ptnGraph.getVertex(data.id).setPriority(parseInt(data.priority));
+            return true;
+        } catch (e) {
+            return false;
+        }
+    };
+
     this.createTransition = function(data) {
         try {
             return this.ptnGraph.createTransition(data.label, 1, createPosition(data)).id;

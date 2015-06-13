@@ -39,6 +39,9 @@ var AppController = function() {
         evenement.Register($('#btn-9')[0], 'click', $.proxy(media.PrepareUpload, media));
         evenement.Register($('#btn-10')[0], 'click', $.proxy(analyzer.DownloadAnalysis, analyzer));
         evenement.Register($('#btn-11')[0], 'click', $.proxy(app.ShowInstructions, app));
+        evenement.Register($('#btn-12')[0], 'click', $.proxy(app.SimulationModeSwitch, app));
+        evenement.Register($('#btn-13')[0], 'click', $.proxy(analyzer.GetActiveTransitions, analyzer));
+        evenement.Register($('#btn-14')[0], 'click', $.proxy(app.PriorityModeSwitch, app));
         evenement.Register($('#prompt-bg')[0], 'click', $.proxy(app.ClosePromptMessage, app));
 
         keyboard.BindKeyIn(
@@ -53,6 +56,9 @@ var AppController = function() {
         );
         keyboard.BindKeyOut(
             keyboard.KEY.LSHIFT, 'DemolishModeActivator', $.proxy(app.DemolishModeOff, app)
+        );
+        keyboard.BindKeyOut(
+            keyboard.KEY.CAPS, 'SimulationModeActivator', $.proxy(app.SimulationModeSwitch, app)
         );
 
         keyboard.BindKeyOut(

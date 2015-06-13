@@ -5,9 +5,28 @@ var PriorityQueue = require('priorityqueuejs');
 
 function CoverabilityGraph(ptnGraph) {
     //this.ptnGraph = Utils.clone(ptnGraph);
-    ////(this.ptnGraph);
+    //console.log(this.ptnGraph);
     this.ptnGraph = ptnGraph;
     this.graph = new Graph(new VertexStorage());
+
+    //this.reachability = new Graph(new VertexStorage());
+    this.reachability = null;
+
+    this.rootState = ptnGraph.getState();
+
+    /*
+    New field, gets root-state when first building CoverabilityTree
+    (used in building Reach-tree and Cover-graph)
+     */
+    this.rootState = this.ptnGraph.getState();
+
+    /*
+    ! Problem
+    Taka konstrukcja budowanie grafu coverability podczas konstrukcji
+    daje podwojone wyniki przy kolejnym odpalaniu budowania drzewa
+    (nie wiem czy zmiana jest konieczna dla reachability...)
+     */
+
 
     this.treeRoot = null;
 
@@ -32,6 +51,116 @@ function CoverabilityGraph(ptnGraph) {
         this.buildCoverabilityTree();
         this.buildCoverabilityGraph();
     };
+
+
+
+    //ReachabilityTree
+    this.buildReachabilityTree = function() {
+
+        console.log("buildReachabilityTree...");
+        this.reachability = new Graph(new VertexStorage())
+
+        var list = [];
+        var MAXCOUNTER = 4;    // 30 or 50
+
+        //var root = this.ptnGraph.getState();
+        var root = this.rootState;
+        this.reachability.AddVertex( root );
+
+        this.ptnGraph.setState(root);
+
+        var count = 0;
+        list.push([root,count]);
+
+        var current, newState;
+        var currTuple;
+
+        while(!(list.length==0)) {
+            currTuple = list.pop();
+            count = currTuple[1];
+            count++;
+
+            current = currTuple[0];
+
+            var vertices = this.reachability.GetVertices();
+            var GotOLD = false;
+            var OLDWasCheckedAlready = false;
+
+            for(var v in vertices) {
+
+                if(vertices[v] === current) {
+                    //continue;
+                    //console.log("The same vertex");
+                } else {
+                    if(current.isEqual(vertices[v])) {
+
+                        console.log("current set to OLD");
+                        current.setLabel(State.OLD);
+
+                        //IMPORTANT!
+                        GotOLD = true;
+                        if( this.graph.GetNeighbours(vertices[v].id).length > 0 ) {
+                            OLDWasCheckedAlready = true;
+                        }
+
+                        //break;
+                    }
+                }
+            }
+
+            //IMPORTANT!
+            if(GotOLD && !OLDWasCheckedAlready) {
+                console.log("DAYUM! current set BACK to NEW");
+                current.setLabel(State.NEW);
+            }
+
+
+            if((current.getLabel()==State.NEW) && (count < MAXCOUNTER)) {
+
+                this.ptnGraph.setState(current);
+
+                var TMPtrans;
+                if(this.ptnGraph.priorities) {
+                    TMPtrans = this.ptnGraph.findPrioritizedTransitionsToExecute();
+                } else {
+                    TMPtrans = this.ptnGraph.findTransitionsToExecute();
+                }
+
+                if(!TMPtrans.length) {
+
+                    current.setDead(true);
+                    console.log("current set to DEAD");
+                }
+                else {
+                    console.log("current in checking executable transitions");
+
+                    TMPtrans.forEach(function(transition) {
+
+                        console.log("(one) + transition name: " + transition.getLabel());
+
+                        this.ptnGraph.setState(current);
+                        this.ptnGraph.executeTransition(transition);
+                        newState = this.ptnGraph.getState();
+
+                        this.reachability.AddVertex( newState );
+                        this.reachability.AddEdge(current.id,newState.id,{transition:transition});
+                        //list.push( [newState,currTuple[1]++] );
+                        list.push( [newState,count] );
+                        console.log("counter: " + count);
+
+
+                    }, this);
+                }
+            }
+
+        }
+
+        console.log("build Reachability Tree finished!");
+
+        // Go back to current state
+        this.ptnGraph.setState( this.rootState );
+    };
+    //!Reach
 
     //BUILD
     this.buildCoverabilityTree = function() {
@@ -64,11 +193,11 @@ function CoverabilityGraph(ptnGraph) {
 
                 if(vertices[v] === current) {
                     //continue;
-                    ////("The same vertex");
+                    //console.log("The same vertex");
                 } else {
                     if(current.isEqual(vertices[v])) {
 
-                        ////("current set to OLD");
+                        console.log("current set to OLD");
                         current.setLabel(State.OLD);
 
                         this.addToMergeQueue(vertices[v]);
@@ -87,7 +216,7 @@ function CoverabilityGraph(ptnGraph) {
 
             //IMPORTANT!
             if(GotOLD && !OLDWasCheckedAlready) {
-                ////("DAYUM! current set BACK to NEW");
+                console.log("DAYUM! current set BACK to NEW");
                 current.setLabel(State.NEW);
             }
 
@@ -97,7 +226,7 @@ function CoverabilityGraph(ptnGraph) {
             while( parent = this.getParent(parent) ) {
                 if(current.isEqual(parent)) {
 
-                    //("current set to OLD");
+                    console.log("current set to OLD");
                     current.setLabel(State.OLD);
 
                     this.addToMergeQueue(parent);
@@ -112,20 +241,26 @@ function CoverabilityGraph(ptnGraph) {
             if(current.getLabel()==State.NEW) {
 
                 this.ptnGraph.setState(current);
-                var TMPtrans = this.ptnGraph.findTransitionsToExecute();
+
+                var TMPtrans;
+                if(this.ptnGraph.priorities) {
+                    TMPtrans = this.ptnGraph.findPrioritizedTransitionsToExecute();
+                } else {
+                    TMPtrans = this.ptnGraph.findTransitionsToExecute();
+                }
 
                 if(!TMPtrans.length) {
                     //current.setLabel(State.DEAD);\
                     current.setDead(true);
-                    ////("current set to DEAD");
+                    console.log("current set to DEAD");
                 }
                 else {
-                    ////("current in checking executable transitions");
+                    console.log("current in checking executable transitions");
 
                     var OneTimeAdd = false;
                     TMPtrans.forEach(function(transition) {
 
-                        ////("(one) + transition name: " + transition.getLabel());
+                        console.log("(one) + transition name: " + transition.getLabel());
 
                         this.ptnGraph.setState(current);
                         this.ptnGraph.executeTransition(transition);
@@ -141,7 +276,7 @@ function CoverabilityGraph(ptnGraph) {
                         do {
                             /*
                             if(newState.isEqual(innerparent)) {
-                                //("newState set to OLD");
+                                console.log("newState set to OLD");
                                 newState.setLabel(State.OLD);
 
                                 this.addToMergeQueue(innerparent);
@@ -154,8 +289,8 @@ function CoverabilityGraph(ptnGraph) {
                             if(newState.setInfinity(innerparent)) {
                                 // TODO:
                                 this.isConservative = false;
-                                ////("newState has Inf now");
-                                ////(newState.print());
+                                console.log("newState has Inf now");
+                                console.log(newState.print());
 
                             }
 
@@ -164,7 +299,7 @@ function CoverabilityGraph(ptnGraph) {
                         /*
                         do {
                             if(newState.isEqual(innerparent)) {
-                                //("newState set to OLD");
+                                console.log("newState set to OLD");
                                 newState.setLabel(State.OLD);
 
                                 this.graph.AddVertex( newState );
@@ -179,8 +314,8 @@ function CoverabilityGraph(ptnGraph) {
                             if(newState.setInfinity(innerparent)) {
                                 // TODO:
                                 this.isConservative = false;
-                                //("newState has Inf now");
-                                //(newState.print());
+                                console.log("newState has Inf now");
+                                console.log(newState.print());
 
                             }
 
@@ -204,6 +339,10 @@ function CoverabilityGraph(ptnGraph) {
         }
 
 
+        console.log("build Tree finished!");
+
+        // Go back to current state
+        this.ptnGraph.setState( this.rootState );
         //("build Tree finished!");
     };
     //!BUILD
@@ -227,7 +366,7 @@ function CoverabilityGraph(ptnGraph) {
     //tree2graph
     this.buildCoverabilityGraph = function() {
 
-        //("buildCoverabilityGraph...");
+        console.log("buildCoverabilityGraph...");
 
         for (var i in this.mergeQueue) {
             var tab = this.mergeQueue[i];
@@ -287,7 +426,7 @@ function CoverabilityGraph(ptnGraph) {
             if (a.distance < b.distance) comp = 1;
             else if (a.distance > b.distance) comp = -1;
             else comp = 0;
-            ////("a.dist = " + a.distance + ", b.distance =" + b.distance + ", comparison,  = " + comp);
+            //console.log("a.dist = " + a.distance + ", b.distance =" + b.distance + ", comparison,  = " + comp);
             return comp;
         });
 
@@ -303,7 +442,7 @@ function CoverabilityGraph(ptnGraph) {
 
             }
             d[vertices[i].id] = di;
-            ////("Distance = " + di);
+            //console.log("Distance = " + di);
 
             Q.enq({distance: di, vert: vertices[i]});
            // //(Q);
@@ -336,10 +475,10 @@ function CoverabilityGraph(ptnGraph) {
          while(!Q.isEmpty())
          {
          var ttt = Q.deq();
-         //(ttt.distance);
+         console.log(ttt.distance);
          }
          */
-        ////("=!!!!!!!!!!!!!!!!!!!======");
+        //console.log("=!!!!!!!!!!!!!!!!!!!======");
         var u = null;
 
         while (!Q.isEmpty()) // Dopóki kolejka nie jest pusta:
@@ -347,16 +486,16 @@ function CoverabilityGraph(ptnGraph) {
 
 
             u = Q.deq().vert;
-            ////("u: " + u.id);
+            //console.log("u: " + u.id);
 
             var neighbours = this.graph.GetNeighbours(u.id);
-            //if (neighbours === undefined) //("Empty neighbours")
+            //if (neighbours === undefined) console.log("Empty neighbours")
 
 
 
             for (var v in neighbours) {
                 var neighID = neighbours[v].id;
-                ////("nighbors: " + neighbours[v].id);
+                //console.log("nighbors: " + neighbours[v].id);
 
                 //w(u,w) - waga krawędzi pomiędzy u i w
                 // sprawdź, czy v jest elementem Q
@@ -373,7 +512,7 @@ function CoverabilityGraph(ptnGraph) {
 
 
         }
-        //(d);
+        console.log(d);
         if (d[endVertex.id] !== Infinity) return true; // istnieje ścieżka pomiędzy wierzchołkami
         else return false;
     }

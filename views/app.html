@@ -97,8 +97,10 @@
         <div class="app-button-delimiter"></div>
         <div class="app-button" id="btn-1"><div></div><span class="glyphicon glyphicon-plus-sign"></span></div>
         <div class="app-button" id="btn-2"><div></div><span class="glyphicon glyphicon-minus-sign"></span></div>
-        <div class="app-button" id="btn-3"><div></div><span class="glyphicon glyphicon-screenshot"></span></div>
+        <div class="app-button" id="btn-12"><div></div><span class="glyphicon glyphicon-facetime-video"></span></div>
+        <div class="app-button" id="btn-14"><div></div><span class="glyphicon glyphicon-eye-open"></span></div>
         <div class="app-button-delimiter"></div>
+        <div class="app-button" id="btn-3"><div></div><span class="glyphicon glyphicon-screenshot"></span></div>
         <div class="app-button" id="btn-5"><div></div><span class="glyphicon glyphicon-log-in"></span></div>
         <div class="app-button" id="btn-6"><div></div><span class="glyphicon glyphicon-log-out"></span></div>
         <div class="app-button" id="btn-7"><div></div><span class="glyphicon glyphicon-globe"></span></div>
@@ -112,6 +114,7 @@
         <div class="app-button" id="btn-9"><div></div><span class="glyphicon glyphicon-open"></span></div>
         <div class="app-button-delimiter"></div>
         <div class="app-button" id="btn-10"><div></div><span class="glyphicon glyphicon-stats"></span></div>
+        <div class="app-button" id="btn-13"><div></div><span class="glyphicon glyphicon-sort"></span></div>
         <div class="app-button-delimiter"></div>
         <div class="app-button" id="btn-11"><div></div><span class="glyphicon glyphicon-question-sign"></span></div>
     </div>
@@ -134,21 +137,40 @@
         <input type="submit" id="graph-upload-submit" value="upload">
     </form>
 
-    <div id="tooltip-box" style="display:none;">
-        <div class="tooltip" id="tooltip-place-data" style="display:none;">
-            <header>Vertex:</header>
-            <div></div>
+    <div id="tooltip-div">
+        <div id="tooltip-box-sim" style="display:none;">
+            <div class="tooltip" id="tooltip-place-glob-buttons" style="display:none;">
+                <header>Buttons:</header>
+                <div></div>
+            </div>
         </div>
 
-        <div class="tooltip" id="tooltip-place-iedges" style="display:none;">
-            <header>Incoming Edges:</header>
-            <div></div>
-        </div>
+        <div id="tooltip-box" style="display:none;">
+            <div class="tooltip" id="tooltip-place-data" style="display:none;">
+                <header>Vertex:</header>
+                <div></div>
+            </div>
 
-        <div class="tooltip" id="tooltip-place-oedges" style="display:none;">
-            <header>Outcoming Edges:</header>
-            <div></div>
+            <div class="tooltip" id="tooltip-place-iedges" style="display:none;">
+                <header>Incoming Edges:</header>
+                <div></div>
+            </div>
+
+            <div class="tooltip" id="tooltip-place-oedges" style="display:none;">
+                <header>Outcoming Edges:</header>
+                <div></div>
+            </div>
+
+            <div class="tooltip" id="tooltip-place-buttons" style="display:none;">
+                <header>Buttons:</header>
+                <div></div>
+            </div>
         </div>
+    </div>
+
+    <div id="preloader" style="display:none;">
+        <div id="preloader-bg" class="fog"></div>
+        <div id="preloader-box"></div>
     </div>
 
     <div id="prompt-layer" style="display:none;">

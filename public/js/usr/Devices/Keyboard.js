@@ -8,7 +8,8 @@ var Keyboard = function() {
     this.KEY = {
         ENTER:  13,
         LSHIFT: 16,
-        LCTRL:  17
+        LCTRL:  17,
+        CAPS:   20
     };
 
     this.Init = function() {
@@ -20,14 +21,17 @@ var Keyboard = function() {
     };
 
     this.OnKeyPress = function(e) {
+        if (e.target.nodeName === 'INPUT' || e.target.nodeName === 'TEXTAREA') { return; }
         return this.ExecuteKey(e.which, 'press');
     };
 
     this.OnKeyIn = function(e) {
+        if (e.target.nodeName === 'INPUT' || e.target.nodeName === 'TEXTAREA') { return; }
         return this.ExecuteKey(e.which, 'down');
     };
 
     this.OnKeyOut = function(e) {
+        if (e.target.nodeName === 'INPUT' || e.target.nodeName === 'TEXTAREA') { return; }
         return this.ExecuteKey(e.which, 'up');
     };
 

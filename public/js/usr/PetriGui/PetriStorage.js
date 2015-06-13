@@ -2,8 +2,8 @@ var PetriStorage = function(app, ajax) {
     this.app    = app;
     this.Remote = new RemotePetriStorage(ajax);
     this.Graph  = null;
-    this.placeCurrentID      = 1;
-    this.transitionCurrentID = 1;
+    this.placeNumo      = 1;
+    this.transitionNumo = 1;
 
     this.PLACE      = 'place';
     this.TRANSITION = 'transition';
@@ -35,21 +35,23 @@ var PetriStorage = function(app, ajax) {
                         vertex.id,
                         new GraphVertex(new PetriNode(vertex.id, vertex.position.x, vertex.position.y, this.PLACE, vertex.label, vertex.markers))
                     );
-                    this.placeCurrentID++;
+
+                    this.placeNumo++;
                 }
                 else if (vertex.type === 'Transition') {
                     this.Graph.AddVertex(
                         vertex.id,
                         new GraphVertex(new PetriNode(vertex.id, vertex.position.x, vertex.position.y, this.TRANSITION, vertex.label, 0))
                     );
-                    this.transitionCurrentID++;
+
+                    this.transitionNumo++;
                 }
 
                 for (j in vertex.neighbours) {
                     if (vertex.neighbours.hasOwnProperty(j) !== false) {
                         neighbour = vertex.neighbours[j];
 
-                        edges.push([vertex.id, neighbour.id, neighbour.weight ]);
+                        edges.push([ neighbour.edge_id, vertex.id, neighbour.id, neighbour.weight ]);
                     }
                 }
             }
@@ -59,33 +61,35 @@ var PetriStorage = function(app, ajax) {
             if (edges.hasOwnProperty(i) !== false) {
                 edge = edges[i];
 
-                gEdge = new GraphEdge(new PetriEdge(edge[2]));
+                gEdge = new GraphEdge(new PetriEdge(edge[3]));
+                gEdge.id = edge[0];
 
                 this.Graph.AddEdge(
-                    edge[0],
                     edge[1],
+                    edge[2],
                     gEdge
                 )
             }
         }
     };
 
-    this.GetCurrentVertexID = function() {
-        return this.GetPlaceCurrentID() + this.GetTransitionCurrentID() - 1;
+    this.GetVertexCurrentNumo = function() {
+        return this.GetPlaceCurrentNumo() + this.GetTransitionCurrentNumo() - 1;
     };
 
-    this.GetPlaceCurrentID = function() {
-        return this.placeCurrentID;
+    this.GetPlaceCurrentNumo = function() {
+        return this.placeNumo;
     };
 
-    this.GetTransitionCurrentID = function() {
-        return this.transitionCurrentID;
+    this.GetTransitionCurrentNumo = function() {
+        return this.transitionNumo;
     };
 
     this.SetPlaceData = function(id, type, val) {
         switch (type) {
             case 'label': return this.SetPlaceLabel(id, val);
             case 'markers': return this.SetPlaceMarkers(id, val);
+            case 'priority': return this.SetPlacePriority(id, val);
             default: return;
         }
     };
@@ -114,6 +118,19 @@ var PetriStorage = function(app, ajax) {
 
         vertex = this.Graph.GetVertex(id).GetData();
         vertex.markers = markers;
+    };
+
+    this.SetPlacePriority = function(id, priority) {
+        var vertex;
+        var response;
+
+        response = this.Remote.SetVertexPriority(id, priority);
+        if (!response.status) {
+            return;
+        }
+
+        vertex = this.Graph.GetVertex(id).GetData();
+        vertex.priority = priority;
     };
 
     this.SetPlacePos = function(id, x, y) {
@@ -171,12 +188,12 @@ var PetriStorage = function(app, ajax) {
             id,
             new GraphVertex(new PetriNode(id, posx, posy, this.PLACE, label, markers))
         );
-        this.placeCurrentID++;
+        this.placeNumo++;
 
         return this;
     };
 
-    this.AddTransition = function(posx, posy, label) {
+    this.AddTransition = function(posx, posy, label, priority) {
         var id;
         var response;
 
@@ -190,15 +207,17 @@ var PetriStorage = function(app, ajax) {
 
         this.Graph.AddVertex(
             id,
-            new GraphVertex(new PetriNode(id, posx, posy, this.TRANSITION, label, 0))
+            new GraphVertex(new PetriNode(id, posx, posy, this.TRANSITION, label, 0, priority))
         );
-        this.transitionCurrentID++;
+        this.transitionNumo++;
 
         return this;
     };
 
     this.AddConnection = function(source, target, cost) {
         var response;
+        var id;
+        var gEdge;
 
         if (this.Graph.GetEdgeBetween(source, target) !== null) {
             return this;
@@ -213,10 +232,14 @@ var PetriStorage = function(app, ajax) {
             return this;
         }
 
+        id = response.data.id;
+        gEdge = new GraphEdge(new PetriEdge(cost));
+        gEdge.id = id;
+
         this.Graph.AddEdge(
             source,
             target,
-            new GraphEdge(new PetriEdge(cost))
+            gEdge
         );
 
         return this;
@@ -361,7 +384,7 @@ var PetriStorage = function(app, ajax) {
     };
 
     this.CompareTransitions = function(T1, T2) {
-        return T1.label === T2.label;
+        return T1.label === T2.label && T1.priority === T2.priority;
     };
 
     this.CompareConnections = function(C1, C2) {
@@ -370,8 +393,8 @@ var PetriStorage = function(app, ajax) {
 
     this.Reset = function() {
         this.Graph.Reset();
-        this.placeCurrentID      = 1;
-        this.transitionCurrentID = 1;
+        this.placeNumo      = 1;
+        this.transitionNumo = 1;
 
         return this;
     };

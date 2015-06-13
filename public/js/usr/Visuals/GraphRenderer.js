@@ -9,7 +9,7 @@ var GraphRenderer = function(app, renderingRoot) {
     this.selectedNode        = null;
     this.lastSelectedNode    = null;
     this.paintable           = true;
-
+    this.activeTrans         = {};
     this.blockclick          = false;
 
     this.sigmaSettings = {
@@ -22,6 +22,7 @@ var GraphRenderer = function(app, renderingRoot) {
         enableHovering: false,
         drawLabels: true,
         drawEdgeLabels: true,
+        drawPriorities: false,
         edgeLabelSize: 'fixed',
         nodeTextSize: 'fixed',
         nodesPowRatio: 0.5,
@@ -111,20 +112,37 @@ var GraphRenderer = function(app, renderingRoot) {
         return this;
     };
 
+    this.UnregisterDraggableNodes = function() {
+        sigma.plugins.killDragNodes(this.sigma);
+
+        return this;
+    };
+
     this.FixBug423 = function() {
-        this.sigma.graph.addNode({
-            id:     'ghost',
-            size:   0,
-            x:      0,
-            y:      0,
-            dX:     0,
-            dY:     0,
-            type:   'ghost'
-        });
-        this.sigma.camera.goTo({
-            x: 1000,
-            y: 1000
-        });
+        try {
+            this.sigma.graph.addNode({
+                id: 'ghost',
+                size: 0,
+                x: 0,
+                y: 0,
+                dX: 0,
+                dY: 0,
+                type: 'ghost'
+            });
+            this.sigma.camera.goTo({
+                x: 1000,
+                y: 1000
+            });
+        }
+        catch (ex) {}
+    };
+
+    this.EnableDrawingPriorities = function() {
+        this.sigmaRenderer.settings({drawPriorities: true});
+    };
+
+    this.DisableDrawingPriorities = function() {
+        this.sigmaRenderer.settings({drawPriorities: false});
     };
 
     this.PlaceRenderer = function(node, ctx, settings) {
@@ -187,6 +205,7 @@ var GraphRenderer = function(app, renderingRoot) {
         var nx = node[prefix + 'x'];
         var ny = node[prefix + 'y'];
         var nsize = node[prefix + 'size'];
+        var fontSize = (settings('nodeTextSize') === 'fixed') ? settings('defaultNodeTextSize') : settings('defaultNodeTextSize') * size * Math.pow(size, -1 / settings('nodeTextSizePowRatio'));
 
         ctx.shadowBlur = 0;
 
@@ -206,8 +225,36 @@ var GraphRenderer = function(app, renderingRoot) {
             nsize*2,
             nsize*2
         );
+        ctx.save();
 
         ctx.shadowBlur = 0;
+
+        if (!settings('drawPriorities')) {
+            return;
+        }
+
+        ctx.font = [
+            settings('fontStyle'),
+            fontSize + 'px',
+            settings('font')
+        ].join(' ');
+
+        var fillStyle = (settings('nodeTextColor') === 'node') ? (node.color || settings('defaultNodeColor')) : settings('defaultNodeTextColor');
+        ctx.fillStyle = (node.textColor !== undefined) ? node.textColor : fillStyle ;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'alphabetic';
+
+        var cx = node[prefix + 'x'];
+        var cy = node[prefix + 'y'];
+
+        ctx.translate(cx, cy);
+        ctx.fillText(
+            (node.priority > 1 ? node.priority : ''),
+            0,
+            (node[prefix + 'size'] / 2)
+        );
+
+        ctx.restore();
     };
 
     this.RenderNode = function(record, defaultColor, defaultShadow) {
@@ -218,6 +265,7 @@ var GraphRenderer = function(app, renderingRoot) {
             id:                 'n' + record.id,
             storageID:          record.id,
             markers:            record.markers,
+            priority:           record.priority,
             label:              record.label,
             size:               8,
             x:                  record.x,
@@ -227,7 +275,10 @@ var GraphRenderer = function(app, renderingRoot) {
             type:               record.type,
             defaultColor:       defaultColor,
             defaultTextColor:   '#ffffff',
-            defaultShadowColor: defaultShadow
+            defaultShadowColor: defaultShadow,
+            lastColor:          defaultColor,
+            lastTextColor:      '#ffffff',
+            lastShadowColor:    defaultShadow
         });
     };
 
@@ -455,6 +506,14 @@ var GraphRenderer = function(app, renderingRoot) {
         }
     };
 
+    this.MoveCameraTo = function(x, y) {
+        this.sigma.camera.goTo({
+            x: x,
+            y: y,
+            ratio: 1
+        });
+    };
+
     this.ResetCameraPosition = function() {
         var canvasSize;
         var xMin, xMax, yMin, yMax, scale, ratio;
@@ -499,7 +558,7 @@ var GraphRenderer = function(app, renderingRoot) {
         if (this.app.ModeManager.IsOn(this.app.MODES.BUILD) && !this.blockclick && this.selectedNode === null) {
             var pos = this.GetMouseXY(e);
 
-            this.app.Storage.AddPlace(pos.x, pos.y, 'P' + this.app.Storage.GetPlaceCurrentID().toString(), 0);
+            this.app.Storage.AddPlace(pos.x, pos.y, 'P' + this.app.Storage.GetPlaceCurrentNumo().toString(), 0);
             this.Paint();
         }
         else if (!this.blockclick) {
@@ -518,7 +577,7 @@ var GraphRenderer = function(app, renderingRoot) {
         if (this.app.ModeManager.IsOn(this.app.MODES.BUILD) && !this.blockclick && this.selectedNode === null) {
             var pos = this.GetMouseXY(e);
 
-            this.app.Storage.AddTransition(pos.x, pos.y, 'T' + this.app.Storage.GetTransitionCurrentID().toString());
+            this.app.Storage.AddTransition(pos.x, pos.y, 'T' + this.app.Storage.GetTransitionCurrentNumo().toString(), 1);
             this.Paint();
         }
         else {
@@ -611,32 +670,70 @@ var GraphRenderer = function(app, renderingRoot) {
         }
     };
 
+    this.ResetColoring = function() {
+        var nodes;
+        var node;
+        var key;
+
+        nodes = this.sigma.graph.nodes();
+
+        for (key in nodes) {
+            if (nodes.hasOwnProperty(key) !== false) {
+                node = nodes[key];
+
+                node.color = node.defaultColor;
+                node.textColor = '#ffffff';
+                node.shadowColor = node.defaultShadowColor;
+
+                node.lastColor = node.color;
+                node.lastTextColor = node.textColor;
+                node.lastShadowColor = node.shadowColor;
+            }
+        }
+    };
+
+    this.ColorNode = function(id, color, textColor) {
+        var node = this.sigma.graph.nodes('n' + id);
+        var tmpColor;
+        var tmpTextColor;
+        var tmpShadowColor;
+
+        if (node !== undefined) {
+            tmpColor = node.color;
+            tmpTextColor = node.textColor;
+            tmpShadowColor = node.shadowColor;
+
+            node.color = color || node.lastColor;
+            node.textColor = textColor || node.lastTextColor;
+            node.shadowColor = color || node.lastShadowColor;
+
+            node.lastColor = tmpColor;
+            node.lastTextColor = tmpTextColor;
+            node.lastShadowColor = tmpShadowColor;
+
+            this.selectedNode = id;
+        }
+    };
+
     this.SelectNode = function(id) {
         this.DeselectCurrentNode();
 
-        var node = this.sigma.graph.nodes('n' + id);
-
-        if (node !== undefined) {
-            node.color = '#ffff00';
-            node.textColor = '#000000';
-            node.shadowColor = node.color;
-            this.selectedNode = id;
-        }
+        this.ColorNode(id, '#ffff00', '#000000');
 
         this.RenderTooltip(id);
+        this.RenderSimButtons(id);
         this.Paint();
     };
 
     this.DeselectNode = function(id) {
         var node = this.sigma.graph.nodes('n' + id);
 
-        if (node !== undefined) {
-            node.color = node.defaultColor;
-            node.textColor = node.defaultTextColor;
-            node.shadowColor = node.defaultShadowColor;
+        if (node !== undefined && node.color === '#ffff00') {
+            this.ColorNode(id);
         }
 
         this.ClearTooltip();
+        this.ClearSimButtons();
         this.Paint();
 
         this.lastSelectedNode = this.selectedNode;
@@ -798,6 +895,118 @@ var GraphRenderer = function(app, renderingRoot) {
         canvas.style = '';
     };
 
+    this.RenderSimMainButtons = function() {
+        var tooltipBox;
+        var tooltipButtons;
+        var tooltipButtonsDiv;
+        var node;
+        var el;
+
+        if (this.app.ModeManager.IsOff(this.app.MODES.SIMULATE)) {
+            return;
+        }
+
+        tooltipBox     = document.querySelector('#tooltip-box-sim');
+        tooltipButtons = document.querySelector('#tooltip-place-glob-buttons');
+
+        tooltipButtonsDiv = tooltipButtons.querySelector('div');
+
+        el = document.createElement('div');
+        el.className = 'prompt-button';
+        el.innerHTML = 'execute random';
+
+        $(el).on('click', (function(proxy) {
+            return function() {
+                var id;
+                var keys;
+                var node
+
+                keys = Object.keys(proxy.activeTrans);
+                id = keys[ keys.length * Math.random() << 0];
+
+                proxy.app.Analyzer.ExecuteTransition(id);
+
+                node = proxy.sigma.graph.nodes('n' + id);
+                proxy.MoveCameraTo(node.x, node.y);
+                proxy.SelectNode(id);
+
+                return false;
+            };
+        })(this));
+
+        tooltipButtonsDiv.innerHTML = '';
+        tooltipButtonsDiv.appendChild(el);
+
+        tooltipButtons.style.display = "block";
+        tooltipBox.style.display = "block";
+    };
+
+    this.ClearSimMainButtons = function() {
+        var tooltipBox;
+        var tooltipButtons;
+
+        tooltipBox     = document.querySelector('#tooltip-box-sim');
+        tooltipButtons = document.querySelector('#tooltip-place-glob-buttons');
+
+        tooltipBox.style.display = "none";
+        tooltipButtons.style.display = "none";
+    };
+
+    this.RenderSimButtons = function(id) {
+        var tooltipBox;
+        var tooltipButtons;
+        var tooltipButtonsDiv;
+        var node;
+        var el;
+
+        if (this.app.ModeManager.IsOff(this.app.MODES.SIMULATE)) {
+            return;
+        }
+
+        if (id === false) {
+            return;
+        }
+
+        node = this.sigma.graph.nodes('n' + id);
+
+        if (node === undefined || this.activeTrans[id] === undefined) {
+            return;
+        }
+
+        tooltipBox         = document.querySelector('#tooltip-box');
+        tooltipButtons     = document.querySelector('#tooltip-place-buttons');
+
+        tooltipButtonsDiv = tooltipButtons.querySelector('div');
+
+        el = document.createElement('div');
+        el.className = 'prompt-button';
+        el.innerHTML = 'execute transition';
+
+        $(el).on('click', (function(proxy, id) {
+            return function() {
+                proxy.app.Analyzer.ExecuteTransition(id);
+                return false;
+            };
+        })(this, id));
+
+        tooltipButtonsDiv.innerHTML = '';
+        tooltipButtonsDiv.appendChild(el);
+
+        tooltipButtons.style.display = "block";
+        tooltipBox.style.display = "block";
+    };
+
+    this.ClearSimButtons = function() {
+        var tooltipBox;
+        var tooltipButtons;
+
+        tooltipBox     = document.querySelector('#tooltip-box');
+        tooltipButtons = document.querySelector('#tooltip-place-buttons');
+
+        tooltipBox.style.display = "none";
+        tooltipButtons.style.display = "none";
+    };
+
     this.RenderTooltip = function(id) {
         var node;
         var attrs;
@@ -813,6 +1022,10 @@ var GraphRenderer = function(app, renderingRoot) {
         var i;
         var val;
 
+        if (this.app.ModeManager.IsOn(this.app.MODES.SIMULATE)) {
+            return;
+        }
+
         node = this.sigma.graph.nodes('n' + id);
 
         if (node === undefined) {
@@ -825,6 +1038,10 @@ var GraphRenderer = function(app, renderingRoot) {
         }
         else if (node.type === this.app.Storage.TRANSITION) {
             attrs = [ 'label' ];
+
+            if (this.app.ModeManager.IsOn(this.app.MODES.PRIORITY)) {
+                attrs.push('priority');
+            }
         }
         else {
             return;
@@ -835,7 +1052,7 @@ var GraphRenderer = function(app, renderingRoot) {
         tooltipIEdges = document.querySelector('#tooltip-place-iedges');
         tooltipOEdges = document.querySelector('#tooltip-place-oedges');
 
-        tooltipDataDiv    = tooltipData.querySelector('div');
+        tooltipDataDiv   = tooltipData.querySelector('div');
         tooltipIEdgesDiv = tooltipIEdges.querySelector('div');
         tooltipOEdgesDiv = tooltipOEdges.querySelector('div');
 
@@ -950,12 +1167,89 @@ var GraphRenderer = function(app, renderingRoot) {
         tooltipOEdges.style.display = "none";
     };
 
-    this.ShowTransitionsVitality = function(data) {
-        console.log(data);
+    this.Freeze = function() {
+        this.ClearTooltip();
+        this.UnregisterDraggableNodes();
     };
 
-    this.HideTransitionsVitality = function() {
-        console.log('Hide');
+    this.Unfreeze = function() {
+        this.activeTrans = {};
+        this.ResetColoring();
+        this.ClearNotes();
+        this.ClearSimMainButtons();
+        this.ClearSimButtons();
+        this.RegisterDraggableNodes();
+    };
+
+    this.ShowNotesOfTransitionsVitality = function(data) {
+        var key;
+        var row;
+        var node;
+        var nameParts;
+
+        for (key in data) {
+            if (data.hasOwnProperty(key) !== false) {
+                row = data[key];
+
+                node = this.app.Storage.GetTransition(row.transition);
+
+                nameParts = node.label.split('::');
+
+                node.label = nameParts[0] += '::' + row.vitality;
+            }
+        }
+
+        this.Paint();
+    };
+
+    this.ShowNotesOfActiveTransitions = function(data) {
+        var key;
+        var row;
+        var cnt;
+
+        cnt = 0;
+        this.activeTrans = {};
+        for (key in data) {
+            if (data.hasOwnProperty(key) !== false) {
+                row = data[key];
+
+                this.activeTrans[row.id] = true;
+                this.ColorNode(row.id, '#ffa500', '#000000');
+                cnt++;
+            }
+        }
+
+        if (cnt > 0) {
+            this.RenderSimMainButtons();
+        }
+        this.Paint();
+    };
+
+    this.ClearNotes = function() {
+        var key;
+        var data;
+        var places;
+        var trans;
+        var node;
+        var nameParts;
+
+        data = this.app.Storage.GetAll();
+
+        places = data[0];
+        trans  = data[1];
+
+        for (key in trans) {
+            if (trans.hasOwnProperty(key) !== false) {
+                node = trans[key];
+
+                nameParts = node.label.split('::');
+                if (node.label !== nameParts[0]) {
+                    node.label = nameParts[0];
+                }
+            }
+        }
+
+        this.Paint();
     };
 
     return this;

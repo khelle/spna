@@ -75,7 +75,8 @@ Vertex.prototype = {
 
         var neighbours = this.getNeighbours();
         for (var i in neighbours) {
-            obj.neighbours.push({id: neighbours[i].id, weight: this.getCostTo(neighbours[i])});
+            var edgeId = this.graph.edgesStorage.GetEdgeBetween(this.id, neighbours[i].id);
+            obj.neighbours.push({id: neighbours[i].id, weight: this.getCostTo(neighbours[i]), edge_id: edgeId});
         }
 
         return obj;

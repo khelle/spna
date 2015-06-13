@@ -110,6 +110,26 @@ Transition.prototype = {
         return true;
     },
 
+    execute: function() {
+        if (!this.canBeExecuted()) {
+            throw new Error('This transition (' + this.getLabel() + ') cannot be executed at this time.');
+        }
+        else {
+            var TakingMarkers = this.getReferencing();
+            for (var i in TakingMarkers) {
+                TakingMarkers[i].removeMarkers(TakingMarkers[i].getCostTo(this));
+            }
+
+            var AddingMarkers = this.getNeighbours();
+            for (var i in AddingMarkers) {
+                var mark = AddingMarkers[i];
+                mark.addMarkers(this.getCostTo(mark));
+            }
+        }
+
+        return true;
+    },
+
     export: function() {
         var obj = Vertex.prototype.export.apply(this);
 

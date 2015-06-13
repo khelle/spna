@@ -426,7 +426,7 @@ function CoverabilityGraph(ptnGraph) {
             if (a.distance < b.distance) comp = 1;
             else if (a.distance > b.distance) comp = -1;
             else comp = 0;
-            //console.log("a.dist = " + a.distance + ", b.distance =" + b.distance + ", comparison,  = " + comp);
+            console.log("a.dist = " + a.distance + ", b.distance =" + b.distance + ", comparison,  = " + comp);
             return comp;
         });
 
@@ -442,9 +442,11 @@ function CoverabilityGraph(ptnGraph) {
 
             }
             d[vertices[i].id] = di;
-            //console.log("Distance = " + di);
+            console.log("Distance = " + di);
+            var structure = {distance: di, vert: vertices[i]};
+            console.log("Adding to priority queue: " + structure);
+            Q.enq(structure);
 
-            Q.enq({distance: di, vert: vertices[i]});
            // //(Q);
            // //("----------------------");
             ////("ID: " + vertices[i].id);
@@ -463,7 +465,7 @@ function CoverabilityGraph(ptnGraph) {
 
         }
 
-
+        console.log("Priority queue before calculations: " + Q);
         // Utwórz kolejkę priorytetową Q wszystkich wierzchołków grafu. Priorytetem kolejki jest aktualnie wyliczona odległość od wierzchołka źródłowego s.
         // Stwórz tablicę wierzchołków, sortuj ją stabilnie
 
@@ -484,9 +486,10 @@ function CoverabilityGraph(ptnGraph) {
         while (!Q.isEmpty()) // Dopóki kolejka nie jest pusta:
         {
 
-
-            u = Q.deq().vert;
-            //console.log("u: " + u.id);
+            var testU = Q.deq();
+            u = testU.vert;
+            // Usuń z kolejki wierzchołek u o najniższym priorytecie (wierzchołek najbliższy źródła, który nie został jeszcze rozważony)
+            console.log("u: " + u.id + ", dist = " + testU.distance);
 
             var neighbours = this.graph.GetNeighbours(u.id);
             //if (neighbours === undefined) console.log("Empty neighbours")
@@ -495,17 +498,24 @@ function CoverabilityGraph(ptnGraph) {
 
             for (var v in neighbours) {
                 var neighID = neighbours[v].id;
-                //console.log("nighbors: " + neighbours[v].id);
-
+                console.log("nighbors: " + neighbours[v].id);
+                // czy trzeba aktualizować odległość w kolejce priorytowej
                 //w(u,w) - waga krawędzi pomiędzy u i w
                 // sprawdź, czy v jest elementem Q
 
                 if (d[neighID] === Infinity) {
                     d[neighID] = d[u.id] + 1;
+                    var structure = {distance:  d[neighID], vert: neighbours[v]};
+                    console.log("Adding to priority queue: " + structure);
+                    Q.enq(structure);
                 }
                 else {
                     if (d[neighID] > d[u.id] + 1) {
                         d[neighID] = d[u.id] + 1;
+                        var structure = {distance:  d[neighID], vert: neighbours[v]};
+                        console.log("Adding to priority queue: " + structure);
+                        Q.enq(structure);
+
                     }
                 }
             }

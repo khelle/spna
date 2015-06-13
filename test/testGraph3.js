@@ -57,8 +57,11 @@ console.log( g.findTransitionsToExecute() );
 
 
 var testing = new CoverabilityGraph(g);
+
 //testing.buildCoverabilityTree();
 //testing.buildCoverabilityGraph();
 testing.buildReachabilityTree();
+
+var analysis = new
 //console.log( testing.printTree() );
 

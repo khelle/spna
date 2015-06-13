@@ -546,9 +546,12 @@ function CoverabilityGraph(ptnGraph) {
                 var neighbour = vertexNeighbours[j];
                 var edges = graph.edgesStorage.GetEdgesBetween(vertex.id, neighbour.id);
 
+                var labels = [];
                 for (var e in edges) {
-                    neighbours.push({'id': neighbour.id, 'edge_id': edges[e]});
+                    labels.push(graph.GetEdge(edges[e]).data.transition.getLabel());
                 }
+
+                neighbours.push({'id': neighbour.id, 'edge_id': edges[0], 'label': labels.sort().join(', ')});
             }
 
             vertices.push({'id': vertex.id, 'label': vertex.getHash(), 'neighbours': neighbours});

@@ -7,16 +7,12 @@ function State(places) {
     old - found exact same state earlier (going from root)
     dead - no more alive transitions from this state
      */
-
-
-
     this.label = State.NEW;
     this.markers = {};
     this.dead = false;
 
     for (var i in places) {
         this.markers[i] = places[i].getMarkers();
-        //this.markers.push(places[i].getMarkers());
     }
 
     this.getHash = function() {
@@ -37,8 +33,8 @@ function State(places) {
         return this;
     };
 
-    this.setDead = function(trueorfalse) {
-        this.dead = trueorfalse;
+    this.setDead = function(dead) {
+        this.dead = dead;
         return this;
     };
 

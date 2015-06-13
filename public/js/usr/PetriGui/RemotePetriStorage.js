@@ -98,6 +98,27 @@ var RemotePetriStorage = function(ajax) {
         return { data: response.data, status: response.status };
     };
 
+    this.SetVertexWeight = function(id, weight) {
+        var response;
+        var status;
+
+        //this.ajax.HttpPost(
+        //    "/api/transition/priority",
+        //    {
+        //        id: id,
+        //        priority: priority
+        //    },
+        //    function(r, s) {
+        //        response = r;
+        //        status = s;
+        //    }
+        //);
+        //
+        //return { data: response.data, status: response.status };
+        return { data: {}, status: true };
+    };
+
+
     this.SetVertexLabel = function(id, label) {
         var response;
         var status;

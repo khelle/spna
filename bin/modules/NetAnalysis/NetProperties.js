@@ -20,11 +20,11 @@ function NetProperties() {
     // graf pokrycia - scalamy węzły, które zwiększają tylko  1 miejsce do nieskończoności?
     // graf osiągalności - bez symbolu nieskończoności, sklejone duplikaty
 
-   this.PTNgraph = null;
-   this.CoverabilityGraph = null;
-   this.graph = null;
-   this.KLimitValue = null;
-   this.AnalysisResults = null;
+    this.PTNgraph = null;
+    this.CoverabilityGraph = null;
+    this.graph = null;
+    this.KLimitValue = null;
+    this.AnalysisResults = null;
 
 
     this.KPlacesLimits = function()
@@ -32,19 +32,61 @@ function NetProperties() {
         /* TODO: funkcja ma zwracać k-ograniczoność każdego wierzchołka
 
          */
-        var kPlaceLimits = [];
+
+
+
+
+        var vertices = this.graph.GetVertices();
+        var limits = vertices[0].getState();
+        console.log("!!!!");
+        console.log(vertices);
+        console.log(limits);//
+
+
+        for (var v in vertices) // v to indeks a nie obiekt!!!
+        {
+            var state = vertices[v].getState();
+            //var tmp = 0;
+           //console.log("State : " + state);
+
+            for(var m in state)
+            {
+               if (state[m] > limits[m])
+               {
+                   limits[m] = state[m];
+               }
+            }
+
+        }
+        /*
+        for(var t in limits)
+        {
+            console.log("Lims: " + limits[t]);
+
+        }
+        */
+        return limits;
     };
 
 
-    this.KLimit = function ()
+    this.KLimit = function (LimitsVector)
     {
-
+        var maxK = 0;
+        for(var m in LimitsVector)
+        {
+            tmp = LimitsVector[m];
+            ////("m =" + m + ", tmp = " + tmp + ", maxK = " + maxK);
+            if (tmp > maxK) maxK = tmp;
+        }
+        console.log("Maxx 2 " + maxK);
+        return maxK;
+        /*
         // sieć jest k-ograniczona, jeśli istnieje liczba naturalna k,
         // taka że w każdym miejscu nigdy nie będzie więcej niż (k) kropek.
 
         // przeiteruj po tablicy wierzchołków w grafie pokrycia, które są stanami
-            //wybierz maksymalną wartość z tablicy stanów i ją zwróć (w szczególności inf)
-            //
+        //wybierz maksymalną wartość z tablicy stanów i ją zwróć (w szczególności inf)
+        //
         // jeśli któryś z węzłów ma więcej niż k znaczników zwróć fałsz
 
 
@@ -63,11 +105,12 @@ function NetProperties() {
                 if (tmp > maxK) maxK = tmp;
             }
 
-         }
+        }
         ////("Finallly, maxK = " + maxK);
-        //return maxK; // funkcja może zwrócić nieskończoność!!!
+        return maxK; // funkcja może zwrócić nieskończoność!!!
         // TODO: sprawdzić obliczanie max
-        this.KLimitValue = maxK;
+        //this.KLimitValue = maxK;
+        */
     };
 
     this.isSecure = function () {
@@ -75,7 +118,7 @@ function NetProperties() {
         if (this.KLimitValue==1) return true;
         else return false;
     };
-    this.isUnLimited = function () {
+    this.isUnlimited = function () {
         // sieć jest bezpieczna, jeśli jest 1-ograniczona
         if (this.KLimitValue==Infinity) return true;
         else return false;
@@ -109,7 +152,7 @@ function NetProperties() {
                 break;
             }
             for(var i in sampleState)
-            // TODO: dlaczego nie mogę pobrać rozmiaru stanu metodą size/length?
+                // TODO: dlaczego nie mogę pobrać rozmiaru stanu metodą size/length?
             {
                 weightsVector.push(1);
             }
@@ -155,16 +198,16 @@ function NetProperties() {
 
 
     this.isReversable = function () {
-       /*
-        Sieć N  jest  odwracalna  wtedy  i  tylko  wtedy  ,  gd  wszytkie  znakowania  są jej  znakowaniami  własnymi.
-        Znakowanie  M  sieci  N  nazywamy  znakowaniem  własnym jeżeli  jest  osiągalne z  dowolnego  znakowania
+        /*
+         Sieć N  jest  odwracalna  wtedy  i  tylko  wtedy  ,  gd  wszytkie  znakowania  są jej  znakowaniami  własnymi.
+         Znakowanie  M  sieci  N  nazywamy  znakowaniem  własnym jeżeli  jest  osiągalne z  dowolnego  znakowania
 
 
-        Sieć N  nazywamy  odwracalną, jeżeli  znakowanie  początkowe jest  osiągalne
-        z  każdego znakowania.
+         Sieć N  nazywamy  odwracalną, jeżeli  znakowanie  początkowe jest  osiągalne
+         z  każdego znakowania.
 
-        Dla każdego wierzchołka w grafie pokrycia sprawdź, czy da się dojść do niego z każde
-        */
+         Dla każdego wierzchołka w grafie pokrycia sprawdź, czy da się dojść do niego z każde
+         */
         var vertices = this.graph.GetVertices();
 
         if(Object.keys(vertices).length === 1)
@@ -196,12 +239,12 @@ function NetProperties() {
         // - niemożliwości odpalenia jakiegokolwiek przejścia
 
         // Przejdź po wszystkich stanach (węzłąch) w grafie pokrycia:
-            // Przeiteruj po wszystkich przejściach w sieci :
-            // znajdź sekwencję przejść, która uaktywnia to przejście
+        // Przeiteruj po wszystkich przejściach w sieci :
+        // znajdź sekwencję przejść, która uaktywnia to przejście
 
-            // znajdź taką ścieżkę w grafie pokrycia, że kończy się tym przejściem
-            // znajdź taki ciąg wierzchołków, że ostatni wierzchołek w ciągu ma krawędź wychodzącą będącą i-tym przejściem
-    var vertices = this.graph.GetVertices();
+        // znajdź taką ścieżkę w grafie pokrycia, że kończy się tym przejściem
+        // znajdź taki ciąg wierzchołków, że ostatni wierzchołek w ciągu ma krawędź wychodzącą będącą i-tym przejściem
+        var vertices = this.graph.GetVertices();
         for(var v in vertices)
         {
             var vv = vertices[v];
@@ -218,7 +261,7 @@ function NetProperties() {
      Żywotność przejścia  oznacza,  że  zawsze  ma  on szansę ponownie być aktywne.
      Przejście  t  nazywamy  martvvym  ( LO - zywym ) .  jeżeli  przejscie  t  nie  występuje
      żadnym ciągu przejsć należących  do  zbioru  L(M0)
-      */
+     */
 
     //var function {}
     // jeśli z jakiegoś stanu istnieje ścieżka w grafie pokrycia, która prowadzi do stanu martwego - sieć nie jest ani żywa ani martwa
@@ -227,7 +270,7 @@ function NetProperties() {
     this.getTransitionsVitality = function () {
 
         /*
-        Zwróć tablicę obiektów postaci { transitionName: 't0', vitality: 'L0' }
+         Zwróć tablicę obiektów postaci { transitionName: 't0', vitality: 'L0' }
          */
         var transitionsPTN = this.PTNgraph.getTransitions();
         var edges = this.graph.GetEdges();
@@ -261,7 +304,7 @@ function NetProperties() {
                 transitionsVitality.push({transition: transitionsPTN[p].getId(), vitality: 'L1'});
             }
             /*
-            TODO: sprawdzenie innych stopni żywotności
+             TODO: sprawdzenie innych stopni żywotności
 
              Przejście t  sieci  N  jest L2 - żywe  wtedy i tylko  wtedy  , gdy dla dowolnej  liczby
              k  istnieje  droga  w  grafie  osiągalności/pokrycia,  w  której  co  najmniej  k  raz  występuje  łuk
@@ -284,11 +327,13 @@ function NetProperties() {
     this.Analyze = function(PTNGraph)
     {
         this.SetGraph(PTNGraph);
-        this.KLimit();
-        //return
-        //
+        var Limits  =  this.KPlacesLimits();
+        var K = this.KLimit(Limits);
         this.AnalysisResults = {
-            "NetLimit": this.KLimitValue,
+            "PlacesLimits" : Limits,
+            "NetLimit": K,
+            "Securability" : this.isSecure(K),
+            "Unlimited" : this.isUnlimited(K),
             "Conservative": this.isConservative(),
             "Reversable" : this.isReversable(),
             "Vital" : this.isVital(),

@@ -23,6 +23,9 @@ function NetProperties() {
    this.PTNgraph = null;
    this.CoverabilityGraph = null;
    this.graph = null;
+   this.KLimitValue = null;
+   this.AnalysisResults = null;
+
 
     this.KPlacesLimits = function()
     {
@@ -62,18 +65,19 @@ function NetProperties() {
 
          }
         ////("Finallly, maxK = " + maxK);
-        return maxK; // funkcja może zwrócić nieskończoność!!!
+        //return maxK; // funkcja może zwrócić nieskończoność!!!
         // TODO: sprawdzić obliczanie max
+        this.KLimitValue = maxK;
     };
-    // TODO: dodać do GUI!
+
     this.isSecure = function () {
         // sieć jest bezpieczna, jeśli jest 1-ograniczona
-        if (this.KLimit()==1) return true;
+        if (this.KLimitValue==1) return true;
         else return false;
     };
     this.isUnLimited = function () {
         // sieć jest bezpieczna, jeśli jest 1-ograniczona
-        if (this.KLimit()==Infinity) return true;
+        if (this.KLimitValue==Infinity) return true;
         else return false;
     };
 
@@ -85,6 +89,13 @@ function NetProperties() {
         //TODO: co powinniśmy zwrócić użytkownikowi w przypadku podania wektora wag o złej długości
         //TODO: jak użytkownik poda wektor (przycisk + osobne okienko dialogowe?)
         var vertices = this.graph.GetVertices();
+        console.log("Vertices in coverability graph = " + Object.keys(vertices).length);
+        if(Object.keys(vertices).length === 1)
+        // jeśli graf pokrycia ma jeden wierzchołek to sieć jest martwa -> nie jest zachowawcza
+        {
+            return false;
+        }
+
         var sums = [];
         var sampleState = undefined;
 
@@ -102,8 +113,9 @@ function NetProperties() {
             {
                 weightsVector.push(1);
             }
-            ////("weightsVector: " + weightsVector);
+
         }
+        console.log("weightsVector: " + weightsVector);
 
         // sieć jest zachowawcza, jeśli  łączna liczba znaczników
         // w sieci pozostaje stała dla każdego znakowania
@@ -154,8 +166,15 @@ function NetProperties() {
         Dla każdego wierzchołka w grafie pokrycia sprawdź, czy da się dojść do niego z każde
         */
         var vertices = this.graph.GetVertices();
+
+        if(Object.keys(vertices).length === 1)
+        // jeśli graf pokrycia ma jeden wierzchołek to sieć jest martwa -> nie jest odwracalna
+        {
+            return false;
+        }
         var root = this.CoverabilityGraph.treeRoot;
         //("Root: " + root.id);
+        var result = false;
         for(v in vertices)
         {
             vv = vertices[v];
@@ -165,6 +184,7 @@ function NetProperties() {
                 if(!this.CoverabilityGraph.Dijkstra(vertices[v], root)) return false;
             }
         }
+
         return true;
 
     };
@@ -264,14 +284,19 @@ function NetProperties() {
     this.Analyze = function(PTNGraph)
     {
         this.SetGraph(PTNGraph);
-
-        return {
-            "NetLimit": this.KLimit(),
+        this.KLimit();
+        //return
+        //
+        this.AnalysisResults = {
+            "NetLimit": this.KLimitValue,
             "Conservative": this.isConservative(),
             "Reversable" : this.isReversable(),
             "Vital" : this.isVital(),
             "Transitions vitality" : this.getTransitionsVitality()
+
+
         };
+        return this.AnalysisResults;
     };
 
     this.SetGraph = function(PTNGraph)

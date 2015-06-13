@@ -403,7 +403,7 @@ function CoverabilityGraph(ptnGraph) {
 
 
         var vertices = this.graph.GetVertices();
-
+        console.log("Coverability graph: " + this.serializeCoverabilityGraph());
         var d = {};
         //var Q = {};
 
@@ -511,9 +511,9 @@ function CoverabilityGraph(ptnGraph) {
 
         }
         console.log(d);
-       for (var i in d)
+       for (var i in vertices)
         {
-            //console.log("ID = " + d[i].id + ", state = " + vertices[d[i].id].getState())
+            console.log(vertices[i].getState());
         }
         if (d[endVertex.id] !== Infinity) return true; // istnieje ścieżka pomiędzy wierzchołkami
         else return false;

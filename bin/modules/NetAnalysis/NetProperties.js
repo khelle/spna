@@ -338,15 +338,14 @@ function NetProperties() {
         if (!this.hasStateChanged(PTNGraph.getState())) {
             return this.AnalysisResults;
         }
-
         this.SetGraph(PTNGraph);
 
         var Limits  =  this.KPlacesLimits();
         var K = this.KLimit(Limits);
-
+        //if (K === null) K =
         this.AnalysisResults = {
             "PlacesLimits" : Limits,
-            "NetLimit": K,
+            "NetLimit": (null === K ? K : 'Unlimited'),
             "Securability" : this.isSecure(K),
             "Unlimited" : this.isUnlimited(K),
             "Conservative": this.isConservative(),

@@ -220,7 +220,7 @@ var CoverabilityRenderer = function(app, renderingRoot) {
                     if (vertex.neighbours.hasOwnProperty(j) !== false) {
                         edge = vertex.neighbours[j];
 
-                        edges.push({ edge_id: edge.edge_id, source: vertex.id, target: edge.id });
+                        edges.push({ edge_id: edge.edge_id, label: edge.label, source: vertex.id, target: edge.id });
                     }
                 }
 
@@ -238,7 +238,7 @@ var CoverabilityRenderer = function(app, renderingRoot) {
                 edge = edges[i];
 
                 try {
-                    this.RenderEdge({ id: edge.edge_id, label: 'A', source: edge.source, target: edge.target });
+                    this.RenderEdge({ id: edge.edge_id, label: edge.label, source: edge.source, target: edge.target });
                 }
                 catch (e) {
                     // ignore existing edge

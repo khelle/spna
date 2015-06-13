@@ -517,20 +517,24 @@ function CoverabilityGraph(ptnGraph) {
     };
 
     this.serialize = function() {
-        return {
-            'vertices': [
-                {'id': 1, 'label': '1101', 'neighbours': [
-                    {'id': 2, 'edge_id': 1},
-                    {'id': 3, 'edge_id': 2}
-                ]},
-                {'id': 2, 'label': '1001', 'neighbours': [
-                    {'id': 1, 'edge_id': 3}
-                ]},
-                {'id': 3, 'label': '0011', 'neighbours': [
-                    {'id': 2, 'edge_id': 4}
-                ]}
-            ]
-        };
+        var vertices = [];
+        var graphVertices = this.graph.GetVertices();
+
+        for (var i in graphVertices) {
+            var vertex = graphVertices[i];
+            var vertexNeighbours = this.graph.GetNeighbours(vertex.id);
+            var neighbours = [];
+
+            for (var j in vertexNeighbours) {
+                var neighbour = vertexNeighbours[j];
+
+                neighbours.push({'id': neighbour.id, 'edges': this.graph.edgesStorage.GetEdgesBetween(vertex.id, neighbour.id)});
+            }
+
+            vertices.push({'id': vertex.id, 'label': vertex.getHash(), 'neighbours': neighbours});
+        }
+
+        return {'vertices': vertices};
     };
 
     this.build();

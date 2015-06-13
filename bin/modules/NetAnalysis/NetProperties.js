@@ -331,7 +331,7 @@ function NetProperties() {
 
     };
 
-    this.Analyze = function(PTNGraph)
+    this.Analyze = function(PTNGraph, weightVector)
     {
         if (!this.hasStateChanged(PTNGraph.getState())) {
             return this.AnalysisResults;
@@ -346,7 +346,7 @@ function NetProperties() {
             "NetLimit": (null === K ? K : 'Unlimited'),
             "Securability" : this.isSecure(K),
             "Unlimited" : this.isUnlimited(K),
-            "Conservative": this.isConservative(),
+            "Conservative": this.isConservative(weightVector),
             "Reversable" : this.isReversable(),
             "Vital" : this.isVital(),
             "Transitions vitality" : this.getTransitionsVitality()

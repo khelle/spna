@@ -1,6 +1,7 @@
 var PTNGraph = require('../PTNGraph');
 var GraphIO = require('../GraphIO');
 var NetProperties = require('../NetAnalysis');
+var Utils = require('../utils/Utils');
 
 var Api = function() {
     this.graphIO = new GraphIO();
@@ -28,9 +29,9 @@ var Api = function() {
         return false;
     };
 
-    this.analyzeGraph = function() {
+    this.analyzeGraph = function(data) {
         try {
-            return this.netProperties.Analyze(this.ptnGraph.clone());
+            return this.netProperties.Analyze(this.ptnGraph.clone(), Utils.array(data.weight_vector));
         } catch (e) {
             return false;
         }

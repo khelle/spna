@@ -337,7 +337,7 @@ function NetProperties() {
             return this.AnalysisResults;
         }
         this.SetGraph(PTNGraph);
-        this.PTNgraph.calculateMatrixRepresentation();
+        //this.PTNgraph.calculateMatrixRepresentation();
 
         var Limits  =  this.KPlacesLimits();
         var K = this.KLimit(Limits);

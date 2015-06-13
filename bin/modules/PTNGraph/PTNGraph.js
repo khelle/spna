@@ -196,8 +196,7 @@ PTNGraph.prototype = {
 
         for (var i = 0; i < PlacesCounter; i++);
         {
-            Nplus[i][j] = 0;
-
+            Nplus[i] = new Array(TransitionsCounter);
         }
         console.log("Nplus = " + Nplus);
 

@@ -24,7 +24,7 @@ Place.prototype = {
     },
 
     setMarkers: function(markers) {
-        this.markers = Utils.number(parseInt(markers));
+        this.markers = Utils.number(markers);
         return this;
     },
 
@@ -37,13 +37,11 @@ Place.prototype = {
     },
 
     addMarkers: function(markers) {
-        this.markers += Utils.number(parseInt(markers));
+        this.markers += Utils.number(markers);
         return this;
     },
 
     removeMarkers: function(markers) {
-        markers = parseInt(markers);
-
         if (markers > this.markers) {
             this.markers = 0;
             return this;
@@ -138,14 +136,14 @@ Transition.prototype = {
             console.log("!!!! TAKING MARKERS" +  TakingMarkers);
 
             for (var i in TakingMarkers) {
-                TakingMarkers[i].removeMarkers(TakingMarkers[i].getCostTo(this));
+                TakingMarkers[i].removeMarkers(parseInt(TakingMarkers[i].getCostTo(this)));
                 console.log("Cost to " + TakingMarkers[i] + " = " + TakingMarkers[i].getCostTo(this));
             }
 
             var AddingMarkers = this.getNeighbours();
             for (var i in AddingMarkers) {
                 var mark = AddingMarkers[i];
-                mark.addMarkers(this.getCostTo(mark));
+                mark.addMarkers(parseInt(this.getCostTo(mark)));
             }
         }
 

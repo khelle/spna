@@ -114,13 +114,13 @@ function NetProperties() {
         */
     };
 
-    this.isSecure = function () {
+    this.isSecure = function (K) {
         // sieć jest bezpieczna, jeśli jest 1-ograniczona
-        return (this.KLimitValue == 1);
+        return (K == 1);
     };
-    this.isUnlimited = function () {
+    this.isUnlimited = function (K) {
         // sieć jest bezpieczna, jeśli jest 1-ograniczona
-        return (this.KLimitValue == Infinity);
+        return (K == Infinity);
     };
 
 
@@ -139,23 +139,22 @@ function NetProperties() {
         }
 
         var sums = [];
-        var sampleState = undefined;
+        var sampleState = vertices[0].getState();
         var weightsVector = [];
+        console.log("GIVEN VECTOR = " + givenVector);
+        if ( (givenVector instanceof Array) && (givenVector.length === 0)) {
 
-        if (typeof(givenVector)==='undefined'){
 
-            // TODO: jak mogę pobrać pierwszy stan (pierwszy element tablicy)?
-            sampleState = vertices[0].getState();
             for(var i in sampleState) // DANGER!!!!
-                // TODO: dlaczego nie mogę pobrać rozmiaru stanu metodą size/length?
+
             {
+                console.log("i = " + i);
                 weightsVector[i] = 1;
             }
 
         }
         else
         {
-            sampleState = vertices[0].getState();
             var index = 0;
             for(var i in sampleState)
                 // TODO: dlaczego nie mogę pobrać rozmiaru stanu metodą size/length?
@@ -340,7 +339,7 @@ function NetProperties() {
 
         var Limits  =  this.KPlacesLimits();
         var K = this.KLimit(Limits);
-
+        console.log("K  = "  + K);
         this.AnalysisResults = {
             "PlacesLimits" : Limits,
             "NetLimit": (null !== K ? K : 'Unlimited'),

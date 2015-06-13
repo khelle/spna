@@ -36,6 +36,18 @@ var Api = function() {
         }
     };
 
+    this.getCoverabilityGraph = function() {
+        try {
+            if (null === this.netProperties.CoverabilityGraph) {
+                this.netProperties.Analyze(this.ptnGraph.clone());
+            }
+
+            return this.netProperties.CoverabilityGraph.serialize();
+        } catch (e) {
+            return false;
+        }
+    };
+
     this.setGraphPriorities = function (data) {
         try {
             this.ptnGraph.setPriorities(data.priorities);

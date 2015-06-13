@@ -7,7 +7,7 @@ function array(value) {
 }
 
 function number(value) {
-  return typeof value !== 'number' ? 0 : value;
+  return (typeof value !== 'number' || isNaN(value)) ? 0 : value;
 }
 
 function position(value) {

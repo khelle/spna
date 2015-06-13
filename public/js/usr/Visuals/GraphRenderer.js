@@ -1110,7 +1110,7 @@ var GraphRenderer = function(app, renderingRoot) {
         tooltipInput.value = val;
         tooltipInput.onkeyup = (function(renderer, id, type) {
             return function() {
-                if (this.value.match(/^([a-zA-Z0-9_\s]*?)$/gi) !== null) {
+                if (this.value.match(/^([a-zA-Z0-9_\s]+?)$/gi) !== null) {
                     renderer.app.Storage.SetPlaceData(id, type, this.value);
                     renderer.Paint();
                 }

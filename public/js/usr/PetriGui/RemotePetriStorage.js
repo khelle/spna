@@ -102,20 +102,19 @@ var RemotePetriStorage = function(ajax) {
         var response;
         var status;
 
-        //this.ajax.HttpPost(
-        //    "/api/transition/priority",
-        //    {
-        //        id: id,
-        //        priority: priority
-        //    },
-        //    function(r, s) {
-        //        response = r;
-        //        status = s;
-        //    }
-        //);
-        //
-        //return { data: response.data, status: response.status };
-        return { data: {}, status: true };
+        this.ajax.HttpPost(
+            '/api/place/weight',
+            {
+                id: id,
+                weight: parseInt(weight)
+            },
+            function(r, s) {
+                response = r;
+                status = s;
+            }
+        );
+
+        return { data: response.data, status: response.status };
     };
 
 

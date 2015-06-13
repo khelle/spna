@@ -116,13 +116,11 @@ function NetProperties() {
 
     this.isSecure = function () {
         // sieć jest bezpieczna, jeśli jest 1-ograniczona
-        if (this.KLimitValue==1) return true;
-        else return false;
+        return (this.KLimitValue == 1);
     };
     this.isUnlimited = function () {
         // sieć jest bezpieczna, jeśli jest 1-ograniczona
-        if (this.KLimitValue==Infinity) return true;
-        else return false;
+        return (this.KLimitValue == Infinity);
     };
 
 

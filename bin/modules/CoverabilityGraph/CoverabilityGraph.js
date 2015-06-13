@@ -537,13 +537,16 @@ function CoverabilityGraph(ptnGraph) {
 
         for (var i in graphVertices) {
             var vertex = graphVertices[i];
-            var vertexNeighbours = graph.GetNeighbours(vertex.id);
+            var vertexNeighbours = graph.GetUniqueNeighbours(vertex.id);
             var neighbours = [];
 
             for (var j in vertexNeighbours) {
                 var neighbour = vertexNeighbours[j];
+                var edges = graph.edgesStorage.GetEdgesBetween(vertex.id, neighbour.id);
 
-                neighbours.push({'id': neighbour.id, 'edges': graph.edgesStorage.GetEdgesBetween(vertex.id, neighbour.id)});
+                for (var e in edges) {
+                    neighbours.push({'id': neighbour.id, 'edge_id': edges[e]});
+                }
             }
 
             vertices.push({'id': vertex.id, 'label': vertex.getHash(), 'neighbours': neighbours});

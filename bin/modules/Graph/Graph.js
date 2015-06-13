@@ -19,6 +19,21 @@ var Graph = function(VerticesStorage, EdgeStorage) {
         return neighbours;
     };
 
+    this.GetUniqueNeighbours = function(id) {
+        var neighbours = [];
+        var tmp = [];
+
+        this.GetIncidentEdges(id).forEach(function(edge) {
+            tmp[edge.target] = this.GetVertex(edge.target);
+        }, this);
+
+        tmp.forEach(function(vertex) {
+            neighbours.push(vertex);
+        });
+
+        return neighbours;
+    };
+
     this.GetReferencing = function(id) {
         var neighbours = [];
         this.GetIncomingEdges(id).forEach(function(edge) {

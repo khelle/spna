@@ -1210,8 +1210,6 @@ var GraphRenderer = function(app, renderingRoot) {
         var node;
         var nameParts;
 
-        console.log(data);
-
         for (key in data) {
             if (data.hasOwnProperty(key) !== false) {
                 row = data[key];

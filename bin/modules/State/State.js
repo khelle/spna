@@ -53,12 +53,11 @@ function State(places) {
     true if both have same markings
      */
     this.isEqual = function(state) {
-
-        for (var i in this.markers) {
+        for (var i in this.getState()) {
             if (this.getState()[i] != state.getState()[i])
                 return false;
         }
-        return true;
+        return ( Object.keys(this.getState()).length == Object.keys(state.getState()).length );
     };
 
     /*

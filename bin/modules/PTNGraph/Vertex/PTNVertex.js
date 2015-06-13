@@ -37,7 +37,8 @@ Place.prototype = {
             return this;
         }
 
-        this.markers -= Utils.number(markers);
+        this.markers -= Utils.number(parseInt(markers));
+      
         return this;
     },
 
@@ -103,6 +104,10 @@ Transition.prototype = {
     canBeExecuted: function() {
         var tmpPlaces = this.getReferencing();
 
+        if(tmpPlaces.length == 0) {
+            return false;
+        }
+
         for (var i in tmpPlaces) {
             if(tmpPlaces[i].getMarkers() < tmpPlaces[i].getCostTo(this))
                 return false;
@@ -116,8 +121,12 @@ Transition.prototype = {
         }
         else {
             var TakingMarkers = this.getReferencing();
+
+            console.log("!!!! TAKING MARKERS" +  TakingMarkers);
+
             for (var i in TakingMarkers) {
                 TakingMarkers[i].removeMarkers(TakingMarkers[i].getCostTo(this));
+                console.log("Cost to " + TakingMarkers[i] + " = " + TakingMarkers[i].getCostTo(this));
             }
 
             var AddingMarkers = this.getNeighbours();

@@ -367,7 +367,7 @@ function NetProperties() {
 
         this.AnalysisResults = {
             "PlacesLimits" : Limits,
-            "NetLimit": (null !== K ? K : 'Unlimited'),
+            "NetLimit": (Infinity !== K ? K : 'Unlimited'),
             "Securability" : this.isSecure(K),
             "Unlimited" : this.isUnlimited(K),
             //"Conservative": this.isConservative(),

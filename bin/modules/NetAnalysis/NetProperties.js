@@ -370,7 +370,7 @@ function NetProperties() {
             "NetLimit": (null !== K ? K : 'Unlimited'),
             "Securability" : this.isSecure(K),
             "Unlimited" : this.isUnlimited(K),
-            "Conservative": this.isConservative(),
+            //"Conservative": this.isConservative(),
             "Reversable" : this.isReversable(),
             "Vital" : this.isVital(),
             "Transitions vitality" : this.getTransitionsVitality()

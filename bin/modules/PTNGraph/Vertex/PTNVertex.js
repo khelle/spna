@@ -6,7 +6,7 @@ var Utils = require('../../utils/Utils');
 function Place(ptnGraph, graph, label, position, markers, id, weight) {
     Vertex.call(this, ptnGraph, graph, Utils.getValue(label, 'Place'), position, id);
     this.setMarkers(Utils.getValue(markers, 0));
-    this.setWeight(Utils.getValue(markers, 1));
+    this.setWeight(Utils.getValue(weight, 1));
 }
 
 Place.prototype = {

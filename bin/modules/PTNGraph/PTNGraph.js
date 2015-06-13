@@ -37,8 +37,8 @@ PTNGraph.prototype = {
         return this.graph.GetVertices()['Place'];
     },
 
-    createPlace: function(label, markers, position, id) {
-        var place = new Place(this, this.graph, label, position, markers, id);
+    createPlace: function(label, markers, position, id, weight) {
+        var place = new Place(this, this.graph, label, position, markers, id, weight);
 
         return this.graph.AddVertex(place);
     },

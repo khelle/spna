@@ -183,6 +183,13 @@ html, body {
   user-select: none;
 }
 
+.app-txt {
+  width: auto;
+  font-size: 14px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
 .prompt-button {
   height: 26px;
   width: auto;
@@ -388,4 +395,18 @@ input[type=range] {
 
 b {
   font-weight: bold;
+}
+
+i.fa {
+    position: relative;
+    top: -4px;
+}
+
+.graph-identifier {
+    font-size: 12px;
+    font-weight: bold;
+    vertical-align: top;
+    position: absolute;
+    right: -1px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }

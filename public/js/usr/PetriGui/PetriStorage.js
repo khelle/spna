@@ -10,9 +10,13 @@ var PetriStorage = function(app, ajax) {
 
     this.Init = function() {
         this.Graph = new Graph(new DefaultVertexStorage(), new DirectedDenseEdgeStorage());
-        this.Remote.UseGraph("petri");
+        this.UseGraph("petri");
 
         return this;
+    };
+
+    this.UseGraph = function(name) {
+        this.Remote.UseGraph(name);
     };
 
     this.Build = function(graph) {

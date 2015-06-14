@@ -48,10 +48,10 @@ function CoverabilityGraph(ptnGraph) {
     this.buildReachabilityTree = function() {
 
         console.log("buildReachabilityTree...");
-        this.reachability = new Graph(new VertexStorage())
+        this.reachability = new Graph(new VertexStorage());
 
         var list = [];
-        var MAXCOUNTER = 4;    // 30 or 50
+        var MAXCOUNTER = 10 ;    // 30 or 50
 
         //var root = this.ptnGraph.getState();
         var root = this.rootState;

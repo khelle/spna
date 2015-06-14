@@ -75,10 +75,10 @@ function NetProperties() {
 
         }
 
-        for (var i in limits)
-        {
-            if(limits[i] === Infinity) limits[i] = 'Inf';
-        }
+        //for (var i in limits)
+        //{
+        //    if(limits[i] === Infinity) limits[i] = 'Inf';
+        //}
         return limits;
     };
 
@@ -450,6 +450,12 @@ function NetProperties() {
 
         var Limits  =  this.KPlacesLimits();
         var K = this.KLimit(Limits);
+
+        for (var i in Limits) {
+            if (Limits[i] === Infinity) {
+                Limits[i] = 'Inf';
+            }
+        }
 
         this.AnalysisResults = {
             "PlacesLimits" : Limits,

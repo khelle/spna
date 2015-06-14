@@ -40,10 +40,10 @@ function NetProperties() {
         var limits = {};
         var tmp = vertices[0].getState();
         var vert = vertices[0];
-        console.log("First state = " + tmp);
+        //console.log("First state = " + tmp);
         for(var i in  tmp)
         {
-            console.log("i = "  + i);
+            //console.log("i = "  + i);
             if (i !== null) limits[i] = 0;
         }
         /*
@@ -54,9 +54,9 @@ function NetProperties() {
             }}
 
     */
-        console.log("!!!!");
-        console.log(vertices);
-        console.log(limits);//
+        //console.log("!!!!");
+        //console.log(vertices);
+        //console.log(limits);//
 
 
         for (var v in vertices) // v to indeks a nie obiekt!!!
@@ -92,7 +92,7 @@ function NetProperties() {
             ////("m =" + m + ", tmp = " + tmp + ", maxK = " + maxK);
             if (tmp > maxK) maxK = tmp;
         }
-        console.log("Maxx 2 " + maxK);
+        //console.log("Maxx 2 " + maxK);
         return maxK;
         /*
         // sieć jest k-ograniczona, jeśli istnieje liczba naturalna k,
@@ -144,38 +144,46 @@ function NetProperties() {
         //TODO: co powinniśmy zwrócić użytkownikowi w przypadku podania wektora wag o złej długości
         //TODO: jak użytkownik poda wektor (przycisk + osobne okienko dialogowe?)
         var vertices = this.graph.GetVertices();
-        console.log("Vertices in coverability graph = " + Object.keys(vertices).length);
+            var weightsVector = [];
+        //console.log("Vertices in coverability graph = " + Object.keys(vertices).length);
         if(Object.keys(vertices).length === 1)
         // jeśli graf pokrycia ma jeden wierzchołek to sieć jest martwa -> nie jest zachowawcza
         {
             return false;
         }
 
+        var places = this.PTNgraph.getPlaces();
+
+            for (var t in places)
+            {
+                weightsVector[places[t].id] = places[t].getWeight();
+            }
+
         var sums = [];
         var sampleState = vertices[0].getState();
-        var weightsVector = [];
-        console.log("GIVEN VECTOR = " + givenVector);
+
+        //console.log("GIVEN VECTOR = " + givenVector);
         //if ( (givenVector instanceof Array) && (givenVector.length === 0)) {
-        if(givenVector === undefined){
-
-            for(var i in sampleState) // DANGER!!!!
-
-            {
-                console.log("i = " + i);
-                weightsVector[i] = 1;
-            }
-
-        }
-        else
-        {
-            var index = 0;
-            for(var i in sampleState)
-                // TODO: dlaczego nie mogę pobrać rozmiaru stanu metodą size/length?
-            {
-                weightsVector[i] = givenVector[index];
-                index++;
-            }
-        }
+        //if(givenVector === undefined){
+        //
+        //    for(var i in sampleState) // DANGER!!!!
+        //
+        //    {
+        //        console.log("i = " + i);
+        //        weightsVector[i] = 1;
+        //    }
+        //
+        //}
+        //else
+        //{
+        //    var index = 0;
+        //    for(var i in sampleState)
+        //        // TODO: dlaczego nie mogę pobrać rozmiaru stanu metodą size/length?
+        //    {
+        //        weightsVector[i] = givenVector[index];
+        //        index++;
+        //    }
+        //}
         console.log("weightsVector: " + weightsVector);
 
         // sieć jest zachowawcza, jeśli  łączna liczba znaczników
@@ -344,6 +352,93 @@ function NetProperties() {
         return transitionsVitality;
 
     };
+    /*
+    this.getMatrixRepresentation = function () {
+
+        var Nplus = {};
+        var Nminus = {};
+        var Ninc = {};
+
+        var places = this.PTNgraph.getPlaces();
+        var transitions = this.PTNgraph.getTransitions();
+        for (var p in places)
+        {
+           // console.log("p = " + p);
+            Nplus[p] = {};
+            Nminus[p] = {};
+            Ninc[p] = {};
+            for (var t in transitions)
+            {
+                //console.log("t = " + t);
+                Nplus[p][t] = 0;
+                Nminus[p][t] = 0;
+                Ninc[p][t] = 0;
+
+            }
+
+        }
+
+        console.log(Nplus);
+
+
+        for (var t in transitions)
+        {
+            console.log("TRANSITION : " + t);
+            var currentTransition = transitions[t];
+            var currentTransitionID = t.id;
+
+            for (var p in places)
+            {
+                var currentPlace = places[p];
+                var currentPlaceID = currentPlace.id;
+
+               // Nplus
+                var placesToAddMarkers = currentTransition.getNeighbours();
+
+                var placesToGetMarkers = currentTransition.getReferencing();
+                //console.log("Places to visit for transition " + t + "  = " +placesToAddMarkers )
+                //console.log("BEFORE : N[" + p + "][" + t + "] = " + Nplus[p][t]);
+                for( var x in placesToAddMarkers)
+                {
+                    var currentNeighbour = placesToAddMarkers[x];
+                    var currentNeighbourID = currentNeighbour.id;
+                    if(currentPlaceID ==  currentNeighbourID)
+                    {
+                        console.log("COST = " + currentTransition.getCostTo(currentPlace));
+                        Nplus[p][t] = currentTransition.getCostTo(currentPlace);
+                    }
+                }
+
+                for( var y in placesToGetMarkers)
+                {
+                    var currentNeighbour = placesToGetMarkers[y];
+                    var currentNeighbourID = currentNeighbour.id;
+                    if(currentPlaceID ==  currentNeighbourID)
+                    {
+                        console.log("COST = " + currentPlace.getCostTo(currentTransition));
+                        Nminus[p][t] = currentPlace.getCostTo(currentTransition);
+                    }
+                }
+                //console.log("AFTER : N[" + p + "][" + t + "] = " + Nplus[p][t]);
+            }
+        }
+        console.log(Nplus);
+        console.log(Nminus);
+
+        for (var p in places)
+        {
+            for (var t in transitions)
+            {
+                console.log(p + ", " + t);
+                console.log(Nplus[p][t] + " - " + Nminus[p][t]);
+                Ninc[p][t] = Nplus[p][t] - Nminus[p][t] ;
+            }
+        }
+        console.log(Ninc);
+
+
+    };
+    */
 
     this.Analyze = function(PTNGraph)
     {
@@ -361,12 +456,12 @@ function NetProperties() {
             "NetLimit": (Infinity !== K ? K : 'Unlimited'),
             "Securability" : this.isSecure(K),
             "Unlimited" : this.isUnlimited(K),
-            //"Conservative": this.isConservative(),
+            "Conservative": this.isConservative(),
             "Reversable" : this.isReversable(),
             "Vital" : this.isVital(),
             "Transitions vitality" : this.getTransitionsVitality()
         };
-        //this.PTNgraph.calculateMatrixRepresentation();
+        //var  matrix = this.PTNgraph.getMatrixRepresentation();
         this.lastAnalyzedState = PTNGraph.getState();
 
         return this.AnalysisResults;

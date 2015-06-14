@@ -171,40 +171,9 @@ PTNGraph.prototype = {
         return AllTransitions;
     },
 
-    /*
-    calculateMatrixRepresentation : function()
-    {
-        var PlacesCounter = 0;
-        var TransitionsCounter = 0;
-
-        for (var p in this.getPlaces())
-        {
-            PlacesCounter++;
-        }
-        for (var t in this.getTransitions())
-        {
-            TransitionsCounter++;
-        }
-
-        console.log("Transitions in graph : " + TransitionsCounter);
-        console.log("Places in graph : " + PlacesCounter);
-
-        // macierz wejść
-        // kolumny - przejścia
-        // wiersze - miejsca
 
 
-        var Nplus = new Array(PlacesCounter)
 
-        for (var i = 0; i < PlacesCounter[i]; i++);
-        {
-            Nplus[i] = new Array(TransitionsCounter);
-        }
-        console.log("Nplus = " + Nplus);
-
-        //  macierzy wyjść
-        },
-         */
 
     /*
      Executes target transition
@@ -236,6 +205,98 @@ PTNGraph.prototype = {
         //console.log( "!!!!=======================");
 
         return true;
+    },
+
+    getMatrixRepresentation : function() {
+        /*
+        Zwróć reprezentację macierzową grafu w postaci macierzy wejścia, wyjścia i incydencji
+        , z których każda jest postaci [id_miejsca : [id przejscia1 : waga1], [id przejscia2: waga2]]
+                [id_miejsca2 : [id przejscia1 : waga1], [id przejscia2: waga2]]
+
+         Przykładowa macierz:
+         { '3': { '0': 0, '1': 0, '2': 0 },
+         '4': { '0': 1, '1': 1, '2': 1 } }
+
+         Funkcja zwraca wszystkie macierze poprzez tablicę [Nplus, Nminus, Ninc]
+         */
+
+    var Nplus = {};
+    var Nminus = {};
+    var Ninc = {};
+
+    var places = this.getPlaces();
+    var transitions = this.getTransitions();
+    for (var p in places)
+    {
+        // console.log("p = " + p);
+        Nplus[p] = {};
+        Nminus[p] = {};
+        Ninc[p] = {};
+        for (var t in transitions)
+        {
+            //console.log("t = " + t);
+            Nplus[p][t] = 0;
+            Nminus[p][t] = 0;
+            Ninc[p][t] = 0;
+
+        }
+
+    }
+
+    //console.log(Nplus);
+
+
+    for (var t in transitions)
+    {
+        //console.log("TRANSITION : " + t);
+        var currentTransition = transitions[t];
+        var currentTransitionID = t.id;
+
+        for (var p in places)
+        {
+            var currentPlace = places[p];
+            var currentPlaceID = currentPlace.id;
+
+            var placesToAddMarkers = currentTransition.getNeighbours();
+            var placesToGetMarkers = currentTransition.getReferencing();
+
+            for( var x in placesToAddMarkers)
+            {
+                var currentNeighbour = placesToAddMarkers[x];
+                var currentNeighbourID = currentNeighbour.id;
+                if(currentPlaceID ==  currentNeighbourID)
+                {
+                    //console.log("COST = " + currentTransition.getCostTo(currentPlace));
+                    Nplus[p][t] = currentTransition.getCostTo(currentPlace);
+                }
+            }
+
+            for( var y in placesToGetMarkers)
+            {
+                var currentNeighbour = placesToGetMarkers[y];
+                var currentNeighbourID = currentNeighbour.id;
+                if(currentPlaceID ==  currentNeighbourID)
+                {
+                    //console.log("COST = " + currentPlace.getCostTo(currentTransition));
+                    Nminus[p][t] = currentPlace.getCostTo(currentTransition);
+                }
+            }
+            //console.log("AFTER : N[" + p + "][" + t + "] = " + Nplus[p][t]);
+        }
+    }
+    //console.log(Nplus);
+    //console.log(Nminus);
+
+    for (var p in places)
+    {
+        for (var t in transitions)
+        {
+            Ninc[p][t] = Nplus[p][t] - Nminus[p][t] ;
+        }
+    }
+    //console.log(Ninc);
+
+    return [Nplus, Nminus, Ninc];
     },
 
 

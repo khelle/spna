@@ -422,4 +422,10 @@ i.fa {
   border: 1px #696969 solid;
   text-align: center;
   font-weight: bold;
+  font-size: 8px;
+}
+
+.matrix td:hover {
+  background-color: #999999;
+  color: #eeeeee;
 }

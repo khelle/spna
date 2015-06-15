@@ -30,7 +30,7 @@ var Analyzer = function(app, ajax) {
         ];
         trans = [
             'NetLimit', 'Securability', 'Unlimited', 'Conservative', 'Weight Vector', 'Reversable', 'Vital'
-        ]
+        ];
 
         message += '<table cellpadding=0 cellspacing=0>';
         for (i in props) {
@@ -212,18 +212,39 @@ var Analyzer = function(app, ajax) {
         var column;
         var i;
         var j;
+        var icnt;
+        var len;
+        var clabels;
 
         html = '';
+
+        html += '<td width="20" height="20"></td>';
+        clabels = {};
+        for (i in matrix) {
+            len = 0;
+            for (j in matrix[i]) {
+                clabels[i] = matrix[i][j].transLabel;
+                len++;
+            }
+            break;
+        }
+        for (i=0; i<len; i++) {
+            html += '<td width="20" height="20">#' + (i) + '</td>';
+        }
+        html = '<tr>' + html + '</tr>';
+
+        icnt = 0;
         for (i in matrix) {
             if (matrix.hasOwnProperty(i) !== false) {
                 row = matrix[i];
-                el = '';
+                el = '<td width="20" height="20">#' + (icnt) + '</td>';
+                icnt++;
 
                 for (j in row) {
                     if (row.hasOwnProperty(j) !== false) {
                         column = row[j];
 
-                        el += '<td width=20 height=20>' + column.val + '</td>';
+                        el += '<td width="20" height="20" title="P=' + column.placeLabel + '; T=' + column.transLabel + '">' + column.val + '</td>';
                     }
                 }
 

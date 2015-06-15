@@ -15,23 +15,40 @@ var Analyzer = function(app, ajax) {
     this.PromptAnalysisData = function(data) {
         var message;
         var app;
-        var i;
         var row;
+        var rows;
         var props;
+        var trans;
+        var i;
+        var j;
 
         app = this.app;
 
         message = '<label>Below are given characterstics of current graph:</label>';
         props = [
-            'NetLimit', 'Securability', 'Unlimited', 'Conservative', 'Reversable', 'Vital'
+            'NetLimit', 'Securability', 'Unlimited', 'Conservative', 'Weights vector', 'Reversable', 'Vital'
         ];
+        trans = [
+            'NetLimit', 'Securability', 'Unlimited', 'Conservative', 'Weight Vector', 'Reversable', 'Vital'
+        ]
 
         message += '<table cellpadding=0 cellspacing=0>';
         for (i in props) {
             if (data.hasOwnProperty(props[i]) !== false) {
                 row = data[props[i]];
 
-                message += '<tr><td width="120"><b>' + props[i] + '</b></td><td>' + row + '</td></tr>';
+                if (typeof row === 'object') {
+                    rows = [];
+                    for (j in row) {
+                        rows.push(row[j]);
+                    }
+                    rows = rows.join(',');
+
+                    message += '<tr><td width="120"><b>' + trans[i] + '</b></td><td>[' + rows + ']</td></tr>';
+                }
+                else {
+                    message += '<tr><td width="120"><b>' + trans[i] + '</b></td><td>' + row + '</td></tr>';
+                }
             }
         }
         message += '</table>';

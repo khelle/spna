@@ -70,8 +70,8 @@ html, body {
   background: rgba(246,246,246,1);
   padding: 5px;
 
-  border-color: #CCCCCC #CCCCCC #BBBBBB;  
-  
+  border-color: #CCCCCC #CCCCCC #BBBBBB;
+
   position: relative;
   z-index: 3;
 }
@@ -378,19 +378,19 @@ input[type=range] {
 }
 
 .header-icon {
-    display:inline-block;
-    padding: 0;
-    height: 26px;
-    padding-top: 10px;
-    margin-left: 5px;
-    text-decoration:none;
-    text-shadow:0 1px 0 #ffffff;
-    text-align: center;
-    color: #444444;
-    font-size: 16px;
-    float: left;
-    top: 0;
-    position: relative;
+  display:inline-block;
+  padding: 0;
+  height: 26px;
+  padding-top: 10px;
+  margin-left: 5px;
+  text-decoration:none;
+  text-shadow:0 1px 0 #ffffff;
+  text-align: center;
+  color: #444444;
+  font-size: 16px;
+  float: left;
+  top: 0;
+  position: relative;
 }
 
 b {
@@ -398,16 +398,21 @@ b {
 }
 
 i.fa {
-    position: relative;
-    top: -4px;
+  position: relative;
+  top: -4px;
 }
 
 .graph-identifier {
-    font-size: 24px;
-    font-weight: bold;
-    vertical-align: top;
-    position: absolute;
-    right: 7px;
-    top: -1px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  vertical-align: top;
+  position: absolute;
+  right: 7px;
+  top: -1px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.scrollable {
+  width: 100%;
+  overflow: auto;
 }

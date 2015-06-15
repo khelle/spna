@@ -158,22 +158,38 @@ var Analyzer = function(app, ajax) {
     this.DownloadMatrixRepresentation = function() {
         var proxy = this;
 
-        proxy.app.PromptMessage("Matrix representation", "TABLE", [
+        this.ajax.HttpGet('/api/graph/matrix', null, function(data, status) {
+            if (data.status === true) {
+                proxy.DisplayMatrixRepresentation(data.data.matrix);
+            }
+        }, true);
+    };
+
+    this.DisplayMatrixRepresentation = function(matrix) {
+        var html;
+        var proxy;
+
+        html = '';
+
+        html += '<div><b>(N)  Matrix:</b></div>' + this.DisplayMatrixInstance(matrix.n_inc);
+        html += '<div><b>(N+) Matrix:</b></div>' + this.DisplayMatrixInstance(matrix.n_plus);
+        html += '<div><b>(N-) Matrix:</b></div>' + this.DisplayMatrixInstance(matrix.n_minus);
+
+        html = '<div class="scrollable">' + html + '</div>';
+
+        proxy = this;
+        proxy.app.PromptMessage("Matrix representation", html, [
             {
                 type: 'close',
                 fn: function() {
                     proxy.app.ClosePromptMessage();
                 }
             }
-        ],
-        [
-            {
-                name: 'OK',
-                fn: function() {
-                    proxy.app.ClosePromptMessage();
-                }
-            }
         ]);
+    };
+
+    this.DisplayMatrixInstance = function(matrix) {
+        return '';
     };
 
     return this;

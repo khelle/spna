@@ -279,10 +279,7 @@ PTNGraph.prototype = {
                 if(currentPlaceID ==  currentNeighbourID)
                 {
                     //console.log("COST = " + currentTransition.getCostTo(currentPlace));
-                    Nplus[p][t] =  {
-                        "placeLabel" : places[p].getLabel(),
-                        "transID" : transitions[t].getLabel(),
-                        "val" : currentTransition.getCostTo(currentPlace)};
+                    Nplus[p][t] = currentTransition.getCostTo(currentPlace);
                 }
             }
 
@@ -293,35 +290,25 @@ PTNGraph.prototype = {
                 if(currentPlaceID ==  currentNeighbourID)
                 {
                     //console.log("COST = " + currentPlace.getCostTo(currentTransition));
-
-
-                    Nminus[p][t] = {
-                        "placeLabel" : places[p].getLabel(),
-                        "transID" : transitions[t].getLabel(),
-                        "val" :currentPlace.getCostTo(currentTransition)
-                    };
+                    Nminus[p][t] = currentPlace.getCostTo(currentTransition);
                 }
             }
             //console.log("AFTER : N[" + p + "][" + t + "] = " + Nplus[p][t]);
         }
     }
     //console.log(Nplus);
-    console.log(Nminus);
+    //console.log(Nminus);
 
     for (var p in places)
     {
         for (var t in transitions)
         {
-
-            Ninc[p][t] =  {
-                "placeLabel" : places[p].getLabel(),
-                "transLabel" : transitions[t].getLabel(),
-                "val" : Nplus[p][t].val - Nminus[p][t].val};
+            Ninc[p][t] = Nplus[p][t] - Nminus[p][t] ;
         }
     }
-    console.log(Ninc);
+    //console.log(Ninc);
 
-    return [Nplus, Nminus, Ninc];
+        return {'n_plus': Nplus, 'n_minus': Nminus, 'n_inc': Ninc};
     },
 
 

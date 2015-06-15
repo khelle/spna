@@ -9,6 +9,8 @@ POST /api/graph/file : void - import grafu z pliku
 
 GET /api/graph/analyze : json analyzis - obiekt zawierający właściwości grafu
 
+GET /api/graph/analyze/matrix : json matrix - obiekt zawierający 3 macierze: N+, N- i Ninc
+
 GET /api/graph/analyze/coverability-graph : json graph - zserializowany graf pokrycia
 
 GET /api/graph/analyze/reachability-graph : json graph - zserializowany graf osiągalności

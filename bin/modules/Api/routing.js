@@ -66,6 +66,16 @@ router.get('/graph/analyze', function(request, response) {
     response.json(createResponse(true, {analysis: analysis}));
 });
 
+router.get('/graph/matrix', function(request, response) {
+    var matrix = api.getMatrix();
+
+    if (matrix === false) {
+        response.json(createResponse(false, {}));
+        return;
+    }
+
+    response.json(createResponse(true, {matrix: matrix}));
+});
 
 router.get('/graph/analyze/coverability-graph', function(request, response) {
     var graph = api.getCoverabilityGraph();

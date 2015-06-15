@@ -29,6 +29,14 @@ var Api = function() {
         return false;
     };
 
+    this.getMatrix = function() {
+        try {
+            return this.ptnGraph.getMatrixRepresentation();
+        } catch (e) {
+            return false;
+        }
+    };
+
     this.analyzeGraph = function() {
         try {
             return this.netProperties.Analyze(this.ptnGraph.clone());

@@ -279,7 +279,7 @@ PTNGraph.prototype = {
                 if(currentPlaceID ==  currentNeighbourID)
                 {
                     //console.log("COST = " + currentTransition.getCostTo(currentPlace));
-                    Nplus[p][t] = currentTransition.getCostTo(currentPlace);
+                    Nplus[p][t].val = currentTransition.getCostTo(currentPlace);
                 }
             }
 
@@ -290,7 +290,7 @@ PTNGraph.prototype = {
                 if(currentPlaceID ==  currentNeighbourID)
                 {
                     //console.log("COST = " + currentPlace.getCostTo(currentTransition));
-                    Nminus[p][t] = currentPlace.getCostTo(currentTransition);
+                    Nminus[p][t].val = currentPlace.getCostTo(currentTransition);
                 }
             }
             //console.log("AFTER : N[" + p + "][" + t + "] = " + Nplus[p][t]);
@@ -303,7 +303,12 @@ PTNGraph.prototype = {
     {
         for (var t in transitions)
         {
-            Ninc[p][t] = Nplus[p][t] - Nminus[p][t] ;
+            //Ninc[p][t] = Nplus[p][t] - Nminus[p][t] ;
+            Ninc[p][t] = {
+                "placeLabel" : Nplus[p][t].placeLabel,
+                "transID" : Nplus[p][t].transID,
+                "val" : Nplus[p][t].val - Nminus[p][t].val
+            };
         }
     }
     //console.log(Ninc);

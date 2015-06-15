@@ -280,7 +280,16 @@ function NetProperties() {
             //console.log(vv);
             //console.log(vv.id);
             //console.log("LABEL? : " + vv.); // ta etykieta tego nie oznacza!!
-            if(vv.getDead()) return false; // jeśli którykolwiek stan grafu pokrycia jest martwy
+            if(vv.getDead())
+            {
+                console.log("!!!!" + vv.id + "," + vv.getDead());
+                for (var i in vv.getState())
+                {
+                    console.log(vv.getState()[i]);
+                }
+                return false;
+            } // jeśli którykolwiek stan grafu pokrycia jest martwy
+
             // to znaczy że sieć może utknąć w martwym punkcie (zakleszczyć się) -> nie jest żywotna
         }
         return true;
@@ -352,93 +361,17 @@ function NetProperties() {
         return transitionsVitality;
 
     };
-    /*
-    this.getMatrixRepresentation = function () {
 
-        var Nplus = {};
-        var Nminus = {};
-        var Ninc = {};
-
-        var places = this.PTNgraph.getPlaces();
-        var transitions = this.PTNgraph.getTransitions();
-        for (var p in places)
+    this.tmpFun = function()
+    {
+        console.log("!!!XXX!!!");
+        var vertices = this.PTNgraph.getTransitions()
+        for (var v in vertices)
         {
-           // console.log("p = " + p);
-            Nplus[p] = {};
-            Nminus[p] = {};
-            Ninc[p] = {};
-            for (var t in transitions)
-            {
-                //console.log("t = " + t);
-                Nplus[p][t] = 0;
-                Nminus[p][t] = 0;
-                Ninc[p][t] = 0;
-
-            }
-
+            console.log(v + ", " + vertices[v].getLabel());
         }
-
-        console.log(Nplus);
-
-
-        for (var t in transitions)
-        {
-            console.log("TRANSITION : " + t);
-            var currentTransition = transitions[t];
-            var currentTransitionID = t.id;
-
-            for (var p in places)
-            {
-                var currentPlace = places[p];
-                var currentPlaceID = currentPlace.id;
-
-               // Nplus
-                var placesToAddMarkers = currentTransition.getNeighbours();
-
-                var placesToGetMarkers = currentTransition.getReferencing();
-                //console.log("Places to visit for transition " + t + "  = " +placesToAddMarkers )
-                //console.log("BEFORE : N[" + p + "][" + t + "] = " + Nplus[p][t]);
-                for( var x in placesToAddMarkers)
-                {
-                    var currentNeighbour = placesToAddMarkers[x];
-                    var currentNeighbourID = currentNeighbour.id;
-                    if(currentPlaceID ==  currentNeighbourID)
-                    {
-                        console.log("COST = " + currentTransition.getCostTo(currentPlace));
-                        Nplus[p][t] = currentTransition.getCostTo(currentPlace);
-                    }
-                }
-
-                for( var y in placesToGetMarkers)
-                {
-                    var currentNeighbour = placesToGetMarkers[y];
-                    var currentNeighbourID = currentNeighbour.id;
-                    if(currentPlaceID ==  currentNeighbourID)
-                    {
-                        console.log("COST = " + currentPlace.getCostTo(currentTransition));
-                        Nminus[p][t] = currentPlace.getCostTo(currentTransition);
-                    }
-                }
-                //console.log("AFTER : N[" + p + "][" + t + "] = " + Nplus[p][t]);
-            }
-        }
-        console.log(Nplus);
-        console.log(Nminus);
-
-        for (var p in places)
-        {
-            for (var t in transitions)
-            {
-                console.log(p + ", " + t);
-                console.log(Nplus[p][t] + " - " + Nminus[p][t]);
-                Ninc[p][t] = Nplus[p][t] - Nminus[p][t] ;
-            }
-        }
-        console.log(Ninc);
-
-
     };
-    */
+
 
     this.Analyze = function(PTNGraph)
     {
@@ -467,8 +400,9 @@ function NetProperties() {
             "Vital" : this.isVital(),
             "Transitions vitality" : this.getTransitionsVitality()
         };
-        //var  matrix = this.PTNgraph.getMatrixRepresentation();
+        var  matrix = this.PTNgraph.getMatrixRepresentation();
         this.lastAnalyzedState = PTNGraph.getState();
+        this.tmpFun();
 
         return this.AnalysisResults;
     };

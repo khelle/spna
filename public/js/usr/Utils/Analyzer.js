@@ -155,5 +155,26 @@ var Analyzer = function(app, ajax) {
         });
     };
 
+    this.DownloadMatrixRepresentation = function() {
+        var proxy = this;
+
+        proxy.app.PromptMessage("Matrix representation", "TABLE", [
+            {
+                type: 'close',
+                fn: function() {
+                    proxy.app.ClosePromptMessage();
+                }
+            }
+        ],
+        [
+            {
+                name: 'OK',
+                fn: function() {
+                    proxy.app.ClosePromptMessage();
+                }
+            }
+        ]);
+    };
+
     return this;
 };

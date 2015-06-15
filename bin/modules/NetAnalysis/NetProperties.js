@@ -137,14 +137,15 @@ function NetProperties() {
     };
 
 
-        this.isConservative = function (givenVector) { // TODO: Potrzebuję do testu sieci, w której nie pojawiają się nieskończoności w grafie pokrycia
+        this.isConservative = function () { // TODO: Potrzebuję do testu sieci, w której nie pojawiają się nieskończoności w grafie pokrycia
         // JEŚLI CoverabilityGraph.isConservative = true - sprawdź:
         // Jeśli false- zwróc false
         // TODO: czy takie rozwiazanie z argumentem domyślnym dla funkcji jest ok?
         //TODO: co powinniśmy zwrócić użytkownikowi w przypadku podania wektora wag o złej długości
         //TODO: jak użytkownik poda wektor (przycisk + osobne okienko dialogowe?)
         var vertices = this.graph.GetVertices();
-            var weightsVector = [];
+        var weightsVector = this.PTNgraph.getWeightVector();
+        var sums = [];
         //console.log("Vertices in coverability graph = " + Object.keys(vertices).length);
         if(Object.keys(vertices).length === 1)
         // jeśli graf pokrycia ma jeden wierzchołek to sieć jest martwa -> nie jest zachowawcza
@@ -152,38 +153,6 @@ function NetProperties() {
             return false;
         }
 
-        var places = this.PTNgraph.getPlaces();
-
-            for (var t in places)
-            {
-                weightsVector[places[t].id] = places[t].getWeight();
-            }
-
-        var sums = [];
-        var sampleState = vertices[0].getState();
-
-        //console.log("GIVEN VECTOR = " + givenVector);
-        //if ( (givenVector instanceof Array) && (givenVector.length === 0)) {
-        //if(givenVector === undefined){
-        //
-        //    for(var i in sampleState) // DANGER!!!!
-        //
-        //    {
-        //        console.log("i = " + i);
-        //        weightsVector[i] = 1;
-        //    }
-        //
-        //}
-        //else
-        //{
-        //    var index = 0;
-        //    for(var i in sampleState)
-        //        // TODO: dlaczego nie mogę pobrać rozmiaru stanu metodą size/length?
-        //    {
-        //        weightsVector[i] = givenVector[index];
-        //        index++;
-        //    }
-        //}
         console.log("weightsVector: " + weightsVector);
 
         // sieć jest zachowawcza, jeśli  łączna liczba znaczników
@@ -198,9 +167,6 @@ function NetProperties() {
         // we wszystkich getState, klasa State;
 
         // jeśli gdziekolwiek w grafie pokrycia pojawi się nam symbol nieskończnoności, to sieć nie jest zachowawcza
-
-        var vertices = this.graph.GetVertices();
-        var sums = [];
 
         for(var i in vertices)
         {
@@ -378,8 +344,8 @@ function NetProperties() {
         if (!this.hasStateChanged(PTNGraph.getState())) {
             return this.AnalysisResults;
         }
-        this.SetGraph(PTNGraph);
 
+        this.SetGraph(PTNGraph);
 
         var Limits  =  this.KPlacesLimits();
         var K = this.KLimit(Limits);
@@ -396,13 +362,14 @@ function NetProperties() {
             "Securability" : this.isSecure(K),
             "Unlimited" : this.isUnlimited(K),
             "Conservative": this.isConservative(),
+            "Weights vector": PTNGraph.getWeightVector(),
             "Reversable" : this.isReversable(),
             "Vital" : this.isVital(),
             "Transitions vitality" : this.getTransitionsVitality()
         };
-        var  matrix = this.PTNgraph.getMatrixRepresentation();
+
         this.lastAnalyzedState = PTNGraph.getState();
-        this.tmpFun();
+        //this.tmpFun();
 
         return this.AnalysisResults;
     };

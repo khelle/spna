@@ -207,6 +207,17 @@ PTNGraph.prototype = {
         return true;
     },
 
+    getWeightVector: function() {
+        var weightsVector = {};
+        var places = this.getPlaces();
+
+        for (var i in places) {
+            weightsVector[places[i].id] = places[i].getWeight();
+        }
+
+        return weightsVector;
+    },
+
     getMatrixRepresentation : function() {
         /*
         Zwróć reprezentację macierzową grafu w postaci macierzy wejścia, wyjścia i incydencji

@@ -171,9 +171,9 @@ var Analyzer = function(app, ajax) {
 
         html = '';
 
-        html += '<div><b>(N)  Matrix:</b></div>' + this.DisplayMatrixInstance(matrix.n_inc);
-        html += '<div><b>(N+) Matrix:</b></div>' + this.DisplayMatrixInstance(matrix.n_plus);
-        html += '<div><b>(N-) Matrix:</b></div>' + this.DisplayMatrixInstance(matrix.n_minus);
+        html += '<br><div><b>(N)  Matrix:</b></div>' + this.DisplayMatrixInstance(matrix.n_inc);
+        html += '<br><div><b>(N+) Matrix:</b></div>' + this.DisplayMatrixInstance(matrix.n_plus);
+        html += '<br><div><b>(N-) Matrix:</b></div>' + this.DisplayMatrixInstance(matrix.n_minus);
 
         html = '<div class="scrollable">' + html + '</div>';
 
@@ -189,7 +189,33 @@ var Analyzer = function(app, ajax) {
     };
 
     this.DisplayMatrixInstance = function(matrix) {
-        return '';
+        var html;
+        var el;
+        var row;
+        var column;
+        var i;
+        var j;
+
+        html = '';
+        for (i in matrix) {
+            if (matrix.hasOwnProperty(i) !== false) {
+                row = matrix[i];
+                el = '';
+
+                for (j in row) {
+                    if (row.hasOwnProperty(j) !== false) {
+                        column = row[j];
+
+                        el += '<td width=20 height=20>' + column.val + '</td>';
+                    }
+                }
+
+                html += '<tr>' + el + '</tr>';
+            }
+        }
+        html = '<table class="matrix">' + html + '</table>';
+
+        return html;
     };
 
     return this;

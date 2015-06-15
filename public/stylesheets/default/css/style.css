@@ -414,5 +414,12 @@ i.fa {
 
 .scrollable {
   width: 100%;
+  max-height: 500px;
   overflow: auto;
+}
+
+.matrix td {
+  border: 1px #696969 solid;
+  text-align: center;
+  font-weight: bold;
 }

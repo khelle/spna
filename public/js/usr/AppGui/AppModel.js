@@ -267,8 +267,8 @@ var AppModel = function() {
         winY = $(window).height();
 
         $canvas.css({
-            width: winX * 0.8,
-            height: winY * 0.8
+            width: winX * 0.88,
+            height: winY * 0.88
         });
 
         return this;

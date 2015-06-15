@@ -237,17 +237,17 @@ PTNGraph.prototype = {
             //console.log("t = " + t);
             Nplus[p][t] = {
                 "placeLabel" : places[p].getLabel(),
-                "transID" : transitions[t].getLabel(),
+                "transLabel" : transitions[t].getLabel(),
                 "val" : 0
             };
             Nminus[p][t] = {
                 "placeLabel" : places[p].getLabel(),
-                "transID" : transitions[t].getLabel(),
+                "transLabel" : transitions[t].getLabel(),
                 "val" : 0
             };
             Ninc[p][t] ={
                 "placeLabel" : places[p].getLabel(),
-                "transID" : transitions[t].getLabel(),
+                "transLabel" : transitions[t].getLabel(),
                 "val" : 0
             };
 
@@ -306,7 +306,7 @@ PTNGraph.prototype = {
             //Ninc[p][t] = Nplus[p][t] - Nminus[p][t] ;
             Ninc[p][t] = {
                 "placeLabel" : Nplus[p][t].placeLabel,
-                "transID" : Nplus[p][t].transID,
+                "transLabel" : Nplus[p][t].transLabel,
                 "val" : Nplus[p][t].val - Nminus[p][t].val
             };
         }

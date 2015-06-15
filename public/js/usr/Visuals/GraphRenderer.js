@@ -49,7 +49,8 @@ var GraphRenderer = function(app, renderingRoot) {
         maxNodeSize: 2,
         minEdgeSize: 0.5,
         maxEdgeSize: 1,
-        minArrowSize: 10
+        minArrowSize: 10,
+        labelThreshold: 1
     };
 
     this.Init = function() {
